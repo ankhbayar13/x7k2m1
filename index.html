@@ -12,8 +12,21 @@ window.stop();
 var u=location.href.split('#')[0],hs=location.hash||'';u+=(u.indexOf('?')<0?'?':'&')+'fr=1'+hs;
 document.documentElement.innerHTML='<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Тал Нутгийн Хаан</title><meta name="theme-color" content="#0f2a5c"><link rel="manifest" href="manifest.json"><style>html,body{margin:0;height:100%;overflow:hidden;background:url(hf/splash_pc2.webp) 50% 0/auto 100% no-repeat,linear-gradient(#0009,#0009),url(hf/splash_pc2.webp) 50% 50%/cover no-repeat #070b16}html.go,html.go body{background:#070b16 radial-gradient(ellipse at 50% 30%,#14234a 0,#070b16 70%)}iframe{position:fixed;top:0;border:0;background:#000;box-shadow:0 0 60px #000c,0 0 0 2px #c9972b66}</style></head><body><iframe id="gfr" src="'+u.replace(/"/g,'&quot;')+'" allow="autoplay; fullscreen; clipboard-write; clipboard-read" allowfullscreen></iframe></body>';
 /* өндөр дэлгэц дээр бүх товч, цэс жижиг харагдахгүй: iframe-ийг k дахин томруулна (хөтчийн zoom-той адил, зураг тод хэвээр) */
-var fit=function(){try{var x=document.getElementById('gfr');if(!x)return;var W=innerWidth,H=innerHeight,d=window.devicePixelRatio||1,sp=Math.max(1,Math.min(2,H*d/720)),k=Math.max(1,Math.min(4,sp/d)),fw=Math.min(W,Math.max(390,H*1.6));
-x.style.zoom=k;x.style.width=(fw/k)+'px';x.style.height=(H/k)+'px';x.style.left=((W-fw)/2/k)+'px';}catch(e){}};
+/* Бүтэн дэлгэцийн товч (F11-тэй адил): баруун талын хоосон зайд. Esc эсвэл дахин дарж буцна */
+var fsB=null,fsCan=!!(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen);
+var fsOn=function(){return !!(document.fullscreenElement||document.webkitFullscreenElement)||(innerHeight>=screen.height-2&&innerWidth>=screen.width-2);};
+var fsIco=function(){if(!fsB)return;var on=fsOn(),api=!!(document.fullscreenElement||document.webkitFullscreenElement);
+fsB.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f0cf7a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'+(on?'<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>':'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>')+'</svg>';
+fsB.title=on?(api?'Бүтэн дэлгэцээс гарах (Esc)':'Бүтэн дэлгэцээс гарах: F11 дарна уу'):'Бүтэн дэлгэц (F11)';};
+var fsPos=function(W,fw){if(!fsB)return;var m=(W-fw)/2;fsB.style.right=Math.max(4,(m-42)/2)+'px';};
+if(fsCan){fsB=document.createElement('button');fsB.type='button';fsB.id='fsbtn';
+fsB.style.cssText='position:fixed;top:12px;width:42px;height:42px;padding:0;border-radius:10px;border:2px solid #c9972b;background:linear-gradient(#3a2a12,#1a1208);box-shadow:0 2px 8px #000a,inset 0 0 0 1px #ffe3a033;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;opacity:.85;transition:opacity .15s,transform .15s';
+fsB.onmouseenter=function(){fsB.style.opacity='1';fsB.style.transform='scale(1.06)';};fsB.onmouseleave=function(){fsB.style.opacity='.85';fsB.style.transform='none';};
+fsB.onclick=function(){try{var d=document,el=d.documentElement;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else if(!fsOn()){(el.requestFullscreen||el.webkitRequestFullscreen).call(el);}}catch(e){}setTimeout(function(){try{var x=document.getElementById('gfr');if(x&&x.contentWindow)x.contentWindow.focus();}catch(_){}},300);};
+document.body.appendChild(fsB);fsIco();
+document.addEventListener('fullscreenchange',fsIco);document.addEventListener('webkitfullscreenchange',fsIco);addEventListener('resize',fsIco);}
+var fit=function(){try{var x=document.getElementById('gfr');if(!x)return;var W=innerWidth,H=innerHeight,d=window.devicePixelRatio||1,sp=Math.max(1,Math.min(2,H*d/720)),k=Math.max(1,Math.min(4,sp/d)),fw=Math.min(W-96,Math.max(390,H*1.6));
+x.style.zoom=k;x.style.width=(fw/k)+'px';x.style.height=(H/k)+'px';x.style.left=((W-fw)/2/k)+'px';fsPos(W,fw);}catch(e){}};
 addEventListener('message',function(e){try{if(e.data==='dxxgo')document.documentElement.className='go';}catch(_){}});fit();addEventListener('resize',fit);try{matchMedia('(resolution: '+(window.devicePixelRatio||1)+'dppx)').addEventListener('change',fit);}catch(e){}
 var f=function(){try{var x=document.getElementById('gfr');if(x&&x.contentWindow)x.contentWindow.focus();}catch(e){}};setTimeout(f,800);document.addEventListener('visibilitychange',function(){if(!document.hidden)f();});
 }catch(e){}})();
@@ -11051,7 +11064,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='ce54d5e7cd';
+var UPDB='2448697cc5';
 (function(){
   const K='updTry';
   const _go=updGo;
