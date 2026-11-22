@@ -2568,7 +2568,8 @@ function bqCost(id,n){ let t=0; const h=S.animals[id]||0; for(let i=0;i<n;i++) t
 function bqRoom(id){ return Math.max(0,Math.min(penCap(id)-(S.animals[id]||0),herdMax()-herdCount())); }
 function bqMax(id){ let n=0, g=S.res.gold||0; const h=S.animals[id]||0, room=bqRoom(id); while(n<room){ const c=bqCost1(id,h+n); if(g<c) break; g-=c; n++; } return n; }
 function bqSet(id,v){ v=parseInt(v,10); if(!(v>=1)) v=1; BQ[id]=Math.min(v,99); try{ fillM(); }catch(e){} }
-function bqUI(id){ const n=Math.max(1,BQ[id]||1), cost=bqCost(id,n), c1=bqCost1(id,S.animals[id]||0);
+function bqUI(id){ const room=bqRoom(id); if(room<=0) return '<div style="flex:none;text-align:center;font-size:12px;font-weight:bold;color:#ffb0a0;line-height:1.3;width:110px">Хашаа дүүрэн<br><span style="font-weight:normal;color:#f1e4c4">Сайжруулна уу</span></div>';
+  const n=Math.max(1,Math.min(BQ[id]||1,room)), cost=bqCost(id,n), c1=bqCost1(id,S.animals[id]||0);
   const sp='cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:#1a1109;border:2px solid #c9972b;color:#ffe9b0;font-size:20px;font-weight:bold;line-height:1;user-select:none';
   return '<div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;width:124px">'+
     '<div style="display:flex;gap:6px;align-items:center;justify-content:center"><span style="'+sp+'" onclick="bqSet(\''+id+'\','+(n-1)+')">−</span>'+
@@ -11139,7 +11140,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='f16fc0f164';
+var UPDB='faf95fda1b';
 (function(){
   const K='updTry';
   const _go=updGo;
