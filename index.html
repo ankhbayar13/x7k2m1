@@ -3162,6 +3162,47 @@ function wmRefreshBar(){ const b=$('wmbar'); if(!b) return; const st=wmSt(), now
 setInterval(()=>{ if(WMV&&WMV.on) wmRefreshBar(); },1000);
 function wmDrawS(c,k,x,y,w){ const s=SPR[k]; if(!s||!s.img||!s.img.complete||!s.iw) return; c.drawImage(s.img,x-w/2,y-w*s.ih/s.iw,w,w*s.ih/s.iw); }
 function wmLabel(c,t,x,y,col,sz){ c.font='bold '+(sz||12)+'px sans-serif'; c.textAlign='center'; c.lineWidth=3; c.strokeStyle='#000'; c.strokeText(t,x,y); c.fillStyle=col||'#fff'; c.fillText(t,x,y); }
+/* аяны зам: далайг аль болох тойрч, заавал гатлах газар нь ⛵ хөлөг (зөвхөн дүрслэл, хугацаа өөрчлөгдөөгүй) */
+const WMR=new Map();
+function wmPlan(a,b){
+  const M=500, minx=Math.min(a.x,b.x)-M, maxx=Math.max(a.x,b.x)+M, miny=Math.min(a.y,b.y)-M, maxy=Math.max(a.y,b.y)+M;
+  const w=maxx-minx, h=maxy-miny, cs=Math.max(60,Math.ceil(Math.max(w,h)/140)), nx=Math.ceil(w/cs), ny=Math.ceil(h/cs);
+  const SEA=6, sea=new Uint8Array(nx*ny); let ns=0;
+  for(let j=0;j<ny;j++) for(let i=0;i<nx;i++){ const s=wmLandAt(minx+(i+.5)*cs,miny+(j+.5)*cs,0)?0:1; sea[j*nx+i]=s; ns+=s; }
+  if(!ns) return null;
+  const cell=p=>[Math.max(0,Math.min(nx-1,Math.floor((p.x-minx)/cs))),Math.max(0,Math.min(ny-1,Math.floor((p.y-miny)/cs)))];
+  const A=cell(a), B=cell(b), N=nx*ny, g=new Float64Array(N).fill(1e18), par=new Int32Array(N).fill(-1), done=new Uint8Array(N);
+  const heap=[]; const push=(f,i)=>{ heap.push([f,i]); let k=heap.length-1; while(k>0){ const p=(k-1)>>1; if(heap[p][0]<=heap[k][0]) break; const t=heap[p]; heap[p]=heap[k]; heap[k]=t; k=p; } };
+  const pop=()=>{ const top=heap[0], last=heap.pop(); if(heap.length){ heap[0]=last; let k=0; for(;;){ let l=2*k+1, r=l+1, m=k; if(l<heap.length&&heap[l][0]<heap[m][0]) m=l; if(r<heap.length&&heap[r][0]<heap[m][0]) m=r; if(m===k) break; const t=heap[m]; heap[m]=heap[k]; heap[k]=t; k=m; } } return top; };
+  const si=A[1]*nx+A[0], gi=B[1]*nx+B[0]; g[si]=0; push(Math.hypot(A[0]-B[0],A[1]-B[1])*cs,si);
+  while(heap.length){ const [f,u]=pop(); if(done[u]) continue; done[u]=1; if(u===gi) break; const ux=u%nx, uy=(u-ux)/nx;
+    for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){ if(!dx&&!dy) continue; const vx=ux+dx, vy=uy+dy; if(vx<0||vy<0||vx>=nx||vy>=ny) continue; const v=vy*nx+vx; if(done[v]) continue;
+      const st=Math.hypot(dx,dy)*cs*(1+(SEA-1)*(sea[u]+sea[v])/2), ng=g[u]+st; if(ng<g[v]){ g[v]=ng; par[v]=u; push(ng+Math.hypot(vx-B[0],vy-B[1])*cs,v); } } }
+  if(!done[gi]) return null;
+  let path=[]; for(let u=gi;u!==-1;u=par[u]){ const ux=u%nx, uy=(u-ux)/nx; path.push([minx+(ux+.5)*cs,miny+(uy+.5)*cs]); } path.reverse();
+  path[0]=[a.x,a.y]; path[path.length-1]=[b.x,b.y];
+  const stp=Math.max(20,cs/3), segCost=(p,q)=>{ const L=Math.hypot(q[0]-p[0],q[1]-p[1]), n=Math.max(1,Math.ceil(L/stp)); let c=0; for(let k=0;k<n;k++){ const t=(k+.5)/n; c+=(L/n)*(wmLandAt(p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t,0)?1:SEA); } return c; };
+  const cum=[0]; for(let i=1;i<path.length;i++) cum.push(cum[i-1]+segCost(path[i-1],path[i]));
+  const out=[path[0]]; let i=0;
+  while(i<path.length-1){ let pick=i+1; for(let j=Math.min(path.length-1,i+45);j>i+1;j--){ if(segCost(path[i],path[j])<=(cum[j]-cum[i])*1.03){ pick=j; break; } } out.push(path[pick]); i=pick; }
+  return out;
+}
+function wmRoute(a,b){
+  const key=Math.round(a.x)+','+Math.round(a.y)+'>'+Math.round(b.x)+','+Math.round(b.y), now=Date.now(); let r=WMR.get(key);
+  if(r&&(!r.tmp||now<r.tmp)) return r;
+  let pts=null; try{ if(typeof wmLandAt==='function') pts=wmPlan(a,b); }catch(e){ pts=null; }
+  const tmp=!pts; if(!pts) pts=[[a.x,a.y],[b.x,b.y]];
+  const seg=[], cum=[0]; for(let i=1;i<pts.length;i++){ const p=pts[i-1], q=pts[i], L=Math.hypot(q[0]-p[0],q[1]-p[1]), n=Math.max(1,Math.ceil(L/30)); let s=0; if(!tmp&&typeof wmLandAt==='function'){ for(let k=0;k<n;k++){ const t=(k+.5)/n; if(!wmLandAt(p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t,0)) s++; } } seg.push(s>n*0.5); cum.push(cum[i-1]+L); }
+  r={pts:pts,seg:seg,cum:cum,len:cum[cum.length-1]||1,tmp:tmp?now+1500:0}; WMR.set(key,r); if(WMR.size>200) WMR.delete(WMR.keys().next().value); return r;
+}
+function wmAlong(a,b,p){
+  const r=wmRoute(a,b), L=Math.max(0,Math.min(1,p))*r.len; let i=1; while(i<r.cum.length-1&&r.cum[i]<L) i++;
+  const p0=r.pts[i-1], p1=r.pts[i], d=r.cum[i]-r.cum[i-1]||1, t=Math.max(0,Math.min(1,(L-r.cum[i-1])/d));
+  const x=p0[0]+(p1[0]-p0[0])*t, y=p0[1]+(p1[1]-p0[1])*t; let sea=false; try{ sea=!r.tmp&&typeof wmLandAt==='function'&&!wmLandAt(x,y,0); }catch(e){} return {x:x,y:y,sea:sea};
+}
+function wmRLine(c,a,b){ const r=wmRoute(a,b); c.beginPath(); r.pts.forEach((q,i)=>{ if(i) c.lineTo(q[0],q[1]-10); else c.moveTo(q[0],q[1]-10); }); c.stroke(); }
+function wmShip(c,x,y){ try{ c.save(); c.font='70px serif'; c.textAlign='center'; c.textBaseline='middle'; c.globalAlpha=.95; c.shadowColor='rgba(0,0,0,.6)'; c.shadowBlur=4; c.fillText('⛵',x,y+14); c.restore(); }catch(e){} }
+
 function wmLoop(){
   if(!WMV||!WMV.on||!$('wmc')) return; const cv=$('wmc'), c=cv.getContext('2d'), D=wmGen(), dp=WMV.dp||1, z=WMV.z, t=performance.now()/1000;
   c.setTransform(1,0,0,1,0,0); c.fillStyle='#a3bcb4'; c.fillRect(0,0,cv.width,cv.height); c.setTransform(dp*z,0,0,dp*z,-WMV.x*z*dp,-WMV.y*z*dp); c.imageSmoothingEnabled=true; c.imageSmoothingQuality='high'; try{ wmWorldDraw(c,D,z,t); }catch(e){} try{ wmHistUnder(c,D,z,t); }catch(e){}
@@ -3173,9 +3214,9 @@ function wmLoop(){
   const items=[]; D.decor.forEach(d=>{ if(vis(d.x,d.y,d.big||(d.k==='mt'?170:70))) items.push({y:d.flat?-1e6+d.y:d.y,f:()=>wmDecorDraw(c,d)}); });
   // marches lines
   const st=wmSt(), now=Date.now();
-  st.m.forEach(m=>{ const e=wmEnt(m.tid)||m.tg; if(!e) return; const el=(now-m.t0)/1000; let p, back=false; if(m.ty==='gather'&&el>m.d+20){ p=1-Math.min(1,(el-m.d-20)/m.d); back=true; } else p=Math.min(1,el/m.d); const mx=D.C.x+(e.x-D.C.x)*p, my=D.C.y+(e.y-D.C.y)*p;
-    c.strokeStyle=m.ty==='gather'?'rgba(255,230,120,.75)':'rgba(255,90,70,.8)'; c.lineWidth=2/z+1; c.setLineDash([8,6]); c.beginPath(); c.moveTo(D.C.x,D.C.y-10); c.lineTo(e.x,e.y-10); c.stroke(); c.setLineDash([]);
-    items.push({y:my+999,f:()=>{ try{ wmArmyDraw(c,m,mx,my,t,back,e); }catch(x){ wmDrawS(c,'u_lightcav',mx,my,26); } }}); });
+  st.m.forEach(m=>{ const e=wmEnt(m.tid)||m.tg; if(!e) return; const el=(now-m.t0)/1000; let p, back=false; if(m.ty==='gather'&&el>m.d+20){ p=1-Math.min(1,(el-m.d-20)/m.d); back=true; } else p=Math.min(1,el/m.d); const _q=wmAlong(D.C,e,p), mx=_q.x, my=_q.y, _sea=_q.sea;
+    c.strokeStyle=m.ty==='gather'?'rgba(255,230,120,.75)':'rgba(255,90,70,.8)'; c.lineWidth=2/z+1; c.setLineDash([8,6]); wmRLine(c,D.C,e); c.setLineDash([]);
+    items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmArmyDraw(c,m,mx,_sea?my-14:my,t,back,e); }catch(x){ wmDrawS(c,'u_lightcav',mx,my,26); } }}); });
   try{ wmNodes(c,D,vis,items,t); }catch(e){ wmNodes0(c,D,vis,items,t); }
   try{ wmChests(c,D,vis,items,t); }catch(e){ wmChests0(c,D,vis,items,t); }
   try{ wmCamps(c,D,vis,items,t); }catch(e){ wmCamps0(c,D,vis,items,t); }
@@ -11076,7 +11117,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b4918a5bcc';
+var UPDB='cdcda3651f';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -22557,13 +22598,13 @@ const ox=W-52*U-6, oy=112*U, Ls=40*U, r0=10*U, lw=4*U, ro=r0+5*lw; c.fillStyle='
   const _n=wmNodes;
   wmNodes=function(c,D,vis,items,t){
     try{ const s=wmSt(), now=Date.now(), z=(typeof WMV!=='undefined'&&WMV&&WMV.z)||1;
-      const line=(e,col)=>{ c.save(); c.strokeStyle=col; c.lineWidth=2/z+1; c.setLineDash([8,6]); c.beginPath(); c.moveTo(D.C.x,D.C.y-10); c.lineTo(e.x,e.y-10); c.stroke(); c.restore(); };
-      (s.rt||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const p=Math.min(1,Math.max(0,(now-q.t0)/1000/q.d)), mx=e.x+(D.C.x-e.x)*p, my=e.y+(D.C.y-e.y)*p;
+      const line=(e,col)=>{ c.save(); c.strokeStyle=col; c.lineWidth=2/z+1; c.setLineDash([8,6]); wmRLine(c,D.C,e); c.restore(); };
+      (s.rt||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const p=Math.min(1,Math.max(0,(now-q.t0)/1000/q.d)), _q=wmAlong(D.C,e,1-p), mx=_q.x, my=_q.y, _sea=_q.sea;
         line(e,'rgba(140,220,120,.75)');
-        items.push({y:my+999,f:()=>{ try{ wmArmyDraw(c,{id:q.id,ty:'attack',hs:q.hs,pc:q.pc,tid:q.tid,t0:q.t0,d:q.d},mx,my,t,true,e); }catch(x){ try{ wmDrawS(c,'u_lightcav',mx,my,26); }catch(y){} } }}); });
-      (s.sct||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const el=(now-q.t0)/1000, p=el<=q.d?el/q.d:Math.max(0,1-(el-q.d)/q.d), mx=D.C.x+(e.x-D.C.x)*Math.min(1,p), my=D.C.y+(e.y-D.C.y)*Math.min(1,p);
+        items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmArmyDraw(c,{id:q.id,ty:'attack',hs:q.hs,pc:q.pc,tid:q.tid,t0:q.t0,d:q.d},mx,_sea?my-14:my,t,true,e); }catch(x){ try{ wmDrawS(c,'u_lightcav',mx,my,26); }catch(y){} } }}); });
+      (s.sct||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const el=(now-q.t0)/1000, p=el<=q.d?el/q.d:Math.max(0,1-(el-q.d)/q.d), _q=wmAlong(D.C,e,Math.min(1,p)), mx=_q.x, my=_q.y, _sea=_q.sea;
         line(e,'rgba(130,200,255,.8)');
-        items.push({y:my+999,f:()=>{ try{ wmDrawS(c,'u_lightcav',mx,my,46); wmLabel(c,'Тагнуул',mx,my+14,'#9fe0ff',10); }catch(x){} }}); });
+        items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmDrawS(c,'u_lightcav',mx,_sea?my-16:my,46); wmLabel(c,'Тагнуул',mx,my+14,'#9fe0ff',10); }catch(x){} }}); });
     }catch(x){}
     return _n.apply(this,arguments);
   };
