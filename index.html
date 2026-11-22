@@ -3218,7 +3218,7 @@ function wmLoop(){
   const items=[]; D.decor.forEach(d=>{ if(vis(d.x,d.y,d.big||(d.k==='mt'?170:70))) items.push({y:d.flat?-1e6+d.y:d.y,f:()=>wmDecorDraw(c,d)}); });
   // marches lines
   const st=wmSt(), now=Date.now();
-  st.m.forEach(m=>{ const e=wmEnt(m.tid)||m.tg; if(!e) return; const el=(now-m.t0)/1000; let p, back=false; if(m.ty==='gather'&&el>m.d+20){ p=1-Math.min(1,(el-m.d-20)/m.d); back=true; } else p=Math.min(1,el/m.d); const _q=wmAlong(D.C,e,p), mx=_q.x, my=_q.y, _sea=_q.sea;
+  st.m.forEach(m=>{ const e=wmEnt(m.tid)||m.tg; if(!e) return; const el=(now-m.t0)/1000; let p, back=false; if(m.ty==='gather'&&el>m.d+20){ p=1-Math.min(1,(el-m.d-20)/m.d); back=true; } else p=Math.min(1,el/m.d); const _q=wmAlong(D.C,e,p), mx=_q.x, my=_q.y, _sea=_q.sea||(e.n==='Дай Вьет');
     c.strokeStyle=m.ty==='gather'?'rgba(255,230,120,.75)':'rgba(255,90,70,.8)'; c.lineWidth=2/z+1; c.setLineDash([8,6]); wmRLine(c,D.C,e); c.setLineDash([]);
     items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my,WMF3[e.n]?5:1); wmArmyDraw(c,m,mx,_sea?my-24:my,t,back,e); }catch(x){ wmDrawS(c,'u_lightcav',mx,my,26); } }}); });
   try{ wmNodes(c,D,vis,items,t); }catch(e){ wmNodes0(c,D,vis,items,t); }
@@ -11121,7 +11121,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='023c586f61';
+var UPDB='02053f112a';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -22603,10 +22603,10 @@ const ox=W-52*U-6, oy=112*U, Ls=40*U, r0=10*U, lw=4*U, ro=r0+5*lw; c.fillStyle='
   wmNodes=function(c,D,vis,items,t){
     try{ const s=wmSt(), now=Date.now(), z=(typeof WMV!=='undefined'&&WMV&&WMV.z)||1;
       const line=(e,col)=>{ c.save(); c.strokeStyle=col; c.lineWidth=2/z+1; c.setLineDash([8,6]); wmRLine(c,D.C,e); c.restore(); };
-      (s.rt||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const p=Math.min(1,Math.max(0,(now-q.t0)/1000/q.d)), _q=wmAlong(D.C,e,1-p), mx=_q.x, my=_q.y, _sea=_q.sea;
+      (s.rt||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const p=Math.min(1,Math.max(0,(now-q.t0)/1000/q.d)), _q=wmAlong(D.C,e,1-p), mx=_q.x, my=_q.y, _sea=_q.sea||(e.n==='Дай Вьет');
         line(e,'rgba(140,220,120,.75)');
         items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my,WMF3[e.n]?5:1); wmArmyDraw(c,{id:q.id,ty:'attack',hs:q.hs,pc:q.pc,tid:q.tid,t0:q.t0,d:q.d},mx,_sea?my-24:my,t,true,e); }catch(x){ try{ wmDrawS(c,'u_lightcav',mx,my,26); }catch(y){} } }}); });
-      (s.sct||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const el=(now-q.t0)/1000, p=el<=q.d?el/q.d:Math.max(0,1-(el-q.d)/q.d), _q=wmAlong(D.C,e,Math.min(1,p)), mx=_q.x, my=_q.y, _sea=_q.sea;
+      (s.sct||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const el=(now-q.t0)/1000, p=el<=q.d?el/q.d:Math.max(0,1-(el-q.d)/q.d), _q=wmAlong(D.C,e,Math.min(1,p)), mx=_q.x, my=_q.y, _sea=_q.sea||(e.n==='Дай Вьет');
         line(e,'rgba(130,200,255,.8)');
         items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmDrawS(c,'u_lightcav',mx,_sea?my-24:my,46); wmLabel(c,'Тагнуул',mx,my+14,'#9fe0ff',10); }catch(x){} }}); });
     }catch(x){}
