@@ -2229,7 +2229,7 @@ function modalContent(k){
       const a=ANIMALS[id], cost=Math.floor(a.cost*(1+S.animals[id]*0.1)), prod=[];
       if(a.meat) prod.push('мах '+a.meat); if(a.milk) prod.push('сүү '+a.milk); if(a.wool) prod.push('ноос '+a.wool); if(a.gold) prod.push('🪙 '+a.gold);
       h+='<div class="card"><div class="row"><div style="display:flex;gap:8px;align-items:center">'+ico('an_'+id,56)+'<div><h3>'+a.n+' · '+S.animals[id]+'</h3><div class="sm">Минутад (нэг мал): '+prod.join(', ')+'</div></div></div>'+
-        ''+(PEN[id]&&!penOpen(id)?'<div style="flex:none;width:86px;text-align:center;font-size:11px;font-weight:bold;color:#ffb0a0;line-height:1.3">🔒 Гол гэр<br>'+PEN[id].req+'-р түвшин</div>':'<button class="btn" data-c="'+cost+'" data-h="1" onclick="buy(\''+id+'\','+cost+')">'+f(cost)+' 🪙</button>')+'</div></div>';
+        ''+(PEN[id]&&!penOpen(id)?'<div style="flex:none;width:86px;text-align:center;font-size:11px;font-weight:bold;color:#ffb0a0;line-height:1.3">🔒 Гол гэр<br>'+PEN[id].req+'-р түвшин</div>':bqUI(id,cost))+'</div></div>';
     }
     return h;
   }
@@ -2561,7 +2561,25 @@ function idleJobs(){
   }
 }
 setInterval(()=>{ document.querySelectorAll('.upt').forEach(el=>{ const u=S.upg&&S.upg[el.dataset.k]; if(u) el.textContent=fmtT(u.need-u.p); }); document.querySelectorAll('.upb').forEach(el=>{ const u=S.upg&&S.upg[el.dataset.k]; if(u){ const h=upRushLbl(u); if(el.dataset.l!==h){ el.dataset.l=h; el.innerHTML=h; } } }); },1000);
-function buy(k,c){ if(S.res.gold<c){ noGold(); return; } if(!penOpen(k)){ say('Гол гэр '+PEN[k].req+'-р түвшинд нээгдэнэ'); return; } if(penCap(k)<=0){ say('Малын хашаа барина уу'); return; } if((S.animals[k]||0)>=penCap(k)||herdCount()>=herdMax()){ say(PEN[k].n+' дүүрэн. Сайжруулна уу'); return; } S.res.gold-=c; S.animals[k]++; refresh(); }
+/* мал худалдаж авахдаа тоо оруулах */
+var BQ={};
+function bqCost1(id,have){ return Math.floor(ANIMALS[id].cost*(1+have*0.1)); }
+function bqCost(id,n){ let t=0; const h=S.animals[id]||0; for(let i=0;i<n;i++) t+=bqCost1(id,h+i); return t; }
+function bqRoom(id){ return Math.max(0,Math.min(penCap(id)-(S.animals[id]||0),herdMax()-herdCount())); }
+function bqMax(id){ let n=0, g=S.res.gold||0; const h=S.animals[id]||0, room=bqRoom(id); while(n<room){ const c=bqCost1(id,h+n); if(g<c) break; g-=c; n++; } return n; }
+function bqSet(id,v){ v=parseInt(v,10); if(!(v>=1)) v=1; BQ[id]=Math.min(v,99); try{ fillM(); }catch(e){} }
+function bqUI(id){ const n=Math.max(1,BQ[id]||1), cost=bqCost(id,n), c1=bqCost1(id,S.animals[id]||0);
+  return '<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:5px;width:156px">'+
+    '<div style="display:flex;gap:3px;align-items:center;justify-content:center"><button class="btn" style="padding:4px 9px;min-width:0" onclick="bqSet(\''+id+'\','+(n-1)+')">−</button>'+
+    '<input type="number" min="1" max="99" value="'+n+'" style="width:44px;text-align:center;font:inherit;font-weight:bold;padding:4px 2px;border-radius:6px;border:2px solid #c9972b;background:#1a1109;color:#ffe9b0" onchange="bqSet(\''+id+'\',this.value)" onclick="this.select()">'+
+    '<button class="btn" style="padding:4px 9px;min-width:0" onclick="bqSet(\''+id+'\','+(n+1)+')">+</button>'+
+    '<span style="cursor:pointer;background:linear-gradient(#e8b84a,#b8841f);color:#2a1a0a;border:1px solid #6b4a14;border-radius:7px;padding:7px 7px;font-size:11px;font-weight:bold;white-space:nowrap;box-shadow:0 2px 0 #4a3010" onclick="bqSet(\''+id+'\',Math.max(1,bqMax(\''+id+'\')))">Дээд</span></div>'+
+    '<button class="btn" data-c="'+c1+'" data-h="1" onclick="buy(\''+id+'\','+c1+','+n+')">'+(n>1?'×'+n+' · ':'')+f(cost)+' 🪙</button></div>'; }
+function buyN(k,n){ if(!penOpen(k)){ say('Гол гэр '+PEN[k].req+'-р түвшинд нээгдэнэ'); return; } if(penCap(k)<=0){ say('Малын хашаа барина уу'); return; }
+  const room=bqRoom(k); if(room<=0){ say(PEN[k].n+' дүүрэн. Сайжруулна уу'); return; }
+  let got=0; while(got<n&&got<room){ const c=bqCost1(k,S.animals[k]||0); if(S.res.gold<c) break; S.res.gold-=c; S.animals[k]=(S.animals[k]||0)+1; got++; }
+  if(!got){ noGold(); return; } if(got<n) say(got+' мал авлаа (бусад нь '+(got>=room?'хашаанд багтсангүй':'алт хүрсэнгүй')+')'); else if(got>1) say(got+' мал авлаа'); refresh(); }
+function buy(k,c,n){ if(n>1) return buyN(k,n); if(S.res.gold<c){ noGold(); return; } if(!penOpen(k)){ say('Гол гэр '+PEN[k].req+'-р түвшинд нээгдэнэ'); return; } if(penCap(k)<=0){ say('Малын хашаа барина уу'); return; } if((S.animals[k]||0)>=penCap(k)||herdCount()>=herdMax()){ say(PEN[k].n+' дүүрэн. Сайжруулна уу'); return; } S.res.gold-=c; S.animals[k]++; refresh(); }
 function sellAll(){
   qh('sell',1); let g=0; for(const k in SELL){ g+=S.res[k]*SELL[k]*sellMult(); S.res[k]=0; }
   S.res.gold+=g;
@@ -11121,7 +11139,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='e296e9d375';
+var UPDB='542d620c35';
 (function(){
   const K='updTry';
   const _go=updGo;
