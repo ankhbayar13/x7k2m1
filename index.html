@@ -3201,7 +3201,7 @@ function wmAlong(a,b,p){
   const x=p0[0]+(p1[0]-p0[0])*t, y=p0[1]+(p1[1]-p0[1])*t; let sea=false; try{ sea=!r.tmp&&typeof wmLandAt==='function'&&!wmLandAt(x,y,0); }catch(e){} return {x:x,y:y,sea:sea};
 }
 function wmRLine(c,a,b){ const r=wmRoute(a,b); c.beginPath(); r.pts.forEach((q,i)=>{ if(i) c.lineTo(q[0],q[1]-10); else c.moveTo(q[0],q[1]-10); }); c.stroke(); }
-let WMSHIP=null; function wmShip(c,x,y){ try{ if(!WMSHIP){ WMSHIP=new Image(); WMSHIP.src='rts/emx_ship.webp?v=1'; } c.save(); c.shadowColor='rgba(0,0,0,.6)'; c.shadowBlur=5; if(WMSHIP.complete&&WMSHIP.naturalWidth){ c.drawImage(WMSHIP,x-55,y-40,110,110); } else { c.font='70px serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText('⛵',x,y+14); } c.restore(); }catch(e){} }
+let WMSHIP=null; function wmShip(c,x,y){ try{ if(!WMSHIP){ WMSHIP=new Image(); WMSHIP.src='hf/nv/b1.webp?v=1'; } c.save(); c.shadowColor='rgba(0,0,0,.55)'; c.shadowBlur=6; if(WMSHIP.complete&&WMSHIP.naturalWidth){ const w=150, h=w*WMSHIP.naturalHeight/WMSHIP.naturalWidth; c.drawImage(WMSHIP,x-w/2,y-h*.72,w,h); } else { c.font='70px serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText('⛵',x,y+14); } c.restore(); }catch(e){} }
 
 function wmLoop(){
   if(!WMV||!WMV.on||!$('wmc')) return; const cv=$('wmc'), c=cv.getContext('2d'), D=wmGen(), dp=WMV.dp||1, z=WMV.z, t=performance.now()/1000;
@@ -3216,7 +3216,7 @@ function wmLoop(){
   const st=wmSt(), now=Date.now();
   st.m.forEach(m=>{ const e=wmEnt(m.tid)||m.tg; if(!e) return; const el=(now-m.t0)/1000; let p, back=false; if(m.ty==='gather'&&el>m.d+20){ p=1-Math.min(1,(el-m.d-20)/m.d); back=true; } else p=Math.min(1,el/m.d); const _q=wmAlong(D.C,e,p), mx=_q.x, my=_q.y, _sea=_q.sea;
     c.strokeStyle=m.ty==='gather'?'rgba(255,230,120,.75)':'rgba(255,90,70,.8)'; c.lineWidth=2/z+1; c.setLineDash([8,6]); wmRLine(c,D.C,e); c.setLineDash([]);
-    items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmArmyDraw(c,m,mx,_sea?my-14:my,t,back,e); }catch(x){ wmDrawS(c,'u_lightcav',mx,my,26); } }}); });
+    items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmArmyDraw(c,m,mx,_sea?my-34:my,t,back,e); }catch(x){ wmDrawS(c,'u_lightcav',mx,my,26); } }}); });
   try{ wmNodes(c,D,vis,items,t); }catch(e){ wmNodes0(c,D,vis,items,t); }
   try{ wmChests(c,D,vis,items,t); }catch(e){ wmChests0(c,D,vis,items,t); }
   try{ wmCamps(c,D,vis,items,t); }catch(e){ wmCamps0(c,D,vis,items,t); }
@@ -11117,7 +11117,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='74c50011aa';
+var UPDB='d453d928f3';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -22601,10 +22601,10 @@ const ox=W-52*U-6, oy=112*U, Ls=40*U, r0=10*U, lw=4*U, ro=r0+5*lw; c.fillStyle='
       const line=(e,col)=>{ c.save(); c.strokeStyle=col; c.lineWidth=2/z+1; c.setLineDash([8,6]); wmRLine(c,D.C,e); c.restore(); };
       (s.rt||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const p=Math.min(1,Math.max(0,(now-q.t0)/1000/q.d)), _q=wmAlong(D.C,e,1-p), mx=_q.x, my=_q.y, _sea=_q.sea;
         line(e,'rgba(140,220,120,.75)');
-        items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmArmyDraw(c,{id:q.id,ty:'attack',hs:q.hs,pc:q.pc,tid:q.tid,t0:q.t0,d:q.d},mx,_sea?my-14:my,t,true,e); }catch(x){ try{ wmDrawS(c,'u_lightcav',mx,my,26); }catch(y){} } }}); });
+        items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmArmyDraw(c,{id:q.id,ty:'attack',hs:q.hs,pc:q.pc,tid:q.tid,t0:q.t0,d:q.d},mx,_sea?my-34:my,t,true,e); }catch(x){ try{ wmDrawS(c,'u_lightcav',mx,my,26); }catch(y){} } }}); });
       (s.sct||[]).forEach(q=>{ const e=wmEnt(q.tid); if(!e) return; const el=(now-q.t0)/1000, p=el<=q.d?el/q.d:Math.max(0,1-(el-q.d)/q.d), _q=wmAlong(D.C,e,Math.min(1,p)), mx=_q.x, my=_q.y, _sea=_q.sea;
         line(e,'rgba(130,200,255,.8)');
-        items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmDrawS(c,'u_lightcav',mx,_sea?my-16:my,46); wmLabel(c,'Тагнуул',mx,my+14,'#9fe0ff',10); }catch(x){} }}); });
+        items.push({y:my+999,f:()=>{ try{ if(_sea) wmShip(c,mx,my); wmDrawS(c,'u_lightcav',mx,_sea?my-34:my,46); wmLabel(c,'Тагнуул',mx,my+14,'#9fe0ff',10); }catch(x){} }}); });
     }catch(x){}
     return _n.apply(this,arguments);
   };
