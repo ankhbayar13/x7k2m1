@@ -11139,7 +11139,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='a3f1b85e29';
+var UPDB='f16fc0f164';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -21027,7 +21027,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
   const _m=menuHTML;
   menuHTML=function(){
     let h=_m.apply(this,arguments);
-    try{ h=h.replace(/<button[^>]*onclick="cardOpen\(\)"[^>]*>[\s\S]*?<\/button>/,'<button onclick="cardOpen()" aria-label="Картын тулаан" style="grid-column:1/3;display:block;width:100%;padding:0;margin:2px 0 0;border:0;background:none;box-shadow:none;cursor:pointer;touch-action:manipulation"><img src="'+IMG+'" alt="Картын тулаан" style="display:block;width:100%;height:auto;filter:drop-shadow(0 3px 4px #0009)"></button>'); }catch(e){}
+    try{ h=h.replace(/<button[^>]*onclick="cardOpen\(\)"[^>]*>[\s\S]*?<\/button>/,'<button onclick="cardOpen()" aria-label="Картын тулаан" style="display:block;width:100%;padding:0;margin:4px 0 0;border:0;background:none;box-shadow:none;cursor:pointer;touch-action:manipulation"><img src="'+IMG+'" alt="Картын тулаан" style="display:block;width:100%;aspect-ratio:2/1;object-fit:contain;filter:drop-shadow(0 3px 4px #0009)"></button>'); }catch(e){}
     return h;
   };
 })();
@@ -21039,7 +21039,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
   const _m=menuHTML;
   menuHTML=function(){
     let h=_m.apply(this,arguments);
-    try{ h=h.replace(/<button[^>]*onclick="chessOpen\(\)"[^>]*>[\s\S]*?<\/button>/,'<button onclick="chessOpen()" aria-label="Шатрын арена" style="grid-column:1/3;display:block;width:100%;padding:0;margin:2px 0 0;border:0;background:none;box-shadow:none;cursor:pointer;touch-action:manipulation"><img src="'+IMG+'" alt="Шатрын арена" style="display:block;width:100%;height:auto;filter:drop-shadow(0 3px 4px #0009)"></button>'); }catch(e){}
+    try{ h=h.replace(/<button[^>]*onclick="chessOpen\(\)"[^>]*>[\s\S]*?<\/button>/,'<button onclick="chessOpen()" aria-label="Шатрын арена" style="display:block;width:100%;padding:0;margin:4px 0 0;border:0;background:none;box-shadow:none;cursor:pointer;touch-action:manipulation"><img src="'+IMG+'" alt="Шатрын арена" style="display:block;width:100%;aspect-ratio:2/1;object-fit:contain;filter:drop-shadow(0 3px 4px #0009)"></button>'); }catch(e){}
     return h;
   };
 })();
