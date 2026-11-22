@@ -1202,7 +1202,7 @@ function clampPos(){
   for(const k in S.pos){ const d=bdims(k,Math.max(1,S.bld[k])); S.pos[k].x=clamp(S.pos[k].x,2,WW-d.w-2); S.pos[k].y=clamp(S.pos[k].y,48,WH-d.h-8); }
 }
 function freeSpot(k,x,y){
-  const d=bdims(k,1), rc={x:x,y:y,w:d.w,h:d.h+(BUILD[k].extra||0)};
+  const d=bdims(k,(placing&&placing.move&&placing.k===k)?undefined:1), rc={x:x,y:y,w:d.w,h:d.h+(BUILD[k].extra||0)};
   if(rc.x<2||rc.x+rc.w>WW-2||rc.y<48||rc.y+rc.h>WH-8) return false;
   if(!rectOpen(rc)||fenceHit(rc)) return false;
   for(const j of BKEYS){ if(j===k||!S.pos[j]) continue; if(ovl(rc,brect(j),6)) return false; }
@@ -2041,7 +2041,7 @@ function draw(t){
   floats.forEach(fl=>{ ctx.globalAlpha=Math.max(0,1-fl.t/1.8); ctx.font='bold 6px monospace'; ctx.textAlign='center'; ctx.fillStyle='#000'; ctx.fillText(fl.txt,fl.x+0.5,fl.y+0.5); ctx.fillStyle=fl.col; ctx.fillText(fl.txt,fl.x,fl.y); });
   ctx.globalAlpha=1;
   if(placing){
-    const k=placing.k, d=bdims(k,1), ok=freeSpot(k,placing.x,placing.y);
+    const k=placing.k, d=bdims(k,placing.move?undefined:1), ok=freeSpot(k,placing.x,placing.y);
     ctx.globalAlpha=0.7;
     if(k==='hashaa') drawPen({x:placing.x,y:placing.y});
     else if(isFarmK(k)) drawFarm({x:placing.x,y:placing.y},0,k==='tarialan'?undefined:1);
@@ -2424,7 +2424,7 @@ function tap(x,y){
     for(const a of arrowList()){ if(x>=a.x-1&&x<=a.x+a.w+1&&y>=a.y-1&&y<=a.y+a.h+1){ x=a.r.x+a.r.w/2; y=a.r.y+a.r.h-1; break; } }
   }
   if(placing){
-    const d=bdims(placing.k,1);
+    const d=bdims(placing.k,placing.move?undefined:1);
     placing.x=snap(x-d.w/2); placing.y=snap(y-d.h/2);
     return;
   }
@@ -11121,7 +11121,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='02053f112a';
+var UPDB='6a53d9a7d1';
 (function(){
   const K='updTry';
   const _go=updGo;
