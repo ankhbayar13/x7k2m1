@@ -31,6 +31,18 @@ addEventListener('message',function(e){try{if(e.data==='dxxgo')document.document
 var f=function(){try{var x=document.getElementById('gfr');if(x&&x.contentWindow)x.contentWindow.focus();}catch(e){}};setTimeout(f,800);document.addEventListener('visibilitychange',function(){if(!document.hidden)f();});
 }catch(e){}})();
 </script>
+<script>/* guard: зураг хамгаалах хөнгөн хамгаалалт + сайтын жижиг тэмдэг (watermark) */
+(function(){try{
+  var okT=function(e){try{var t=e.target;return !!(t&&t.closest&&t.closest('input,textarea,select,[contenteditable=""],[contenteditable="true"]'));}catch(_){return false;}};
+  document.addEventListener('contextmenu',function(e){ if(!okT(e)) e.preventDefault(); },true);
+  document.addEventListener('dragstart',function(e){ if(!okT(e)) e.preventDefault(); },true);
+  var st=document.createElement('style');
+  st.textContent='img,canvas,video{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none}img,canvas{-webkit-user-select:none;user-select:none}#wmk{position:fixed;right:max(8px,env(safe-area-inset-right,0px));bottom:max(3px,env(safe-area-inset-bottom,0px));z-index:2147483000;pointer-events:none;font:600 10px/1 Georgia,serif;letter-spacing:.04em;color:rgba(255,255,255,.4);text-shadow:0 0 3px #000,0 1px 2px #000;user-select:none;-webkit-user-select:none}';
+  (document.head||document.documentElement).appendChild(st);
+  var mk=function(){ try{ if(document.getElementById('wmk')||!document.body) return; var d=document.createElement('div'); d.id='wmk'; d.textContent='talnutgiinhaan.com'; document.body.appendChild(d); }catch(_){} };
+  if(document.body) mk(); else document.addEventListener('DOMContentLoaded',mk);
+}catch(e){}})();
+</script>
 <title>Тал Нутгийн Хаан</title>
 <meta name="theme-color" content="#0f2a5c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -11064,7 +11076,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='2448697cc5';
+var UPDB='dd594579be';
 (function(){
   const K='updTry';
   const _go=updGo;
