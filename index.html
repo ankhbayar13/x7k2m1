@@ -3201,7 +3201,7 @@ function wmAlong(a,b,p){
   const x=p0[0]+(p1[0]-p0[0])*t, y=p0[1]+(p1[1]-p0[1])*t; let sea=false; try{ sea=!r.tmp&&typeof wmLandAt==='function'&&!wmLandAt(x,y,0); }catch(e){} return {x:x,y:y,sea:sea};
 }
 function wmRLine(c,a,b){ const r=wmRoute(a,b); c.beginPath(); r.pts.forEach((q,i)=>{ if(i) c.lineTo(q[0],q[1]-10); else c.moveTo(q[0],q[1]-10); }); c.stroke(); }
-function wmShip(c,x,y){ try{ c.save(); c.font='70px serif'; c.textAlign='center'; c.textBaseline='middle'; c.globalAlpha=.95; c.shadowColor='rgba(0,0,0,.6)'; c.shadowBlur=4; c.fillText('⛵',x,y+14); c.restore(); }catch(e){} }
+let WMSHIP=null; function wmShip(c,x,y){ try{ if(!WMSHIP){ WMSHIP=new Image(); WMSHIP.src='rts/emx_ship.webp?v=1'; } c.save(); c.shadowColor='rgba(0,0,0,.6)'; c.shadowBlur=5; if(WMSHIP.complete&&WMSHIP.naturalWidth){ c.drawImage(WMSHIP,x-55,y-40,110,110); } else { c.font='70px serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText('⛵',x,y+14); } c.restore(); }catch(e){} }
 
 function wmLoop(){
   if(!WMV||!WMV.on||!$('wmc')) return; const cv=$('wmc'), c=cv.getContext('2d'), D=wmGen(), dp=WMV.dp||1, z=WMV.z, t=performance.now()/1000;
@@ -11117,7 +11117,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='cdcda3651f';
+var UPDB='74c50011aa';
 (function(){
   const K='updTry';
   const _go=updGo;
