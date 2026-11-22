@@ -3298,10 +3298,13 @@ function btLayout(U,W,H,e){
   const y0=H*0.27, y1=H*0.71;
   U.filter(u=>!u.side).forEach(u=>{ const s=btSlotXY(u.slot||0,W,H); u.x=s[0]; u.y=s[1]; u.fdir=1; });
   U.filter(u=>u.side).forEach((u,k)=>{ const s=btSlotXY(k,W,H); u.slot=k; u.x=W-s[0]; u.y=s[1]; u.fdir=-1; });
-  /* Түүхэн аян (хэвтээ): харваачид хамгийн ард зүүн ирмэгт, бусад нь тэдний өмнө */
-  try{ const el=document.getElementById('btl'); if(e&&!e.hbf&&W>H&&el&&el.dataset.tar){ const own=U.filter(u=>!u.side&&!u.sup), ar=own.filter(u=>u.type==='archer'), ot=own.filter(u=>u.type!=='archer');
-    const FP=[[0.25,0.59],[0.21,0.44],[0.18,0.70],[0.31,0.30],[0.33,0.50]]; ot.forEach((u,k)=>{ const p=FP[Math.min(k,4)]; u.x=W*p[0]; u.y=H*p[1]; });
-    const ys=ar.length===1?[0.62]:ar.length===2?[0.44,0.68]:ar.map((_,k)=>0.25+0.45*k/(ar.length-1)); ar.forEach((u,k)=>{ u.x=W*0.08; u.y=H*ys[k]; }); U.filter(u=>!u.side&&u.sup).forEach(u=>{ u.x=W*0.185; u.y=H*0.5; }); } }catch(x){}
+  /* Түүхэн аян (хэвтээ): харваачид хамгийн ард ирмэгт, бусад нь тэдний өмнө (манай тал зүүн, дайсан баруун тал адил) */
+  try{ const el=document.getElementById('btl'); if(e&&!e.hbf&&W>H&&el&&el.dataset.tar){
+    const FP=[[0.25,0.59],[0.21,0.44],[0.18,0.70],[0.31,0.30],[0.33,0.50]];
+    [0,1].forEach(sd=>{ const own=U.filter(u=>(u.side?1:0)===sd&&!u.sup), ar=own.filter(u=>u.type==='archer'), ot=own.filter(u=>u.type!=='archer'), mx=x=>sd?W-x:x;
+      ot.forEach((u,k)=>{ const p=FP[Math.min(k,4)]; u.x=mx(W*p[0]); u.y=H*p[1]; });
+      const ys=ar.length===1?[0.62]:ar.length===2?[0.44,0.68]:ar.map((_,k)=>0.25+0.45*k/(ar.length-1)); ar.forEach((u,k)=>{ u.x=mx(W*(sd?0.10:0.08)); u.y=H*ys[k]; });
+      U.filter(u=>(u.side?1:0)===sd&&u.sup).forEach(u=>{ u.x=mx(W*0.185); u.y=H*0.5; }); }); } }catch(x){}
   const ne=U.filter(u=>u.side).length||1;
   U.forEach(u=>{ if(u.side) u.c0=Math.max(6,Math.round(e.p/ne/20)); });
 }
@@ -11144,7 +11147,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='72ed45148f';
+var UPDB='cf5c8ab148';
 (function(){
   const K='updTry';
   const _go=updGo;
