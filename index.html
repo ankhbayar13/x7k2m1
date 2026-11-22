@@ -2902,7 +2902,7 @@ const NLK=/^(en\d_[ac]|bd_)/;
 function startBattle(i,E){
   if(!Object.keys(S.heroes).length){ say('Эхлээд баатар дууд'); return; }
   const e=E||Object.assign({},ENEMIES[i],{rep:i<S.won}), fb=facBonus().m, rm=relicMul(), el=document.createElement('div'); el.id='btl';
-  el.className='wt'; try{ if(e.hbf) window.taRotBt(el); }catch(x){} el.innerHTML='<div id="bti"><canvas id="bc"></canvas><div id="btop"></div><div id="bbtn"><button onclick="btSpeed()" id="bsp">×1</button><button onclick="skToggle()" id="bauto">Авто</button><button onclick="btEnd(true)">Гарах</button></div><div id="bres"></div><div id="btpan"><div id="bthd"></div><div id="btray"></div><div id="bact"><button id="bexit" onclick="btEnd(true)">Гарах</button><button id="bq" onclick="btQuick()">⚡ Шилдэг</button><button id="bstart" onclick="btGo()">⚔ ЭХЛЭХ</button></div></div></div>';
+  el.className='wt'; try{ if(e.hbf||(typeof e.back==='string'&&e.back.indexOf('cmap:')===0)) window.taRotBt(el); }catch(x){} el.innerHTML='<div id="bti"><canvas id="bc"></canvas><div id="btop"></div><div id="bbtn"><button onclick="btSpeed()" id="bsp">×1</button><button onclick="skToggle()" id="bauto">Авто</button><button onclick="btEnd(true)">Гарах</button></div><div id="bres"></div><div id="btpan"><div id="bthd"></div><div id="btray"></div><div id="bact"><button id="bexit" onclick="btEnd(true)">Гарах</button><button id="bq" onclick="btQuick()">⚡ Шилдэг</button><button id="bstart" onclick="btGo()">⚔ ЭХЛЭХ</button></div></div></div>';
   document.body.appendChild(el);
   const BW=el.clientWidth||innerWidth, BH=el.clientHeight||innerHeight, port=BH>BW, VW=port?380:Math.max(560,Math.min(BW,820)), SC=BW/VW, W2=VW, H2=BH/SC;
   const cv2=$('bc'), dp=Math.min(3,(devicePixelRatio||1)*SC); cv2.width=Math.round(W2*dp); cv2.height=Math.round(H2*dp); cv2.style.cssText='width:100%;height:100%;display:block';
@@ -11140,7 +11140,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='faf95fda1b';
+var UPDB='3765bbb677';
 (function(){
   const K='updTry';
   const _go=updGo;
