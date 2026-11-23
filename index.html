@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='a55801d1ea';
+var UPDB='7bf309131c';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -24635,9 +24635,39 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
 (function(){
   function want(E){ return !!E&&E.back==='wmap'&&(E.kt==='kingdom'||E.kt==='clan'); }
   var D=null;
-  var _b=isBuild; isBuild=function(E){ var r=_b.apply(this,arguments); try{ if(want(E)&&RT){ RT.dep=1; mk(); } }catch(e){} return r; };
+  var _b=isBuild; isBuild=function(E){ var r=_b.apply(this,arguments); try{ if(want(E)&&RT){ RT.dep=1; snap(); mk(); restore(); } }catch(e){} return r; };
   var _s=isStep; isStep=function(dt){ if(RT&&RT.dep) return; return _s.apply(this,arguments); };
   var _t=isTap; isTap=function(px,py){ if(RT&&RT.dep){ try{ depTap(px,py); }catch(e){} return; } return _t.apply(this,arguments); };
+
+  /* ---- байрлал хадгалах: бүлэг бүрийн анхны байрнаас хэр зайтай тавьсныг (dx,dy) хадгална ---- */
+  function mine(ty){ return RT.G.filter(function(g){ return !g.side&&g.kind!=='hero'&&g.type===ty&&g.us.length; }); }
+  function cen(g){ var x=0,y=0,k=0; g.us.forEach(function(u){ if(u.hp>0){ x+=u.x; y+=u.y; k++; } }); return k?{x:x/k,y:y/k}:null; }
+  function snap(){ var S0={}; ['foot','cav','archer'].forEach(function(ty){ var gs=mine(ty); if(!gs.length) return; var x=0,y=0,k=0; gs.forEach(function(g){ var c=cen(g); if(c){ x+=c.x; y+=c.y; k++; } }); if(k) S0[ty]={x:x/k,y:y/k}; }); RT.depS=S0; }
+  function clampXY(x,y){ return {x:Math.max(40,Math.min(760,x)),y:Math.max(60,Math.min(ISH-60,y))}; }
+  function saveDep(){
+    try{ var R=RT, out={}, any=0; ['foot','cav','archer'].forEach(function(ty){ var st=R.depS&&R.depS[ty]; if(!st) return; var arr=[]; R.G.forEach(function(g){ if(g.side||g.kind==='hero'||g.type!==ty) return; var c=cen(g), n=Math.round(g.n||0); if(!c||n<1) return; arr.push({n:n,dx:Math.round(c.x-st.x),dy:Math.round(c.y-st.y)}); }); if(arr.length){ arr.sort(function(a,b){ return b.n-a.n; }); out[ty]=arr.slice(0,8); any=1; } });
+      if(any){ S.depSave={t:Date.now(),d:out}; save(); } }catch(e){}
+  }
+  function restore(){
+    try{ var R=RT, sv=S.depSave&&S.depSave.d; if(!sv||!R.depS) return; var used=0;
+      ['foot','cav','archer'].forEach(function(ty){ var ent=sv[ty], st=R.depS[ty]; if(!ent||!ent.length||!st) return; var gs=mine(ty); if(!gs.length) return;
+        gs.sort(function(a,b){ return b.us.length-a.us.length; }); var base=gs[0], tot=ent.reduce(function(a,e){ return a+e.n; },0), units=base.us.length;
+        // хэсэг тус бүрт хэдэн нэгж оноохыг тооцно (эхний хэсэг үлдсэнийг авна)
+        var ks=ent.map(function(e,i){ return i?Math.max(1,Math.round(e.n/tot*units)):0; }), sum=ks.reduce(function(a,b){ return a+b; },0);
+        while(sum>units-1&&ks.some(function(k,i){ return i&&k>1; })){ var j=ks.lastIndexOf(Math.max.apply(null,ks)); ks[j]--; sum--; }
+        if(sum>units-1) { ks=ks.map(function(k,i){ return i?0:k; }); }
+        var per=base.n/Math.max(1,base.us.length), groups=[base];
+        for(var i=1;i<ent.length;i++){ var k=ks[i]; if(!k) continue; var al=base.us.filter(function(u){ return u.hp>0; }); if(al.length<=k) break;
+          var pickU=al.slice(al.length-k), g2=rtsMkG(0,base.kind,base.type,{T:base.T,n:0,name:base.name,mode:'hold'});
+          base.us=base.us.filter(function(u){ return pickU.indexOf(u)<0; }); pickU.forEach(function(u){ u.g=g2; u.tg=null; }); g2.us=pickU; g2.per=per; g2.n=Math.round(per*k); base.n=Math.max(0,base.n-g2.n); g2.home={x:base.home.x,y:base.home.y}; g2.dest={x:base.dest.x,y:base.dest.y}; groups[i]=g2; }
+        groups.forEach(function(g,i){ var e=ent[i]||ent[0], p=clampXY(st.x+e.dx,st.y+e.dy), off=(typeof isOffX!=='undefined'&&isOffX[g.type])||0; isBlock(g,Math.max(40,Math.min(760,p.x-off)),p.y,1); used=1; }); });
+      if(used){ R.selSq=null; try{ isSelSync(); isHud(); }catch(e){} try{ say('💾 Өмнөх байрлал сэргээгдлээ'); }catch(e){} }
+    }catch(e){ try{ console.error(e); }catch(x){} }
+  }
+  function reset(){
+    try{ var R=RT; if(!R||!R.dep||!R.depS) return; ['foot','cav','archer'].forEach(function(ty){ var st=R.depS[ty]; if(!st) return; mine(ty).forEach(function(g,i){ var off=(typeof isOffX!=='undefined'&&isOffX[g.type])||0; isBlock(g,Math.max(40,Math.min(760,st.x-off)),Math.max(60,Math.min(ISH-60,st.y+i*34)),1); }); }); R.selSq=null; try{ isSelSync(); isHud(); }catch(e){} try{ say('↺ Анхны байрлал'); }catch(e){} }catch(e){}
+  }
+  window.isDepReset=reset;
   function own(px,py){
     var R=RT, best=null, bd=Math.max(20,26*R.z);
     R.U.forEach(function(u){ if(u.hp<=0||u.side) return; var sp=isScr(u.x,u.y), d=Math.hypot(sp.x-px,(sp.y-ISUH*R.z*0.5)-py); if(d<bd){ bd=d; best=u; } });
@@ -24665,7 +24695,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   },{passive:false});
   function end(){ try{ if(D&&RT) isHud(); }catch(e){} D=null; }
   document.addEventListener('pointerup',end); document.addEventListener('pointercancel',end);
-  function tier(n){ return n>=9500?'Түмэн':n>=950?'Мянгат':n>=95?'Зуут':'Аравт'; }
+  function tier(n){ return n>=10000?'Түмэн':n>=1000?'Мянгат':n>=100?'Зуут':'Аравт'; }
   var _d=isDraw;
   isDraw=function(now){
     var r=_d.apply(this,arguments);
@@ -24679,17 +24709,154 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   function mk(){
     var o=document.getElementById('isdep'); if(o) o.remove();
     o=document.createElement('div'); o.id='isdep';
-    o.style.cssText='position:fixed;right:10px;bottom:10px;z-index:2147482000;display:flex;flex-direction:column;gap:8px;background:rgba(30,20,8,.9);border:2px solid #c9972b;border-radius:12px;padding:8px 10px;color:#ffe9b0;font:12px/1.35 sans-serif;width:230px;max-width:40vw';
-    o.innerHTML='<div><b>⚔ Байрлуулах шат</b><br><span style="opacity:.85">Цэргээ дарж сонгоод чирж хүссэн газраа тавь. Доорх «Арван / Зуут / Мянгат» товчоор хэсгийн хэмжээг сонго.</span></div><button id="isdepgo" style="padding:10px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(#e0402f,#a52a1c);border:2px solid #ffd770;border-radius:10px;cursor:pointer;white-space:nowrap">⚔ ЭХЛЭХ</button>';
+    o.style.cssText='position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:2147482000;display:flex;align-items:center;gap:10px;background:rgba(30,20,8,.9);border:2px solid #c9972b;border-radius:12px;padding:8px 12px;color:#ffe9b0;font:13px/1.35 sans-serif;max-width:92vw';
+    o.innerHTML='<div style="max-width:300px"><b>⚔ Байрлуулах шат</b><br><span style="opacity:.85">Цэргээ дарж сонгоод чирж хүссэн газраа тавь. «Арван / Зуут / Мянгат» товчоор хэсгийн хэмжээг сонгоно.</span></div><button id="isdeprs" title="Анхны байрлал руу буцаах" style="padding:8px 10px;font-size:13px;font-weight:700;color:#ffe9b0;background:rgba(255,255,255,.1);border:2px solid #8a6a2a;border-radius:10px;cursor:pointer;white-space:nowrap">↺ Анхны</button><button id="isdepgo" style="padding:10px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(#e0402f,#a52a1c);border:2px solid #ffd770;border-radius:10px;cursor:pointer;white-space:nowrap">⚔ ЭХЛЭХ</button>';
     document.body.appendChild(o);
-    document.getElementById('isdepgo').onclick=function(ev){ ev.stopPropagation(); go(); };
+    document.getElementById('isdepgo').onclick=function(ev){ ev.stopPropagation(); go(); }; document.getElementById('isdeprs').onclick=function(ev){ ev.stopPropagation(); reset(); };
   }
   function go(){
-    var R=RT; if(!R||!R.dep) return; R.dep=0; R.selSq=null; R.sel=new Set(['foot','cav','archer']); try{ isSelSync(); isHud(); }catch(e){}
+    var R=RT; if(!R||!R.dep) return; saveDep(); R.dep=0; R.selSq=null; R.sel=new Set(['foot','cav','archer']); try{ isSelSync(); isHud(); }catch(e){}
     var o=document.getElementById('isdep'); if(o) o.remove(); try{ R.banner('ШТАБЫГ УСТГА!'); sfx('horn'); vib(40); }catch(e){}
   }
   window.isDepGo=go;
   setInterval(function(){ try{ if(!RT||!RT.dep){ var o=document.getElementById('isdep'); if(o) o.remove(); } }catch(e){} },700);
+})();
+</script>
+<script id="yamnet">
+/* Ямын сүлжээ: нээсэн ямууд бие биетэйгээ (болон нийслэлтэйгээ) холбогдож, холбогдсон тутамд бүх цуваа хурдсана, тагнуулын цуваа ч хурдсана. */
+(function(){
+  var LINK=950, HOME_LINK=1150, MAXB=0.30, FULL=0.05;
+  function built(){ var Y=(S.wm&&S.wm.yam)||{}; return wmYams().filter(function(y){ return Y[y.id]; }); }
+  /* нийслэлээс эхлэн холбогдсон ямуудын жагсаалт */
+  function net(){
+    var C=wmGen().C, ys=built(), seen={}, q=[], out=[], links=[];
+    ys.forEach(function(y){ if(Math.hypot(y.x-C.x,y.y-C.y)<=HOME_LINK){ seen[y.id]=1; q.push(y); links.push([C,y]); } });
+    while(q.length){ var a=q.shift(); out.push(a); ys.forEach(function(b){ if(seen[b.id]) return; if(Math.hypot(a.x-b.x,a.y-b.y)<=LINK){ seen[b.id]=1; q.push(b); links.push([a,b]); } }); }
+    /* зургийн хувьд хамгийн богино зам (Prim) — олон шугам давхцахгүй */
+    links=[]; var inT=[C], rest=out.slice();
+    while(rest.length){ var bd=1e9, bi=-1, bp=null; rest.forEach(function(y,i){ inT.forEach(function(a){ var d=Math.hypot(a.x-y.x,a.y-y.y); if(d<bd){ bd=d; bi=i; bp=a; } }); }); var y=rest.splice(bi,1)[0]; links.push([bp,y]); inT.push(y); }
+    return {n:out.length,ids:out.map(function(y){ return y.id; }),links:links,all:ys.length};
+  }
+  function bonus(){ var n=net().n; return Math.min(MAXB,n*0.03)+(n>=wmYams().length?FULL:0); }
+  window.yamNet=net; window.yamBonus=bonus;
+  /* зам, цувааны хугацаа */
+  var _f=wmYamF;
+  wmYamF=function(e){ var r=_f.apply(this,arguments); try{ var b=bonus(); if(b>0) r=Math.max(0.3,r*(1-b)); }catch(x){} return r; };
+  /* тагнуулын цуваа ч хурдсана */
+  var _sc=wmScout;
+  wmScout=function(id){ var n0=((S.wm&&S.wm.sct)||[]).length; _sc.apply(this,arguments);
+    try{ var L=(S.wm&&S.wm.sct)||[], q=L[L.length-1], b=bonus(); if(L.length>n0&&q&&q.tid===id&&b>0&&!q.yn){ q.d=Math.max(3,Math.round(q.d*(1-b))); q.yn=1; try{ wmRefreshBar(); }catch(x){} } }catch(x){} };
+  /* ямын цонх дээр сүлжээний мэдээлэл */
+  var _sh=wmYamSheet;
+  wmYamSheet=function(e,d){ var h=_sh.apply(this,arguments); try{ var N=net(), b=Math.round(bonus()*100), Y=(S.wm&&S.wm.yam)||{}, on=!!Y[e.id], inNet=N.ids.indexOf(e.id)>=0;
+      h+='<div class="sm" style="margin-top:8px;padding:8px;border-radius:8px;background:rgba(111,208,74,.12);border:1px solid rgba(111,208,74,.4)"><b>🕸 Ямын сүлжээ: '+N.n+'/'+wmYams().length+' холбогдсон</b><br>Бүх цуваа, тагнуул <b>−'+b+'%</b> хурдан'+(N.n>=wmYams().length?'<br>🏆 Бүрэн сүлжээ!':'')+'<br><span style="opacity:.8">'+(on?(inNet?'Энэ ям нийслэлтэй холбогдсон ✓':'Энэ ям нийслэл болон бусад ямтай холбогдоогүй — ойролцоох (≈'+LINK+') ям нээж холбо.'):'Нээгдсэн ям нийслэл, бусад ямтай ≈'+LINK+' хүртэл зайнд байвал сүлжээнд орно. Нэг ям +3%, дээд тал нь −30%.')+'</span></div>'; }catch(x){} return h; };
+  /* газрын зураг дээр холбоосыг зурна */
+  var _yd=wmYamDraw;
+  wmYamDraw=function(c,t,vis,items){ var r=_yd.apply(this,arguments);
+    try{ var N=net(); if(N.links.length) items.push({y:-1e6+8,f:function(){ var z=(typeof WMV!=='undefined'&&WMV&&WMV.z)||1, lw=Math.max(2.5,2.4/z); c.save(); c.lineCap='round'; c.setLineDash([lw*5,lw*3]); c.lineDashOffset=-((t||0)*18)%(lw*8);
+        N.links.forEach(function(l){ var a=l[0],b=l[1]; c.strokeStyle='rgba(0,0,0,.4)'; c.lineWidth=lw*2; c.beginPath(); c.moveTo(a.x,a.y); c.lineTo(b.x,b.y); c.stroke(); });
+        N.links.forEach(function(l){ var a=l[0],b=l[1]; c.strokeStyle='#9fee6f'; c.lineWidth=lw; c.beginPath(); c.moveTo(a.x,a.y); c.lineTo(b.x,b.y); c.stroke(); });
+        c.restore(); }}); }catch(x){}
+    return r; };
+  /* шинэ ям холбогдоход мэдэгдэнэ */
+  var last=-1; setInterval(function(){ try{ if(typeof S==='undefined'||!S.wm) return; var n=net().n; if(last>=0&&n>last){ say('🕸 Ямын сүлжээ '+n+'/'+wmYams().length+' · цуваа −'+Math.round(bonus()*100)+'%'); } last=n; }catch(x){} },1500);
+})();
+</script>
+<script id="hural">
+/* Клан хуралдай (чуулган): клан удирдагч зарлиг санал болгоно → гишүүд санал өгнө → олонх дэмжвэл 7 хоног бүх клан гишүүдэд бонус өгнө.
+   Санал нь clanlog/c{k}/e дотор (клан түүхтэй ижил хэлбэрээр: t,u,e,n,x) хадгалагдана. Технологийн «Их хуралдай»-аас тусдаа. */
+(function(){
+  var DEC=[
+    {n:'Тариа, малын зарлиг',d:'Тариа +12%, малын өсөлт +12%',ef:{eco_farm:0.12,eco_herd:0.12},h:'Хаврын хуралдаанаар нутгийн мал, тариаг арчлах журам тогтоов.'},
+    {n:'Наймааны зарлиг',d:'Зарах үнэ +12%, үйлдвэрлэл +8%',ef:{eco_sell:0.12,eco_prod:0.08},h:'Ямны замаар худалдаачид чөлөөтэй зорчино.'},
+    {n:'Цэргийн хуралдай',d:'Баатрын цохилт +8%, бие +8%',ef:{mil_atk:0.08,mil_hp:0.08},h:'Түмэн, мянгат, зуутын даргууд цуглаж, дайны бэлтгэлийг шалгана.'},
+    {n:'Өвлийн бэлтгэлийн зарлиг',d:'Агуулах +20%, боловсруулалт +10%',ef:{eco_cap:0.20,eco_proc:0.10},h:'Өвөлд бүх айл хоол, түлээгээ бүрдүүлнэ.'},
+    {n:'Нийтийн агнуурын зарлиг',d:'Ан агнуур +20%, хамгаалалт +8%',ef:{mil_hunt:0.20,mil_def:0.08},h:'Их агнуураар цэргийн эв нэгдлийг сайжруулна.'},
+    {n:'Мэргэдийн зөвлөл',d:'Туршлага +10%, шагналын оноо +10%',ef:{cul_xp:0.10,cul_pass:0.10},h:'Ахмад мэргэд залуучуудад ёс, мэдлэг заана.'}
+  ];
+  var WIN=24*3600e3, LIFE=7*864e5, H={ev:{},t:{},busy:0,err:'',vis:0};
+  function now(){ try{ return wmNow(); }catch(e){ return Date.now(); } }
+  function K(){ try{ return wmClanId(); }catch(e){ return -1; } }
+  function nm(){ try{ return String((S.prof&&S.prof.name)||'Хаан').slice(0,14); }catch(e){ return 'Хаан'; } }
+  function online(){ return !!window.hrSrc||(typeof ckOn==='function'&&ckOn()); }
+  var FB={
+    fetch:async function(k){ var x=FBM, s=await x.F.getDocs(x.F.query(x.F.collection(x.db,'clanlog','c'+k,'e'),x.F.orderBy('t','desc'),x.F.limit(300))); return s.docs.map(function(d){ return d.data(); }).filter(function(r){ return r&&(r.e==='hp'||r.e==='vt'); }); },
+    post:async function(k,r){ var x=FBM; await x.F.addDoc(x.F.collection(x.db,'clanlog','c'+k,'e'),r); }
+  };
+  function src(){ return window.hrSrc||FB; }
+  function leader(k){ try{ if(window.hrSrc) return !!window.hrLeader; var r=ckRole(k); return r==='own'||r==='act'; }catch(e){ return false; } }
+  function members(k){ try{ return window.hrSrc?(window.hrM||5):Math.max(1,ckRows(k).length); }catch(e){ return 1; } }
+  function okProposer(k,u){ if(window.hrSrc) return true; try{ var d=CKD.docs[k]; return !!d&&(u===d.ow||u===ckActing(k)); }catch(e){ return false; } }
+  function kicked(k,u){ try{ return !window.hrSrc&&ckKicked(CKD.docs[k],u); }catch(e){ return false; } }
+  /* Төлөв тооцоо: бүх үйлдэл зөвхөн түүхийн бичлэгээс гарна */
+  function calc(k){
+    var ev=H.ev[k]||[], t=now(), uid=(typeof CL!=='undefined'&&CL.uid)||'me', M=members(k), q=Math.min(M,Math.max(2,Math.ceil(M*0.3)));
+    var ps=ev.filter(function(r){ return r.e==='hp'&&okProposer(k,r.u)&&t-r.t<LIFE&&r.x>=0&&r.x<DEC.length; }).sort(function(a,b){ return a.t-b.t; });
+    var res=ps.map(function(p){
+      var by={}; ev.forEach(function(r){ if(r.e!=='vt'||Math.floor(r.x/2)!==p.t||r.t<p.t||r.t>p.t+WIN+60000||kicked(k,r.u)) return; if(!by[r.u]||by[r.u].t<r.t) by[r.u]=r; });
+      var yes=0,no=0; Object.keys(by).forEach(function(u){ if(by[u].x%2) yes++; else no++; });
+      var st; if(yes>M/2) st='passed'; else if(t<p.t+WIN) st='voting'; else st=(yes>no&&yes+no>=q)?'passed':'failed';
+      return {p:p,idx:p.x,yes:yes,no:no,M:M,q:q,st:st,end:p.t+WIN,until:p.t+LIFE,my:by[uid]?(by[uid].x%2?1:0):-1};
+    });
+    var cur=res.length?res[res.length-1]:null, act=null; for(var i=res.length-1;i>=0;i--){ if(res[i].st==='passed'){ act=res[i]; break; } }
+    return {cur:cur,act:act,q:q,M:M};
+  }
+  function hrS(){ if(!S.hr) S.hr={}; return S.hr; }
+  function apply(k){
+    var c=calc(k), h=hrS(); h.k=k; h.a=c.act?{i:c.act.idx,u:c.act.until,t:c.act.p.t}:null;
+    if(c.cur&&c.cur.st==='voting'&&c.cur.my<0&&h.seen!==c.cur.p.t){ h.seen=c.cur.p.t; try{ say('🏛 Клан хуралдай: шинэ зарлиг — санал өг'); sfx('ok'); }catch(e){} }
+    try{ save(); }catch(e){}
+    return c;
+  }
+  async function hrRef(force){
+    var k=K(); if(k<0||!online()) return null;
+    var f=false; if(force||!H.t[k]||Date.now()-H.t[k]>60000){ f=true; try{ var a=await src().fetch(k); var loc=(H.ev[k]||[]).filter(function(r){ return r._l&&!a.some(function(x){ return x.t===r.t&&x.u===r.u&&x.e===r.e; }); }); H.ev[k]=a.concat(loc); H.t[k]=Date.now(); H.err=''; }catch(e){ H.err='net'; H.t[k]=Date.now()-40000; } }
+    var c=apply(k); if(c) c.f=f; return c;
+  }
+  window.hrB=function(key){ try{ var h=S&&S.hr; if(!h||!h.a||h.k!==K()||h.a.u<=now()) return 0; var e=DEC[h.a.i]&&DEC[h.a.i].ef; return (e&&e[key])||0; }catch(x){ return 0; } };
+  window.hrState=function(){ var k=K(); return k<0?null:calc(k); };
+  window.hrEv=H;
+  async function post(k,r){ if(H.busy) return false; H.busy=1; try{ await src().post(k,r); r._l=1; (H.ev[k]=H.ev[k]||[]).push(r); H.t[k]=0; return true; }catch(e){ H.err='post'; try{ say('Илгээж чадсангүй. Холболт, эрхээ шалга'); sfx('err'); }catch(x){} return false; } finally{ H.busy=0; } }
+  window.hrPropose=async function(i){
+    var k=K(); if(k<0||!leader(k)) return; var c=calc(k); if(c.cur&&(c.cur.st==='voting'||c.act)){ try{ say('Одоогийн зарлиг дуусаагүй байна'); }catch(e){} return; }
+    var u=(typeof CL!=='undefined'&&CL.uid)||'me', ok=await post(k,{t:now(),u:u,e:'hp',n:nm(),x:i}); if(ok){ apply(k); try{ sfx('ok'); say('🏛 Зарлиг санал болголоо. 24 цагийн дотор санал авна'); }catch(e){} try{ if(typeof ckLogFetch==='function') ckLogFetch(k,true); }catch(e){} } try{ fillM(); }catch(e){}
+  };
+  window.hrVote=async function(yes){
+    var k=K(); if(k<0) return; var c=calc(k); if(!c.cur||c.cur.st!=='voting'||c.cur.my>=0) return;
+    var u=(typeof CL!=='undefined'&&CL.uid)||'me', ok=await post(k,{t:now(),u:u,e:'vt',n:nm(),x:c.cur.p.t*2+(yes?1:0)});
+    if(ok){ var h=hrS(); h.rw=h.rw||{}; if(!h.rw[c.cur.p.t]){ h.rw[c.cur.p.t]=1; try{ S.res.gold+=80; addXP(5); say('🗳 Санал бүртгэгдлээ · +80 🪙'); sfx('coin'); window.refresh(); }catch(e){} } apply(k); }
+    try{ fillM(); }catch(e){}
+  };
+  function left(ms){ var m=Math.max(0,Math.round(ms/60000)); return m>=1440?Math.floor(m/1440)+' өдөр':m>=60?Math.floor(m/60)+' цаг '+(m%60)+' мин':m+' мин'; }
+  function bar(c){ var tot=Math.max(1,c.yes+c.no); return '<div style="height:10px;border-radius:5px;background:#5a2a20;overflow:hidden;margin:6px 0"><i style="display:block;height:100%;width:'+(c.yes/tot*100)+'%;background:linear-gradient(90deg,#4f9d3a,#9fe39a)"></i></div>'; }
+  function html(){
+    H.vis=Date.now(); var k=K(), h='<h2>🏛 Клан хуралдай</h2>';
+    h+='<div class="card"><div class="sm" style="line-height:1.5">Клан чуулган: удирдагч зарлиг санал болгоно, гишүүд 24 цагийн дотор санал өгнө. Олонх дэмжвэл бүх гишүүдэд <b>7 хоног</b> бонус үйлчилнэ. Санал өгсөн гишүүн <b>+80 🪙</b> авна. (Судалгааны «Их хуралдай»-аас тусдаа.)</div></div>';
+    if(k<0){ return h+'<div class="card"><b>Та кланд нэгдээгүй байна.</b><div class="sm">Дэлхийн газрын зураг дээр «Клан»-аас нутгаа сонгож нэгдэнэ.</div></div>'; }
+    if(!online()){ return h+'<div class="card"><b>Клан сүлжээнд холбогдсонгүй.</b><div class="sm">Интернэт, нэвтрэлтээ шалгаад дахин нээнэ үү.</div></div>'; }
+    var c=calc(k), lead=leader(k), cn=(CLN[k]||{}).n||'';
+    h+='<div class="sm" style="margin:2px 2px 6px">Клан: <b>'+cn+'</b> · гишүүн ≈ '+c.M+' · дор хаяж '+c.q+' санал хэрэгтэй'+(H.err?' · <span style="color:#ff8a7a">холболт тасалдсан</span>':'')+'</div>';
+    if(c.act){ var D=DEC[c.act.idx]; h+='<div class="card" style="border:2px solid #9fe39a;background:rgba(79,157,58,.16)"><b>✅ Идэвхтэй зарлиг: '+D.n+'</b><div class="sm" style="color:#9fe39a;margin-top:2px">▲ '+D.d+'</div><div class="sm" style="opacity:.8">Үлдсэн: '+left(c.act.until-now())+'</div></div>'; }
+    var cur=c.cur;
+    if(cur&&cur.st==='voting'){ var D2=DEC[cur.idx];
+      h+='<div class="card" style="border:2px solid #ffd770"><b>🗳 Санал хураалт: '+D2.n+'</b><div class="sm" style="color:#9fe39a;margin-top:2px">▲ '+D2.d+'</div><div class="sm" style="opacity:.7;font-style:italic;margin:3px 0">'+D2.h+'</div>'+bar(cur)+
+        '<div class="row" style="justify-content:space-between"><span>👍 '+cur.yes+'</span><span>👎 '+cur.no+'</span><span class="sm">Дуусахад '+left(cur.end-now())+'</span></div>'+
+        (cur.my>=0?'<div class="sm" style="margin-top:6px">Та '+(cur.my?'👍 дэмжсэн':'👎 эсрэг')+' санал өгсөн.</div>':'<div class="row" style="gap:8px;margin-top:8px"><button class="btn" style="flex:1" onclick="hrVote(1)">👍 Дэмжих</button><button class="btn" style="flex:1" onclick="hrVote(0)">👎 Эсрэг</button></div>')+'</div>';
+    } else if(cur&&cur.st==='failed'){ h+='<div class="card"><b>❌ Сүүлийн санал: '+DEC[cur.idx].n+'</b><div class="sm">Олонхын дэмжлэг авсангүй ('+cur.yes+' 👍 / '+cur.no+' 👎). Удирдагч шинээр санал болгож болно.</div></div>'; }
+    var busy=(cur&&cur.st==='voting')||!!c.act;
+    h+='<div class="sm" style="margin:10px 2px 4px"><b>Зарлигууд</b>'+(lead?' — та удирдагч тул санал болгож болно':' — зөвхөн удирдагч санал болгоно')+'</div>';
+    DEC.forEach(function(d,i){ h+='<div class="card"><div class="row" style="align-items:flex-start;gap:8px"><div style="flex:1;min-width:0"><b>'+d.n+'</b><div class="sm" style="color:#9fe39a;margin-top:2px">▲ '+d.d+'</div><div class="sm" style="opacity:.7;font-style:italic;margin-top:3px">'+d.h+'</div></div>'+(lead?'<button class="btn" '+(busy?'disabled ':'')+'onclick="hrPropose('+i+')">Санал болгох</button>':'')+'</div></div>'; });
+    return h;
+  }
+  var _mc=modalContent; modalContent=function(k){ if(k==='hural'){ var r=html(); hrRef(false).then(function(c){ try{ if(c&&c.f&&typeof cur!=='undefined'&&cur==='hural') fillM(); }catch(e){} }); return r; } return _mc.apply(this,arguments); };
+  var _r=rsb; rsb=function(k){ var v=_r.apply(this,arguments); try{ v+=hrB(k); }catch(e){} return v; };
+  /* клан түүхэнд хуралдайн бичлэг */
+  try{ var _lt=ckLogTxt; ckLogTxt=function(r){ if(r&&r.e==='hp'){ var n='<b>'+esc2(r.n||'Удирдагч')+'</b>'; return '🏛 '+n+' зарлиг санал болголоо: «'+((DEC[r.x]||{}).n||'')+'»'; } return _lt.apply(this,arguments); }; }catch(e){}
+  try{ var _lf=ckLogFetch; ckLogFetch=async function(){ var r=await _lf.apply(this,arguments); try{ var k=arguments[0]; if(CK6.log[k]) CK6.log[k]=CK6.log[k].filter(function(x){ return x.e!=='vt'; }); r=CK6.log[k]||r; }catch(e){} return r; }; }catch(e){}
+  try{ MENU[1].i.push(['🏛','Клан хуралдай',"openM('hural')"]); }catch(e){}
+  /* ард талд 5 минут тутам шалгана (эхний удаа 25 сек-д) */
+  setTimeout(function(){ try{ hrRef(false); }catch(e){} },25000); setInterval(function(){ try{ hrRef(false); }catch(e){} },300000);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) setTimeout(function(){ try{ hrRef(false); }catch(e){} },2000); });
 })();
 </script>
 </body>
