@@ -11147,7 +11147,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='0afc6dc84c';
+var UPDB='60d7443d5e';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -23839,9 +23839,10 @@ window.RINGAR=0.4557291666666667;
    Нөөцөө зарна (хүссэн бараа нь өндөр үнэтэй), 1★ сахиус үргэлж, 2★ сахиус ховор (1 ширхэг, их үнэтэй) зарна. */
 (function(){
   var M=[
-    {id:'jin',  w:50, n:'Алтан улсын наймаачин', from:'Урд зүгээс, Алтан улс ба Тангутаар дамжин ирлээ.', goods:'Торго, цай, төмөр', want:['meat','wool','tos'], hi:1.9, p2:0.12, c1:[12000,15000], c2:[28000,31000]},
-    {id:'uig',  w:35, n:'Уйгур, Хорезмын наймаачин', from:'Баруун зүгээс, Уйгурын нутаг ба Хорезмоор дамжин ирлээ.', goods:'Үнэт чулуу, нандин даавуу', want:['esgii','wool','aaruul'], hi:2.0, p2:0.18, c1:[12000,15000], c2:[28000,31000]},
-    {id:'arab', w:15, n:'Арабын наймаачин', from:'Алс баруунаас, Перс ба Хорезмоор дамжин ирлээ.', goods:'Ховор эдлэл, дарс, нэрс', want:['airag','tos','buuz'], hi:2.3, p2:0.30, c1:[12000,15000], c2:[28000,31000]}
+    {id:'jin',  w:45, n:'Алтан улсын наймаачин', from:'Урд зүгээс, Алтан улс ба Тангутаар дамжин ирлээ.', goods:'Торго, цай, төмөр', want:['meat','wool','tos'], hi:1.9, p2:0.12, c1:[12000,15000], c2:[28000,31000]},
+    {id:'uig',  w:32, n:'Уйгур, Хорезмын наймаачин', from:'Баруун зүгээс, Уйгурын нутаг ба Хорезмоор дамжин ирлээ.', goods:'Үнэт чулуу, нандин даавуу', want:['esgii','wool','aaruul'], hi:2.0, p2:0.18, c1:[12000,15000], c2:[28000,31000]},
+    {id:'arab', w:13, n:'Арабын наймаачин', from:'Алс баруунаас, Перс ба Хорезмоор дамжин ирлээ.', goods:'Ховор эдлэл, дарс, нэрс', want:['airag','tos','buuz'], hi:2.3, p2:0.30, c1:[12000,15000], c2:[28000,31000]},
+    {id:'eur',  w:10, n:'Европын наймаачин', from:'Алс баруун Европоос, Франц, Ромын ба Византиар дамжин ирлээ.', goods:'Ховор эдлэл, хуяг, дарс', want:['airag','tos','buuz'], hi:2.5, p2:1, c1:[15000,18000], c2:[34000,38000]}
   ];
   window.SILK_M=M;
   function rp(a){ return Math.round((a[0]+Math.random()*(a[1]-a[0]))/100)*100; }
@@ -23893,17 +23894,18 @@ window.RINGAR=0.4557291666666667;
     if(id==='jin') return chain(D,['k10','k9','C']);
     if(id==='uig') return chain(D,['kw35','kw36','k8','C']);
     if(id==='arab') return chain(D,['kw29','kw37','kw36','k8','C']);
+    if(id==='eur') return chain(D,['kw2','kw4','kw11','kw12','kw27','kw29','kw37','kw36','k8','C']);
     return chain(D,['k9','C']); }
   function pos(pts,f){ var L=[],tot=0,i; for(i=1;i<pts.length;i++){ var d=Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y); L.push(d); tot+=d; }
     var s=Math.max(0,Math.min(1,f))*tot; for(i=0;i<L.length;i++){ if(s<=L[i]||i===L.length-1){ var u=L[i]?Math.min(1,s/L[i]):1; return {x:pts[i].x+(pts[i+1].x-pts[i].x)*u,y:pts[i].y+(pts[i+1].y-pts[i].y)*u,dx:pts[i+1].x-pts[i].x}; } s-=L[i]; } return {x:pts[pts.length-1].x,y:pts[pts.length-1].y,dx:1}; }
   function line(c,pts,w,col,dash){ c.beginPath(); c.moveTo(pts[0].x,pts[0].y); for(var i=1;i<pts.length;i++) c.lineTo(pts[i].x,pts[i].y);
     c.lineWidth=w; c.strokeStyle=col; c.setLineDash(dash||[]); c.stroke(); c.setLineDash([]); }
   function drawRoad(c,D,z,t){
-    try{ var main=chain(D,['k10','k9','k8','kw36','kw37','kw29']), b1=chain(D,['k9','C']), b2=chain(D,['k8','C']);
+    try{ var main=chain(D,['k10','k9','k8','kw36','kw37','kw29']), b1=chain(D,['k9','C']), b2=chain(D,['k8','C']), ext=chain(D,['kw29','kw27','kw12','kw11','kw4','kw2']);
       if(main.length<4) return;
       var w=Math.max(6,3.2/z), sc=w/6;
       c.save(); c.lineCap='round'; c.lineJoin='round';
-      [main,b1,b2].forEach(function(P,ix){ var ww=ix?w*0.7:w; line(c,P,ww*1.7,'rgba(50,30,8,.32)'); line(c,P,ww,ix?'#f3d78c':'#eab94f',[ww*2.6,ww*2]); });
+      [main,b1,b2,ext].forEach(function(P,ix){ if(P.length<2) return; var th=(ix===1||ix===2), ww=th?w*0.7:w; line(c,P,ww*1.7,'rgba(50,30,8,.32)'); line(c,P,ww,th?'#f3d78c':'#eab94f',[ww*2.6,ww*2]); });
       var a=K(D,'k8'), b=K(D,'kw36'), mx=(a.x+b.x)/2, my=(a.y+b.y)/2-24*sc, fs=Math.round(15*sc);
       c.font='bold '+fs+'px sans-serif'; c.textAlign='center'; c.lineWidth=fs*0.28; c.strokeStyle='#000'; c.strokeText('Торгоны зам',mx,my); c.fillStyle='#ffe29a'; c.fillText('Торгоны зам',mx,my);
       c.restore();
