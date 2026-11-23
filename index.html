@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='781fcf4714';
+var UPDB='1b9c6556f8';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -24579,6 +24579,55 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     }catch(x){}
   }
   setInterval(tick,500);
+})();
+</script>
+<script id="zasag">
+/* Их Засаг хууль: тосгоны дүрэм. Оноо зарцуулж заалт батлах → бодит бонус (rsb-ээр дамжина). */
+(function(){
+  var LAWS=[
+    {id:'z1',n:'Худал хэлж, хуурч болохгүй',c:1,d:'Зарах үнэ +8%',ef:{eco_sell:0.08},h:'Наймаа шударга байвал худалдаачин олон ирнэ.'},
+    {id:'z2',n:'Хулгайч, дээрэмчинд хатуу ял',c:2,d:'Үйлдвэрлэл +6%, хамгаалалт +10%',ef:{eco_prod:0.06,mil_def:0.10},h:'Хулгайч баригдвал тэр хүнд ял тооно.'},
+    {id:'z3',n:'Элчид халдаж болохгүй',c:1,d:'Шагналын оноо +15%',ef:{cul_pass:0.15},h:'Элч бол хааны нүд, чих. Түүнд хүрвэл бүгд өшөөтэй.'},
+    {id:'z4',n:'Нутаг нутгийн ёсыг хүндэл',c:2,d:'Туршлага +10%',ef:{cul_xp:0.10},h:'Дагаар орсон ард түмний шашин, ёсонд саад хийхгүй.'},
+    {id:'z5',n:'Морь, зэвсгийн үзлэг',c:2,d:'Баатрын цохилт +7%',ef:{mil_atk:0.07},h:'Дайчин бүр морь, зэвсгээ бэлэн байлгана.'},
+    {id:'z6',n:'Хуяг дуулгын шалгалт',c:2,d:'Баатрын бие +7%',ef:{mil_hp:0.07},h:'Тулалдаанд явахын өмнө хуяг, дуулга бүрэн эсэхийг шалгана.'},
+    {id:'z7',n:'Аравтын хариуцлага',c:3,d:'Баатрын хүч +8%, цэрэг +6%',ef:{mil_all:0.08,mil_troop:0.06},h:'Аравтаас нэг хүн зугтвал аравт бүгд хариуцна.'},
+    {id:'z8',n:'Тулалдаанаас зугтаж болохгүй',c:2,d:'Цохилт +12%',bad:'Үйлдвэрлэл −4%',ef:{mil_atk:0.12,eco_prod:-0.04},h:'Дайчин олныг цэрэгт татахад ажил хөдөлмөр багасна.'},
+    {id:'z9',n:'Нийтийн ан',c:1,d:'Ан агнуур +10%',ef:{mil_hunt:0.10},h:'Хаврын цагаас бусад үед хамтын ан хийнэ.'},
+    {id:'z10',n:'Малын тоо бүртгэх',c:1,d:'Малын өсөлт +8%',ef:{eco_herd:0.08},h:'Малын тоо бүртгэгдвэл арчилгаа сайн болно.'},
+    {id:'z11',n:'Нөөцийн агуулах',c:2,d:'Агуулахын багтаамж +10%',ef:{eco_cap:0.10},h:'Өвлийн нөөц бүрдсэн байх ёстой.'},
+    {id:'z12',n:'Хатуу цаазын ял',c:1,d:'Хамгаалалт +10%',bad:'Туршлага −5%',ef:{mil_def:0.10,cul_xp:-0.05},h:'Хатуу ял айдас төрүүлнэ, гэвч сурах хүсэл буурна.'}
+  ];
+  function zs(){ if(!S.zs) S.zs={on:{}}; if(!S.zs.on) S.zs.on={}; return S.zs; }
+  function budget(){ return 3+Math.floor((S.pl||1)/4); }
+  function used(){ var z=zs(), u=0; LAWS.forEach(function(l){ if(z.on[l.id]) u+=l.c; }); return u; }
+  window.zsB=function(k){ var z=S&&S.zs&&S.zs.on; if(!z) return 0; var v=0; LAWS.forEach(function(l){ if(z[l.id]&&l.ef[k]) v+=l.ef[k]; }); return v; };
+  window.zsTog=function(id){
+    var l=LAWS.filter(function(x){ return x.id===id; })[0]; if(!l) return; var z=zs();
+    if(z.on[id]){ delete z.on[id]; }
+    else { if(used()+l.c>budget()){ try{ say('Хуулийн оноо хүрэлцэхгүй. Түвшин нэмэгдэхэд оноо нэмэгдэнэ'); sfx('err'); }catch(e){} return; } z.on[id]=1; try{ sfx('ok'); }catch(e){} }
+    try{ save(); }catch(e){} try{ fillM(); }catch(e){}
+  };
+  function html(){
+    var z=zs(), b=budget(), u=used(), pct=Math.min(100,u/b*100);
+    var h='<h2>📜 Их Засаг</h2>'+
+      '<div class="card"><div class="sm" style="line-height:1.5">«Хааны дээр хууль». Заалт бүр нь тосгонд бодит нөлөө үзүүлнэ. Оноо хязгаартай тул аль заалтыг батлахаа шийднэ. Хүссэн үедээ өөрчилж болно.</div>'+
+      '<div style="margin-top:8px;display:flex;justify-content:space-between;font-weight:700"><span>⚖ Хуулийн оноо</span><span>'+u+' / '+b+'</span></div>'+
+      '<div style="height:8px;border-radius:4px;background:#1c130a;margin-top:4px;overflow:hidden"><i style="display:block;height:100%;width:'+pct+'%;background:linear-gradient(90deg,#c9972b,#ffd770)"></i></div>'+
+      '<div class="sm" style="margin-top:4px;opacity:.8">Оноо түвшин нэмэгдэхэд өснө (4 түвшин тутамд +1).</div></div>';
+    LAWS.forEach(function(l){
+      var on=!!z.on[l.id], can=on||(u+l.c<=b);
+      h+='<div class="card" style="'+(on?'border:2px solid #ffd770;background:rgba(201,151,43,.16)':'')+'">'+
+        '<div class="row" style="align-items:flex-start;gap:8px"><div style="flex:1;min-width:0"><b>'+l.n+'</b>'+
+        '<div class="sm" style="color:#9fe39a;margin-top:2px">▲ '+l.d+'</div>'+(l.bad?'<div class="sm" style="color:#ff8a7a">▼ '+l.bad+'</div>':'')+
+        '<div class="sm" style="opacity:.7;margin-top:3px;font-style:italic">'+l.h+'</div></div>'+
+        '<div style="text-align:right"><div class="sm" style="margin-bottom:4px">⚖ '+l.c+'</div><button class="btn" '+(can?'':'disabled ')+'onclick="zsTog(\''+l.id+'\')">'+(on?'Цуцлах':'Батлах')+'</button></div></div></div>';
+    });
+    return h;
+  }
+  var _mc=modalContent; modalContent=function(k){ if(k==='zasag') return html(); return _mc.apply(this,arguments); };
+  var _r=rsb; rsb=function(k){ var v=_r.apply(this,arguments); try{ v+=zsB(k); }catch(e){} return v; };
+  try{ MENU[1].i.push(['📜','Их Засаг',"openM('zasag')"]); }catch(e){}
 })();
 </script>
 </body>
