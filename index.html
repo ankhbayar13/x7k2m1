@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='1b9c6556f8';
+var UPDB='a55801d1ea';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -24628,6 +24628,68 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _mc=modalContent; modalContent=function(k){ if(k==='zasag') return html(); return _mc.apply(this,arguments); };
   var _r=rsb; rsb=function(k){ var v=_r.apply(this,arguments); try{ v+=zsB(k); }catch(e){} return v; };
   try{ MENU[1].i.push(['📜','Их Засаг',"openM('zasag')"]); }catch(e){}
+})();
+</script>
+<script id="deploy">
+/* Улс эзлэх, клан дайны тулалдааны өмнөх байрлуулалт: цэргээ (10 / 100 / 1000-аар) чирж хүссэн газраа тавиад «Эхлэх» дарна. */
+(function(){
+  function want(E){ return !!E&&E.back==='wmap'&&(E.kt==='kingdom'||E.kt==='clan'); }
+  var D=null;
+  var _b=isBuild; isBuild=function(E){ var r=_b.apply(this,arguments); try{ if(want(E)&&RT){ RT.dep=1; mk(); } }catch(e){} return r; };
+  var _s=isStep; isStep=function(dt){ if(RT&&RT.dep) return; return _s.apply(this,arguments); };
+  var _t=isTap; isTap=function(px,py){ if(RT&&RT.dep){ try{ depTap(px,py); }catch(e){} return; } return _t.apply(this,arguments); };
+  function own(px,py){
+    var R=RT, best=null, bd=Math.max(20,26*R.z);
+    R.U.forEach(function(u){ if(u.hp<=0||u.side) return; var sp=isScr(u.x,u.y), d=Math.hypot(sp.x-px,(sp.y-ISUH*R.z*0.5)-py); if(d<bd){ bd=d; best=u; } });
+    return best;
+  }
+  function select(u){
+    var R=RT;
+    if(R.lvl) isSquad(u); else { R.selSq=new Set([u.g]); isSelSync(); isHud(); }
+  }
+  function place(gs,x,y){
+    gs.forEach(function(g){ var off=(typeof isOffX!=='undefined'&&isOffX[g.type])||0; isBlock(g,Math.max(40,Math.min(760,x-off)),Math.max(60,Math.min(ISH-60,y)),1); });
+  }
+  function depTap(px,py){
+    var R=RT, u=own(px,py); if(u){ select(u); return; }
+    var gs=isGroups(); if(!gs.length){ try{ say('Эхлээд цэргээ дарж сонго'); }catch(e){} return; }
+    var w=isMap(px,py); place(gs,w.x,w.y); try{ sfx('click'); }catch(e){}
+  }
+  document.addEventListener('pointerdown',function(ev){
+    try{ var R=RT; if(!R||!R.dep||!ev.target||ev.target.id!=='rcv') return; var u=own(ev.clientX,ev.clientY); if(!u) return;
+      ev.stopImmediatePropagation(); select(u); var gs=isGroups(); if(!gs.length) return; var w=isMap(ev.clientX,ev.clientY), g=gs[0], cx=0,cy=0,k=0;
+      g.us.forEach(function(x){ if(x.hp>0){ cx+=x.x; cy+=x.y; k++; } }); if(k){ cx/=k; cy/=k; } D={gs:gs,ox:cx-w.x,oy:cy-w.y,moved:0,sx:ev.clientX,sy:ev.clientY}; }catch(e){}
+  },true);
+  document.addEventListener('pointermove',function(ev){
+    try{ if(!D||!RT||!RT.dep) return; if(!D.moved&&Math.hypot(ev.clientX-D.sx,ev.clientY-D.sy)<8) return; D.moved=1; var w=isMap(ev.clientX,ev.clientY); place(D.gs,w.x+D.ox,w.y+D.oy); ev.preventDefault(); }catch(e){}
+  },{passive:false});
+  function end(){ try{ if(D&&RT) isHud(); }catch(e){} D=null; }
+  document.addEventListener('pointerup',end); document.addEventListener('pointercancel',end);
+  function tier(n){ return n>=9500?'Түмэн':n>=950?'Мянгат':n>=95?'Зуут':'Аравт'; }
+  var _d=isDraw;
+  isDraw=function(now){
+    var r=_d.apply(this,arguments);
+    try{ var R=RT; if(R&&R.dep&&R.ctx){ var c=R.ctx; c.save(); c.setTransform(R.dp,0,0,R.dp,0,0); c.textAlign='center'; c.font='bold 11px sans-serif';
+      R.G.forEach(function(g){ if(g.side||g.kind==='hero') return; var a=g.us.filter(function(u){ return u.hp>0; }); if(!a.length) return; var n=Math.round(g.n||a.length); if(n<1) return;
+        var x=0,y=1e9; a.forEach(function(u){ x+=u.x; if(u.y<y) y=u.y; }); x/=a.length; var sp=isScr(x,y), s=tier(n)+' · '+n, w=c.measureText(s).width+10, ty=sp.y-ISUH*R.z-8;
+        c.fillStyle='rgba(30,20,8,.82)'; c.fillRect(sp.x-w/2,ty-10,w,15); c.fillStyle=(R.selSq&&R.selSq.has(g))?'#9fe39a':'#ffe29a'; c.fillText(s,sp.x,ty+1); });
+      c.restore(); } }catch(e){}
+    return r;
+  };
+  function mk(){
+    var o=document.getElementById('isdep'); if(o) o.remove();
+    o=document.createElement('div'); o.id='isdep';
+    o.style.cssText='position:fixed;right:10px;bottom:10px;z-index:2147482000;display:flex;flex-direction:column;gap:8px;background:rgba(30,20,8,.9);border:2px solid #c9972b;border-radius:12px;padding:8px 10px;color:#ffe9b0;font:12px/1.35 sans-serif;width:230px;max-width:40vw';
+    o.innerHTML='<div><b>⚔ Байрлуулах шат</b><br><span style="opacity:.85">Цэргээ дарж сонгоод чирж хүссэн газраа тавь. Доорх «Арван / Зуут / Мянгат» товчоор хэсгийн хэмжээг сонго.</span></div><button id="isdepgo" style="padding:10px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(#e0402f,#a52a1c);border:2px solid #ffd770;border-radius:10px;cursor:pointer;white-space:nowrap">⚔ ЭХЛЭХ</button>';
+    document.body.appendChild(o);
+    document.getElementById('isdepgo').onclick=function(ev){ ev.stopPropagation(); go(); };
+  }
+  function go(){
+    var R=RT; if(!R||!R.dep) return; R.dep=0; R.selSq=null; R.sel=new Set(['foot','cav','archer']); try{ isSelSync(); isHud(); }catch(e){}
+    var o=document.getElementById('isdep'); if(o) o.remove(); try{ R.banner('ШТАБЫГ УСТГА!'); sfx('horn'); vib(40); }catch(e){}
+  }
+  window.isDepGo=go;
+  setInterval(function(){ try{ if(!RT||!RT.dep){ var o=document.getElementById('isdep'); if(o) o.remove(); } }catch(e){} },700);
 })();
 </script>
 </body>
