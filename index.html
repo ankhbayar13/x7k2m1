@@ -8355,12 +8355,19 @@ function jamBtnUpd(){
 
 
 var WMMP={}, WMMK='';
+// уул, нуур, далай дээр тоглогчийн барилга тавихгүй
+var wmBlkC=null;
+function wmBlk(x,y){ try{ const D=wmGen(); if(!wmBlkC||wmBlkC.D!==D){ wmBlkC={D:D,mt:(D.decor||[]).filter(d=>d.k==='mt')}; }
+  if(typeof wmLandAt==='function'&&!wmLandAt(x,y,30)) return true;
+  if(typeof wmInLake==='function'&&wmInLake(x,y,50)) return true;
+  return wmBlkC.mt.some(d=>{ const sc=d.s||1; return Math.abs(x-d.x)<62*sc*0.9+35&&Math.abs(y-(d.y-30*sc))<44*sc+35; }); }catch(e){ return false; } }
+
 // давхцахгүй байрлуулалт: pts=[{id,x,y}] (эхний байрлал), fixed=[{x,y,w,h}] хориотой хэсэг
 function wmSpread(pts,fixed,cx,cy,ky,DX,DY){
-  const placed=[], bad=(x,y)=>placed.some(p=>Math.abs(p.x-x)<DX&&Math.abs(p.y-y)<DY)||fixed.some(f=>Math.abs(f.x-x)<f.w&&Math.abs(f.y-y)<f.h);
+  const placed=[], bad=(x,y)=>placed.some(p=>Math.abs(p.x-x)<DX&&Math.abs(p.y-y)<DY)||fixed.some(f=>Math.abs(f.x-x)<f.w&&Math.abs(f.y-y)<f.h)||wmBlk(x,y);
   pts.forEach(p=>{ let x=p.x, y=p.y;
     if(bad(x,y)){ const a0=Math.atan2((p.y-cy)/ky,p.x-cx), r0=Math.hypot(p.x-cx,(p.y-cy)/ky); let ok=0;
-      for(let k=1;k<=60&&!ok;k++){ const sg=k%2?1:-1, da=Math.ceil(k/2)*0.32*sg, rr=r0+Math.floor((k-1)/6)*45, nx=Math.max(80,Math.min(WM_W-80,cx+Math.cos(a0+da)*rr)), ny=Math.max(120,Math.min(WM_H-80,cy+Math.sin(a0+da)*rr*ky)); if(!bad(nx,ny)){ x=nx; y=ny; ok=1; } } }
+      for(let k=1;k<=150&&!ok;k++){ const sg=k%2?1:-1, da=Math.ceil(k/2)*0.32*sg, rr=r0+Math.floor((k-1)/6)*45, nx=Math.max(80,Math.min(WM_W-80,cx+Math.cos(a0+da)*rr)), ny=Math.max(120,Math.min(WM_H-80,cy+Math.sin(a0+da)*rr*ky)); if(!bad(nx,ny)){ x=nx; y=ny; ok=1; } } }
     p.x=x; p.y=y; placed.push({x:x,y:y}); });
 }
 /* 182: газрын зураг дээр кланы гишүүдийн гэр — кланы жагсаалттай нэгтгэж, хассан гишүүнийг нууна */
@@ -8411,7 +8418,7 @@ function nfBuild(){
     (D.lakes||[]).forEach(l=>{ const r=(l.r||l.rx||120)+40; fx.push({x:l.x,y:l.y,w:r,h:(l.ry||l.r||120)*0.8+40}); });
     (D.decor||[]).forEach(d=>{ if(d.k==='mt'){ const sc=d.s||1; fx.push({x:d.x,y:d.y-44*sc+15,w:62*sc*1.3+55,h:44*sc+40}); } }); }catch(e){}
   const cand=[]; for(let gx=170;gx<=WM_W-170;gx+=115) for(let gy=220;gy<=WM_H-160;gy+=100){ const hh=hsh(gx+'_'+gy), x=gx+((hh%41)-20), y=gy+(((hh>>>6)%41)-20);
-    if(CLN.some((q,i)=>i>=0&&Math.abs(x-q.x)<340&&Math.abs(y-q.y)<260)) continue; if(fx.some(f=>Math.abs(x-f.x)<f.w&&Math.abs(y-f.y)<f.h)) continue; cand.push({x:x,y:y}); }
+    if(CLN.some((q,i)=>i>=0&&Math.abs(x-q.x)<340&&Math.abs(y-q.y)<260)) continue; if(fx.some(f=>Math.abs(x-f.x)<f.w&&Math.abs(y-f.y)<f.h)||wmBlk(x,y)) continue; cand.push({x:x,y:y}); }
   const used={}, pts=L.map(x=>x.id).sort().map(id=>{ let k=hsh(String(id))%Math.max(1,cand.length), g=0; while(used[k]&&g<cand.length){ k=(k+1)%cand.length; g++; } used[k]=1; const c=cand[k]||NF_C; return {id:id,x:c.x,y:c.y}; });
   const pos={}; pts.forEach(p=>{ pos[p.id]={x:p.x,y:p.y}; });
   WMNF.ents=L.map(x=>{ const q=pos[x.id]||{x:NF_C.x,y:NF_C.y}, t0=x.t||0; const e={id:'nf'+x.id,t:'clan',x:q.x,y:q.y,n:esc2(String(x.n||'Тоглогч').slice(0,12)),p:Math.round(x.p),real:1,nf:1,cl:-1,c:'#9a9a9a',ty:TY[hsh(String(x.id))%3],uid:x.id,rs:x.rs||null,dh:(x.v&&x.v.h)||null,v:x.v,gl:(x.v&&x.v.b&&x.v.b.ger)||0};
@@ -11147,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='bf6fbffb90';
+var UPDB='b9e7cf9217';
 (function(){
   const K='updTry';
   const _go=updGo;
