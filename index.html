@@ -6096,7 +6096,7 @@ function wmCamps(c,D,vis,items,t){ if(!(WMT.ok&&wmS('wm_bc0'))) return wmCamps0(
 // клан төв, бусад тоглогчийн гэр, ям
 wmClanDraw=function(c,D,z,t,vis,items){ const my=wmClanId(), w=wmWeek(), op=my>=0?wmOpp(my,w):-1, ok=WMT.ok&&wmS('wm_hq0'), now=wmNow();
   items.push({y:D.C.y+1,f:()=>{ wmLabel(c,'🛡 Хамгаалалттай',D.C.x,D.C.y+46,'#9fd0ff',11); }});
-  CLN.forEach((q,i)=>{ if(!vis(q.x,q.y,320)) return; const isMy=i===my, isOp=i===op&&(!window.CLW||CLW.day()>=0), s=ok?wmS('wm_hq'+i):null, ww=s?(isMy||isOp?0.85:0.78)*s.iw:0, hh=s?ww*s.ih/s.iw:0, qx=isMy&&s?q.x-170:q.x, qy=isMy&&s?q.y-110:q.y;
+  CLN.forEach((q,i)=>{ if(!vis(q.x,q.y,320)) return; const isMy=i===my, isOp=i===op&&(!window.CLW||CLW.day()>=0), s=ok?wmS('wm_hq'+i):null, ww=s?(isMy||isOp?0.85:0.78)*s.iw:0, hh=s?ww*s.ih/s.iw:0, qx=isMy&&s?q.x-190:q.x, qy=isMy&&s?q.y-175:q.y;
     items.push({y:1e5+qy,f:()=>{ c.save(); c.globalAlpha=isMy||isOp?0.9:0.6; wmLabel(c,(isMy?'⚑ ':isOp?'⚔ ':'')+q.n+' клан'+(wmTerr()&&wmTerr().z===i?(wmTerr().win?' 🏴 эзэмшил':' ⚠ эзлэгдсэн'):''),qx,qy-(s?hh*0.86:(isMy?78:44)),isMy?'#ffe28a':isOp?'#ff9a8a':'#fff',isMy||isOp?20:17); c.restore(); }});
     items.push({y:qy,f:()=>{ if(s){ c.drawImage(s.img,qx-ww/2,qy-hh*0.88,ww,hh); } else if(!isMy){ c.fillStyle=q.c; c.fillRect(q.x-1.5,q.y-46,3,48); c.beginPath(); c.moveTo(q.x+1.5,q.y-46); c.lineTo(q.x+26,q.y-38); c.lineTo(q.x+1.5,q.y-30); c.fill(); } }}); });
   const rows=CWD.w===w?CWD.my:[]; rows.filter(x=>!(typeof CL!=='undefined'&&x.id===CL.uid)).slice(0,14).forEach(x=>{ const h=hsh(String(x.id)), a=(h%360)*Math.PI/180, rad=170+((h>>>8)%130), mp=(typeof WMMP!=='undefined')&&WMMP[x.id], px=mp?mp.x:D.C.x+Math.cos(a)*rad, py=mp?mp.y:D.C.y+Math.sin(a)*rad*0.75; if(!vis(px,py,60)) return;
@@ -7255,7 +7255,7 @@ function CK_JOINASK(i){ cwJoin(i); setTimeout(()=>{ if(S.clan===i) ckShow(i); },
       wmAll().forEach(e=>{ const r=(e.t==='city'?46:e.t==='kingdom'?40:30)+10/WMV.z; if(Math.hypot(e.x-wx,(e.y-14)-wy)<r) ent=true; });
       if(!ent){
         const my=wmClanId(); let hit=-1;
-        CLN.forEach((q,i)=>{ const s=(typeof wmS==='function')?wmS('wm_hq'+i):null, ww=s?0.85*s.iw:150, hh=s?ww*s.ih/s.iw:150, qx=(i===my&&s)?q.x-170:q.x, qy=(i===my&&s)?q.y-110:q.y;
+        CLN.forEach((q,i)=>{ const s=(typeof wmS==='function')?wmS('wm_hq'+i):null, ww=s?0.85*s.iw:150, hh=s?ww*s.ih/s.iw:150, qx=(i===my&&s)?q.x-190:q.x, qy=(i===my&&s)?q.y-175:q.y;
           if(wx>qx-ww/2&&wx<qx+ww/2&&wy>qy-hh*0.88&&wy<qy+hh*0.12) hit=i; });
         if(hit>=0){ WMS=null; try{ wmSheet(); }catch(e){} ckOpen(hit); return; }
       }
@@ -8381,7 +8381,7 @@ function wmSpread(pts,fixed,cx,cy,ky,DX,DY){
     if(m){ CWD.my=m; CWD.w=wmWeek();
       try{ const me=(typeof CL!=='undefined'&&CL.uid)||'', set=m.filter(x=>x.id!==me).slice(0,14), key=set.map(x=>x.id).sort().join(',')+'|'+Math.round(D.C.x)+','+Math.round(D.C.y)+'|'+k;
         if(key!==WMMK){ WMMK=key; const pts=set.map(x=>x.id).sort().map(id=>{ const h=hsh(String(id)), a=(h%360)*Math.PI/180, rad=170+((h>>>8)%130); return {id:id,x:D.C.x+Math.cos(a)*rad,y:D.C.y+Math.sin(a)*rad*0.75}; });
-          const fx=[{x:D.C.x,y:D.C.y,w:150,h:95}]; try{ (D.camps||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:90,h:70})); (D.nodes||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:70,h:60})); (D.chests||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:60,h:60})); wmYams().forEach(n=>fx.push({x:n.x,y:n.y,w:80,h:60})); }catch(e){} try{ const q=CLN[k]; if(q) fx.push({x:q.x-170,y:q.y-110,w:230,h:150}); }catch(e){}
+          const fx=[{x:D.C.x,y:D.C.y,w:150,h:95}]; try{ (D.camps||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:90,h:70})); (D.nodes||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:70,h:60})); (D.chests||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:60,h:60})); wmYams().forEach(n=>fx.push({x:n.x,y:n.y,w:80,h:60})); }catch(e){} try{ const q=CLN[k]; if(q) fx.push({x:q.x-190,y:q.y-175,w:230,h:150}); }catch(e){}
           wmSpread(pts,fx,D.C.x,D.C.y,0.75,100,88); WMMP={}; pts.forEach(p=>{ WMMP[p.id]={x:p.x,y:p.y}; }); } }catch(e){} }
     try{
       const r=_d.apply(this,arguments);
@@ -9437,7 +9437,7 @@ setTimeout(()=>{ try{ bgmLoad('battle'); }catch(e){} },25000);
       const my=wmClanId(), ok=WMT.ok&&wmS('wm_hq0');
       CLN.forEach((q,i)=>{
         const d=(typeof CKD!=='undefined')&&CKD.docs&&CKD.docs[i]; if(!d||!d.ow) return; if(window.KG&&KG.ents.some(e=>e.cl===i&&e.kg)) return;
-        const isMy=i===my, s=ok?wmS('wm_hq'+i):null, ww=s?0.85*s.iw:0, hh=s?ww*s.ih/s.iw:0, qx=isMy&&s?q.x-170:q.x, qy=isMy&&s?q.y-110:q.y;
+        const isMy=i===my, s=ok?wmS('wm_hq'+i):null, ww=s?0.85*s.iw:0, hh=s?ww*s.ih/s.iw:0, qx=isMy&&s?q.x-190:q.x, qy=isMy&&s?q.y-175:q.y;
         if(!vis(qx,qy,320)) return;
         const row=((CKD.mem&&CKD.mem[i])||[]).find(x=>x.id===d.ow);
         const nm=esc2(String((row&&row.n)||d.on||'Хаан').slice(0,14)), pw=row&&row.p>0?'  ⚔'+f(row.p):'';
@@ -11147,7 +11147,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='243c840c73';
+var UPDB='bf6fbffb90';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -19177,7 +19177,7 @@ body.sh2fs #modal .box>.x{position:fixed!important;left:10px!important;right:aut
   if(typeof wmClanDraw==='function'){ const _wd=wmClanDraw; wmClanDraw=function(c,D,z,t,vis,items){
     _wd.apply(this,arguments);
     try{ const H=ctHolder(); if(!H||!TIMG.complete||!TIMG.naturalWidth) return; const i=H.k, q=CLN[i]; if(!q) return;
-      const my=wmClanId(), ok=WMT.ok&&wmS('wm_hq0'), s=ok?wmS('wm_hq'+i):null, isMy=i===my, ww=s?(isMy?0.85:0.78)*s.iw:0, hh=s?ww*s.ih/s.iw:0, qx=isMy&&s?q.x-170:q.x, qy=isMy&&s?q.y-110:q.y;
+      const my=wmClanId(), ok=WMT.ok&&wmS('wm_hq0'), s=ok?wmS('wm_hq'+i):null, isMy=i===my, ww=s?(isMy?0.85:0.78)*s.iw:0, hh=s?ww*s.ih/s.iw:0, qx=isMy&&s?q.x-190:q.x, qy=isMy&&s?q.y-175:q.y;
       if(!vis(qx,qy,320)) return;
       /* сахиус: кланы төвийн баруун талд зогсоно */
       const th=210, tw=th*TIMG.naturalWidth/TIMG.naturalHeight, mx=qx+(s?ww*0.74:160), my2=qy+(s?hh*0.06:30);
