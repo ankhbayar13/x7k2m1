@@ -11147,7 +11147,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='cd7de36262';
+var UPDB='0afc6dc84c';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -18141,6 +18141,36 @@ body:has(#alv) #ckov{z-index:88!important}
     if(!S.clanT||Date.now()-S.clanT>=3*864e5){ say('Одоо клан солих хүлээлт байхгүй байна'); return; }
     dxAsk('Нүүлгэгч ашиглах уу?<br><span class="sm">Клан солих хүлээлт арилж, өөр клан руу шууд нүүж болно.</span>','Ашиглах',()=>{ S.it.tp--; S.clanT=0; sfx('win'); say('Одоо клан солих боломжтой боллоо'); try{ save(); }catch(e){} rr(); },'Болих'); };
 
+  /* Нүүлгэгч: «Ашиглах» дарахад шууд Дэлхийн газрын зураг дээр нэг удаа үнэгүй нүүнэ (хүлээлт, Алт шалгахгүй).
+     Нүүсний дараа шинэ нутагт «Нутагруугаа нүүх» товч гарна: өмнөх нутагруугаа 1 удаа үнэгүй буцна. Дахин нүүхэд өөр Нүүлгэгч хэрэгтэй. */
+  (function(){
+    const TPM=window.TPM={on:0}, hasC=()=>S.clan!=null&&S.clan>=0&&!!CLN[S.clan];
+    window.sh2TpUse=function(){
+      if(itn('tp')<1){ say('Нүүлгэгч алга'); try{ sfx('err'); }catch(e){} return; }
+      if(!hasC()){ say('Та кланд нэгдээгүй байна. Эхлээд клан сонгоно уу'); try{ sfx('err'); }catch(e){} return; }
+      try{ closeM(); }catch(e){}
+      try{ if(!document.getElementById('wmap')) wmOpen(); }catch(e){}
+      setTimeout(()=>{ try{ TPM.on=1; CWD.pick=1; const p=$('cwp'); if(p){ cwRender(); p.style.display='block'; } }catch(e){} },450); };
+    function tpMove(i,back){
+      const st=wmSt(); if(st.m.length){ say('Эхлээд цуваа буцаж ирэхийг хүлээнэ үү'); return; }
+      if(S.clan===i){ CWD.pick=0; TPM.on=0; cwRender(); return; }
+      const was=S.clan, wasT=S.clanT;
+      CWD.pick=0; S.clan=i; S.clanT=wasT||0; S.cwk={w:wmWeek(),s:0,pw:0,ps:0}; WMD=null; CWD.t=0; CWD._k=''; CWD.my=[]; CWD.op=[]; CWD.prev=null; CWD.pv=0;
+      if(back){ S.tpHome=null; } else { S.it.tp=Math.max(0,(S.it.tp||0)-1); S.tpHome=was; }
+      TPM.on=0; wmGen(); wmHome(); cwRender(); cwFetch(true); try{ clPushL(true); }catch(e){}
+      try{ sfx('win'); }catch(e){} say(back?('🏠 '+CLN[i].n+' нутагруугаа буцлаа'):('📍 '+CLN[i].n+' клан руу нүүлээ · Буцахад «Нутагруугаа нүүх» товч байна')); try{ save(); }catch(e){} }
+    window.tpBack=function(){ const h=S.tpHome; if(h==null||h<0||!CLN[h]){ S.tpHome=null; return; }
+      dxAsk('Нутагруугаа нүүх үү?<br><span class="sm">'+CLN[h].n+' клан руу үнэгүй буцна. Энэ нэг удаа л.</span>','Нүүх',()=>tpMove(h,true),'Болих'); };
+    const _j=cwJoin; cwJoin=function(i){ if(TPM.on) return tpMove(i,false); const was=S.clan, r=_j.apply(this,arguments); try{ if(S.clan===i&&was!==i) S.tpHome=null; }catch(e){} return r; };
+    const _co=cwOpen; cwOpen=function(){ try{ const p=$('cwp'); if(p&&p.style.display==='block') TPM.on=0; }catch(e){} return _co.apply(this,arguments); };
+    const _cc=cwClose; cwClose=function(){ TPM.on=0; return _cc.apply(this,arguments); };
+    const _ws=wmShut; wmShut=function(){ TPM.on=0; return _ws.apply(this,arguments); };
+    const _cr=cwRender; cwRender=function(){ _cr.apply(this,arguments);
+      try{ const p=$('cwp'); if(!p||!hasC()) return;
+        if(TPM.on&&CWD.pick){ const d=[...p.querySelectorAll('div.sm')].find(x=>/Нүүх:/.test(x.textContent)); const t='📍 <b>Нүүлгэгч:</b> үнэгүй, нэг удаа нүүнэ. Нүүсний дараа шинэ газраасаа «Нутагруугаа нүүх» товчоор өмнөх нутагтаа буцаж болно.<br>⚠ Шинэ кланд энэ долоо хоногийн клан онооны таны хувь 0-ээс эхэлнэ.'; if(d) d.innerHTML=t; else { const h=p.querySelector('.cwh'); if(h) h.insertAdjacentHTML('afterend','<div class="sm" style="margin:6px 0;padding:6px;border:1px solid #c9972b;border-radius:8px">'+t+'</div>'); } }
+      }catch(e){} };
+  })();
+
   /* Өнөөдрийн баатар: байгаа баатруудаас өдөр бүр ээлжлэн */
   function feat(){ const ids=HEROES.map(h=>h.id).filter(id=>S.heroes&&S.heroes[id]); if(!ids.length) return null; const n=Math.floor((Date.now()+8*36e5)/864e5); return ids[n%ids.length]; }
   const hname=id=>{ try{ return HEROES.find(x=>x.id===id).n; }catch(e){ return id; } };
@@ -18187,7 +18217,7 @@ body:has(#alv) #ckov{z-index:88!important}
     const L=shdLeft(); let h=chip()+'<div class="sh2-sb'+(L>0?' on':'')+'">'+(L>0?im(SHI,22)+' Идэвхтэй · '+fmtT(L)+' үлдсэн':im(SHI,22)+' Хамгаалалтгүй')+'<div class="sm">Хамгаалалттай үед дээрэмчин, овгийн дайралт ирэхгүй.</div></div>';
     h+='<div class="sh2-g">'+SHD.map((s,i)=>tile(shdI(s.h+'ц',46),'Хамгаалалт '+s.h+'ц','Байгаа: '+itn('sd'+s.h),s.p,'sh2Shield('+i+')')).join('')+'</div>';
     const cd=S.clanT&&Date.now()-S.clanT<3*864e5;
-    h+='<div class="sh2-h">'+im('ic_world',20)+' Нүүлгэгч</div><div class="sh2-jb"><div class="sh2-jl"><b>Нутаг солих эрх · Байгаа: '+itn('tp')+'</b></div><div class="sm">'+(cd?'Клан солих хүлээлт: '+fmtT((3*864e5-(Date.now()-S.clanT))/1000):'Одоо клан солих хүлээлт байхгүй.')+' Нүүлгэгч нь хүлээлтийг арилгаж, өөр клан руу шууд нүүх боломж олгоно. Ашиглахдаа Агуулах хэсэгт орно.</div><div class="sh2-jr"><button class="sh2-ub" onclick="sh2TpBuy()">'+gem()+' '+TPP+' · Авах</button></div></div>';
+    h+='<div class="sh2-h">'+im('ic_world',20)+' Нүүлгэгч</div><div class="sh2-jb"><div class="sh2-jl"><b>Нутаг солих эрх · Байгаа: '+itn('tp')+'</b></div><div class="sm">'+(cd?'Клан солих хүлээлт: '+fmtT((3*864e5-(Date.now()-S.clanT))/1000):'Одоо клан солих хүлээлт байхгүй.')+' Нүүлгэгч нь Дэлхийн газрын зураг дээр өөр клан руу нэг удаа үнэгүй нүүнэ. Нүүсний дараа «Нутагруугаа нүүх» товчоор өмнөх нутагтаа буцна. Ашиглахдаа Агуулах хэсэгт орно.</div><div class="sh2-jr"><button class="sh2-ub" onclick="sh2TpBuy()">'+gem()+' '+TPP+' · Авах</button></div></div>';
     return h; }
   const GN={b1:'Барилга 1ц',b8:'Барилга 8ц',r1:'Судалгаа 1ц',r8:'Судалгаа 8ц',t1:'Цэрэг 1ц',t8:'Цэрэг 8ц',stn:'Ид шидийн чулуу',gold:'Зоос',wood:'Мод',grain:'Тариа',meat:'Мах',sh:'Баатрын хэлтэрхий'};
   const GO=Object.keys(GN);
@@ -18238,7 +18268,7 @@ body:has(#alv) #ckov{z-index:88!important}
       h+='<div class="sh2-jb"><div class="sh2-jl"><b>'+it.n+' · хаана ашиглах вэ?</b></div>'+(J.length?J.map(j=>'<div class="sh2-jl" style="margin-top:6px"><span>'+j.lab+' · ⏱ '+fmtT(j.rem)+'</span><button class="sh2-ub" onclick="sh2Use(\''+j.t+'\',\''+j.id+'\',\''+k+'\')">Ашиглах</button></div>').join(''):'<div class="sm">Одоо ашиглах ажил алга ('+(ty==='b'?'барилга':ty==='r'?'судалгаа':'цэрэг, эмчилгээ')+' эхлүүлээд ирээрэй).</div>')+'</div>'; }
     else if(k&&(k==='bkS'||k==='bkL')){ h+=(typeof window.hbkList==='function'?window.hbkList(k):''); }
     else if(k&&k.indexOf('sd')===0){ const hh=+k.slice(2); h+='<div class="sh2-jb"><div class="sh2-jl"><b>Хамгаалалт '+hh+' цаг</b><button class="sh2-ub" onclick="sh2ShUse('+hh+')">Ашиглах</button></div></div>'; }
-    else if(k==='tp'){ h+='<div class="sh2-jb"><div class="sh2-jl"><b>Нүүлгэгч</b><button class="sh2-ub" onclick="sh2TpUse()">Ашиглах</button></div><div class="sm">Клан солих хүлээлтийг арилгана.</div></div>'; }
+    else if(k==='tp'){ h+='<div class="sh2-jb"><div class="sh2-jl"><b>Нүүлгэгч</b><button class="sh2-ub" onclick="sh2TpUse()">Ашиглах</button></div><div class="sm">Газрын зураг дээр нэг удаа үнэгүй нүүнэ. Нүүсний дараа «Нутагруугаа нүүх» товчоор буцна.</div></div>'; }
     return h; }
   const _ag=bagHTML;
   bagHTML=function(){ const r=_ag.apply(this,arguments); const i=r.indexOf('</h2>'); let it=''; try{ it=agItems(); }catch(e){ it=''; } return i<0?it+r:r.slice(0,i+5)+it+r.slice(i+5); };
@@ -22803,6 +22833,9 @@ const ox=W-52*U-6, oy=112*U, Ls=40*U, r0=10*U, lw=4*U, ro=r0+5*lw; c.fillStyle='
     try{ h+=cwFeedHTML(); }catch(e){}
     h+='<div style="margin-top:6px">'+(info()?'<button class="btn" onclick="cwGoOp()">Дайсны бааз</button>':'')+'<button class="btn" onclick="wmHome();cwClose()">Гэр</button><button class="btn" onclick="cwClose();ckOpen()">Кланы мэдээлэл</button><button class="btn" style="background:#5b3d1e" onclick="cwChange()">Клан солих</button></div>';
     p.innerHTML=h; };
+  /* Нүүлгэгчээр нүүсний дараа: «Нутагруугаа нүүх» товч (клан самбарын дээд талд) */
+  (function(){ const _r=cwRender; cwRender=function(){ _r.apply(this,arguments);
+    try{ const p=$('cwp'), h=S.tpHome; if(!p||CWD.pick||h==null||h<0||!CLN[h]||h===S.clan||!(S.clan!=null&&S.clan>=0)) return; const hd=p.querySelector('.cwh'); if(hd&&!p.querySelector('#tpbk')) hd.insertAdjacentHTML('afterend','<div id="tpbk" style="margin:6px 0"><button class="btn red" style="width:100%" onclick="tpBack()">🏠 Нутагруугаа нүүх · '+CLN[h].n+'</button></div>'); }catch(e){} }; })();
   /* ---- өдрийн жижиг шагнал: тухайн өдрийн 3 довтолгоогоо дуусгахад нэг удаа ---- */
   window.clwRewardCheck=function(){
     try{ const d=warDay(); if(d<0||used()<MAXA) return; const key=st().w*7+d; if(S.clwR===key) return; S.clwR=key;
