@@ -927,9 +927,9 @@ function deliver(i){
   S.orders.splice(i,1); S.ordT=30;
   say(NPCS[o.who].n+': Баярлалаа! +'+o.gold+' 🪙'+(o.alt?' +1 Алт':'')); refresh();
 }
-let car=null, carT=70;
+let car=null, carT=300;
 function carStep(dt){
-  if(!car){ carT+=dt; if(carT>150){ carT=0; const cy=WH/2+6; const want=['airag','aaruul','tos','esgii','buuz','meat','wool'][Math.floor(Math.random()*7)]; car={x:-50,y:cy,tx:WW/2-20,state:'in',t:0,want}; try{ silkNew(car); }catch(e){} say('🐪 '+(car.mn||'Караван')+' ирлээ! Дарж наймаалцаарай'); } return; }
+  if(!car){ carT+=dt; if(carT>450){ carT=0; const cy=WH/2+6; const want=['airag','aaruul','tos','esgii','buuz','meat','wool'][Math.floor(Math.random()*7)]; car={x:-50,y:cy,tx:WW/2-20,state:'in',t:0,want}; try{ silkNew(car); }catch(e){} say('🐪 '+(car.mn||'Караван')+' ирлээ! Дарж наймаалцаарай'); } return; }
   car.t+=dt;
   if(car.state==='in'){ car.x+=16*dt; if(car.x>=car.tx){ car.x=car.tx; car.state='stay'; car.t=0; } }
   else if(car.state==='stay'){ if(car.t>100){ car.state='out'; if(cur==='trade') closeM(); } }
@@ -11147,7 +11147,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='60d7443d5e';
+var UPDB='243c840c73';
 (function(){
   const K='updTry';
   const _go=updGo;
