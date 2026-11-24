@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='15bb0c68cc';
+var UPDB='a4424540e8';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25317,6 +25317,38 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       try{ var J2=jamS(), n1=(J2.sd===jamDay()?J2.sn:0)||0; if(n1>n0&&!(S.chf&&S.chf.jm&&S.chf.jm.p)&&Math.random()<0.005){ setTimeout(function(){ jmGive('✨🖼 Маш ховор! Жамухын хүрээ хүрдээс унав!'); },4200); } }catch(e){}
       return r; }; }catch(e){}
   setTimeout(function(){ try{ if(S.heroes&&S.heroes.jamukha) jmGive(''); }catch(e){} },5000);
+})();
+</script>
+<script id="sumimg">
+/* Баатар худалдаж авах: AI зургийг бүтнээр нь тавьж, товчнуудыг дээр нь үл үзэгдэх дарах талбайгаар хийнэ (зураг 1199x1312) */
+(function(){
+  var W=1199,H=1312, P=function(x,y,w,h){ return 'left:'+(x/W*100)+'%;top:'+(y/H*100)+'%;width:'+(w/W*100)+'%;height:'+(h/H*100)+'%'; };
+  var st=document.createElement('style'); st.textContent=
+    '#modal .box:has(#sumimg){background:none!important;border:0!important;border-image:none!important;padding:0!important;box-shadow:none!important;width:min(460px,97vw)!important;max-width:97vw!important;overflow:visible!important}'+
+    '#modal .box:has(#sumimg)>.x{display:none!important}#modal .box:has(#sumimg)::before,#modal .box:has(#sumimg)::after{display:none!important}'+
+    '#sumimg{position:relative;width:100%;aspect-ratio:1199/1312;background:url(hf/sum_bg.webp?v=1) center/100% 100% no-repeat;border-radius:10px;user-select:none}'+
+    '#sumimg .hs{position:absolute;background:none;border:0;padding:0;margin:0;cursor:pointer;border-radius:12px;-webkit-tap-highlight-color:transparent}'+
+    '#sumimg .hs:active{background:rgba(255,220,120,.18)}#sumimg .hs.off{background:rgba(0,0,0,.45);cursor:default}'+
+    '#sumimg .pty{position:absolute;display:flex;align-items:center;justify-content:center;background:#24160c;color:#ffd84a;font:800 clamp(13px,4.2vw,19px)/1 sans-serif;border-radius:4px}'+
+    '#sumimg .sinfo{position:absolute;left:8%;right:8%;top:40%;background:rgba(20,12,6,.96);border:2px solid #c9972b;border-radius:10px;padding:12px;color:#ffe9b0;font:13px/1.45 sans-serif;z-index:3;display:none}'+
+    '#sumimg .sinfo.on{display:block}';
+  document.head.appendChild(st);
+  window.sumInfo=function(on){ var e=document.querySelector('#sumimg .sinfo'); if(e) e.classList.toggle('on',on!==undefined?!!on:!e.classList.contains('on')); };
+  var _s=summonHTML;
+  summonHTML=function(){
+    var a1=S.res.alt>=sumAlt(1), a5=S.res.alt>=sumAlt(5), free='';
+    if(S.fsum>0) free='<div class="card" style="border-color:#7fe08a;margin-bottom:6px;background:rgba(20,12,6,.95)"><div class="row"><div><b>🎁 Үнэгүй дуудлага: '+S.fsum+' үлдсэн</b></div><button class="btn" style="background:#3aa83a" onclick="summon(1,1)">Үнэгүй дуудах</button></div></div>';
+    return free+'<div id="sumimg">'+
+      '<button class="hs" style="'+P(1070,40,90,90)+'" onclick="closeM()" aria-label="Хаах"></button>'+
+      '<button class="hs" style="'+P(35,335,235,95)+'" onclick="openM(\'baatar\')" aria-label="Авсан баатрууд"></button>'+
+      '<button class="hs" style="'+P(35,445,235,95)+'" onclick="sumInfo()" aria-label="Магадлал"></button>'+
+      '<button class="hs" style="'+P(905,995,65,62)+'" onclick="sumInfo()" aria-label="Мэдээлэл"></button>'+
+      '<div class="pty" style="'+P(596,1004,50,44)+'">'+sumPity()+'</div>'+
+      '<button class="hs'+(a1?'':' off')+'" style="'+P(185,1090,395,112)+'" '+(a1?'onclick="summon(1)"':'')+' aria-label="1 удаа авах"></button>'+
+      '<button class="hs'+(a5?'':' off')+'" style="'+P(615,1090,400,112)+'" '+(a5?'onclick="summon(5)"':'')+' aria-label="5 удаа авах"></button>'+
+      '<div class="sinfo" onclick="sumInfo(0)"><b>Гарах магадлал</b><br>Домогт 2% · Эрхэм 6% · Ховор 14% · Сайн 28% · Энгийн 50%.<br>Давхцсан баатар од нэмнэ (хэлтэрхий хүрмэгц автоматаар).<br><span style="color:#ffd35a">Баталгаат Домогт: '+sumPity()+' дуудлагад</span><br><span style="opacity:.7;font-size:11px">Дарж хаана</span></div>'+
+    '</div>';
+  };
 })();
 </script>
 </body>
