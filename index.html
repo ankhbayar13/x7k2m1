@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='f2a335bef8';
+var UPDB='326a2619d7';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -14338,7 +14338,7 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
    '#pfxo .pfxP{width:min(94vw,380px);max-height:92vh;overflow:auto;background:#2a1b0e;border:3px solid #c9972b;border-radius:14px;padding:12px 10px 14px;text-align:center;color:#f3e2b8}'+
    '#pfxo h3{margin:2px 0 8px;color:#ffd770;font-size:19px}#pfxo .pfxG{display:grid;grid-template-columns:1fr 1fr;gap:8px}'+
    '#pfxo .pfxC{border:2px solid #5a4026;border-radius:12px;padding:6px 4px 8px;background:#00000040;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}#pfxo .pfxC.pfxOn{border-color:#ffd24a;background:#4a3414}#pfxo .pfxC.pfxLk{opacity:.55;cursor:pointer}#pfxo .pfxC.pfxLk:after{content:"ⓘ Дарж үз";font-size:10px;color:#ffd770;opacity:.9}'+
-   '#pfxi{position:fixed;inset:0;z-index:99995;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box}#pfxi .pi{width:min(92vw,340px);max-height:92vh;overflow:auto;background:linear-gradient(#3a2614,#1e1309);border:3px solid #d9a93a;border-radius:14px;padding:14px 14px 12px;color:#f3e2b8;text-align:center;box-shadow:0 0 30px rgba(255,200,80,.3)}#pfxi h3{margin:0 0 6px;color:#ffd770;font-size:19px}#pfxi .pfxr{display:block;text-align:left;font-size:13px;line-height:1.45;margin:4px 0;padding:6px 8px;background:#0005;border-radius:8px}#pfxi .pfxr b{white-space:nowrap;color:#ffd770}#pfxi .ok{color:#8fe36a}#pfxi .no{color:#ff9a7a}#pfxi .bt{display:flex;gap:8px;justify-content:center;margin-top:10px}#pfxo .pfxC b{font-size:13px}#pfxo .pfxC span{font-size:11px;opacity:.9}';
+   '#pfxi{position:fixed;inset:0;z-index:99995;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box}#pfxi .pi{width:min(92vw,340px);max-height:92vh;overflow:auto;background:linear-gradient(#3a2614,#1e1309);border:3px solid #d9a93a;border-radius:14px;padding:14px 14px 12px;color:#f3e2b8;text-align:center;box-shadow:0 0 30px rgba(255,200,80,.3)}#pfxi h3{margin:0 0 6px;color:#ffd770;font-size:19px}#pfxi .pfxr{display:block;text-align:left;font-size:13px;line-height:1.45;margin:4px 0;padding:6px 8px;background:#0005;border-radius:8px}#pfxi .pfxr b{white-space:nowrap;color:#ffd770}#pfxi .ok{color:#8fe36a}#pfxi .no{color:#ff9a7a}#pfxi .pfxbt{display:flex;gap:8px;justify-content:center;margin-top:10px}#pfxo .pfxC b{font-size:13px}#pfxo .pfxC span{font-size:11px;opacity:.9}';
   document.head.appendChild(st);
   window.pfxOpen=function(){
     const old=document.getElementById('pfxo'); if(old) old.remove(); const av=myAv(), ft=ftOf(S.pl||1), cur=mine()?mine().id:'';
@@ -14368,8 +14368,8 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
     if(f.ch){ const I=INFO[f.id](), x=chS()[f.id];
       h+='<div class="pfxr"><b>Яаж авах:</b> '+I.how+'</div><div class="pfxr"><b>Шалгуур:</b> '+I.crit+'</div><div class="pfxr"><b>Хугацаа:</b> '+(f.id==='ck'?'7 хоног':'1 сар')+'. 3 удаа түрүүлбэл үүрд (III).</div><div class="pfxr"><b>Таны явц:</b> '+I.prog+'</div>'+
         (x?'<div class="pfxr">Өмнө нь <b>'+x.n+'</b> удаа авсан. Дахин түрүүлбэл сэргэнэ.</div>':'');
-      h+='<div class="bt">'+(I.go?'<button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();try{closeM()}catch(e){};'+I.go+'">'+I.gn+' руу очих</button>':'')+'<button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
-    else { const L=rkLv(); h+='<div class="pfxr"><b>Яаж авах:</b> Хааны зэрэг Lv '+f.min+' хүр.</div><div class="pfxr"><b>Таны явц:</b> одоо Lv '+v(L,f.min,L>=f.min)+'</div><div class="pfxr">Хааны зэргийн оноо: даалгавар, тулаан, барилгаар цуглана.</div><div class="bt"><button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();openM(\'rank\')">👑 Хааны зэрэг</button><button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
+      h+='<div class="pfxbt">'+(I.go?'<button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();try{closeM()}catch(e){};'+I.go+'">'+I.gn+' руу очих</button>':'')+'<button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
+    else { const L=rkLv(); h+='<div class="pfxr"><b>Яаж авах:</b> Хааны зэрэг Lv '+f.min+' хүр.</div><div class="pfxr"><b>Таны явц:</b> одоо Lv '+v(L,f.min,L>=f.min)+'</div><div class="pfxr">Хааны зэргийн оноо: даалгавар, тулаан, барилгаар цуглана.</div><div class="pfxbt"><button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();openM(\'rank\')">👑 Хааны зэрэг</button><button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
     const o=document.createElement('div'); o.id='pfxi'; o.onclick=e=>{ if(e.target===o) o.remove(); }; o.innerHTML='<div class="pi">'+h+'</div>'; document.body.appendChild(o); try{ sfx('click'); }catch(e){} };
   window.pfxPick=function(id){ S.pfx=id||''; try{ save(); }catch(e){} const o=document.getElementById('pfxo'); if(o) o.remove(); try{ sfx('ok'); }catch(e){} try{ fillM(); }catch(e){} try{ if(typeof clPush==='function') clPushL(true); }catch(e){} };
 
@@ -25038,6 +25038,30 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       w.querySelector('.dm').addEventListener('click',function(e){ e.stopPropagation(); close(); });
     }catch(e){ try{ console.error(e); }catch(x){} }
   };
+})();
+</script>
+<script id="uiframes">
+/* Энгийн CSS хүрээтэй үлдсэн цонхнуудыг тоглоомын AI хүрээ (rts/ui_*.webp) болон модон дэвсгэрт оруулна */
+(function(){
+  var W='url(rts/ui_wood.webp?v=1) center/260px', st=document.createElement('style');
+  st.textContent=
+  /* том самбар */
+  '#mvol>div,.invb,#khov>div,#pfxo .pfxP,#pfxi .pi,.chc{border-style:solid!important;border-color:transparent!important;border-width:22px!important;border-image:url(rts/ui_rect.webp?v=1) 95 fill/22px stretch!important;background:'+W+'!important;background-clip:padding-box!important;border-radius:0!important;box-shadow:0 8px 28px rgba(0,0,0,.65)!important}'+
+  '#mvol>div,.invb,#pfxo .pfxP,#pfxi .pi{padding:6px 8px 8px!important}#khov>div{padding:8px 12px 10px!important}.chc{padding:4px 8px!important}'+
+  /* урт самбар */
+  '#wmsheet,#isdep{border-style:solid!important;border-color:transparent!important;border-width:14px 18px!important;border-image:url(rts/ui_wide.webp?v=1) 42 52 fill/14px 18px stretch!important;background:'+W+'!important;background-clip:padding-box!important;border-radius:0!important;box-shadow:0 6px 22px rgba(0,0,0,.6)!important}'+
+  '#wmsheet{padding:4px 6px!important}#isdep{padding:2px 6px!important}'+
+  /* жижиг хавтан (хүрээ сонгох) */
+  '#pfxo .pfxC{border-style:solid!important;border-color:transparent!important;border-width:10px!important;border-image:url(rts/ui_sq.webp?v=1) 90 fill/10px stretch!important;background:rgba(0,0,0,.28)!important;background-clip:padding-box!important;border-radius:0!important;padding:2px 2px 4px!important}'+
+  '#pfxo .pfxC.pfxOn{background:rgba(255,200,80,.22)!important;filter:drop-shadow(0 0 6px rgba(255,215,112,.8))}'+
+  /* шатрын товч */
+  '.chb{border-style:solid!important;border-color:transparent!important;border-width:10px 20px!important;border-image:url(rts/ui_pill.webp?v=1) 70 100 fill/10px 20px stretch!important;background:linear-gradient(#8a2414,#4a0f08)!important;background-clip:padding-box!important;border-radius:0!important;padding:4px 6px!important;text-shadow:0 1px 2px #000}'+
+  '.chb.g{border-width:10px 22px!important;border-image:url(rts/ui_btn.webp?v=1) 70 140 fill/10px 22px stretch!important;background:none!important;color:#3a2208!important;text-shadow:0 1px 0 rgba(255,240,190,.6)}'+
+  '.chb.on{filter:drop-shadow(0 0 6px #ffd770)}'+
+  /* Агуулах / Цүнх табын мөр */
+  '.sh2-tabs{background:url(hf/hd_panel.webp) center/100% 100%!important;border-top:0!important}'+
+  '.sh2-tabs button.on{background:none!important;border:solid transparent;border-width:0 20px;border-image:url(hf/hd_tab_on.webp) 0 40 0 40 fill/0 20px 0 20px stretch}';
+  document.head.appendChild(st);
 })();
 </script>
 </body>
