@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='2c37d3a0eb';
+var UPDB='274259c412';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -14345,10 +14345,10 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
     const old=document.getElementById('pfxo'); if(old) old.remove(); const av=myAv(), ft=ftOf(S.pl||1), cur=mine()?mine().id:'';
     const card=(id,nm,html,lock,sub)=>'<div class="pfxC'+(cur===id?' pfxOn':'')+(lock?' pfxLk':'')+'" '+(lock?'onclick="pfxInfo(\''+id+'\')"':'onclick="pfxPick(\''+id+'\')"')+'>'+html+'<b>'+nm+'</b><span>'+sub+'</span></div>';
     let h='<h3>🖼 Профайлын хүрээ</h3><div class="sm" style="font-size:12px;margin-bottom:8px">Хааны зэрэг ахихад шинэ хүрээ нээгдэнэ. 🏆 Аваргын хүрээг тэмцээнд 1-р байр (шалгууртай) эзэлж авна: 1 сар хүчинтэй, 3 удаа түрүүлбэл үүрд. Сонгосон хүрээ найз, чат дээр харагдана.</div><div class="pfxG">';
-    h+=card('','Анхны',comp(av,64,PFR[ft],PFH[ft]),false,cur===''?'✓ Сонгосон':'Сонгох');
+    h+=card('','Анхны',comp(av,52,PFR[ft],PFH[ft]),false,cur===''?'✓ Сонгосон':'Сонгох');
     FR.forEach(f=>{ if(f.ch){ const x=chS()[f.id], ok=chOk(f.id), dl=x&&!x.p?Math.max(0,Math.ceil((x.u-Date.now())/864e5)):0;
-        h+=card(f.id,f.nm,comp(av,64,f.src,gOf(f),'',pxOut(f)),!ok,!x?(f.id==='kh'?'👑 Хааны шагнал':f.id==='jm'?'🗡 Жамуха':'🏆 '+f.tn+' · 1-р байр'):!ok?'⌛ Хугацаа дууссан ('+x.n+'×)':(cur===f.id?'✓ ':'')+(x.p?'♾ Үүрд':'⏳ '+dl+' өдөр')); return; }
-      const lock=rkLv()<f.min; h+=card(f.id,f.nm,comp(av,64,f.src,GEO),lock,lock?'🔒 Хааны зэрэг Lv '+f.min:(cur===f.id?'✓ Сонгосон':'Сонгох')); });
+        h+=card(f.id,f.nm,comp(av,52,f.src,gOf(f),'',pxOut(f)),!ok,!x?(f.id==='kh'?'👑 Хааны шагнал':f.id==='jm'?'🗡 Жамуха':'🏆 '+f.tn+' · 1-р байр'):!ok?'⌛ Хугацаа дууссан ('+x.n+'×)':(cur===f.id?'✓ ':'')+(x.p?'♾ Үүрд':'⏳ '+dl+' өдөр')); return; }
+      const lock=rkLv()<f.min; h+=card(f.id,f.nm,comp(av,52,f.src,GEO),lock,lock?'🔒 Хааны зэрэг Lv '+f.min:(cur===f.id?'✓ Сонгосон':'Сонгох')); });
     h+='</div><button class="btn" style="margin-top:10px" onclick="document.getElementById(\'pfxo\').remove()">Хаах</button>';
     const o=document.createElement('div'); o.id='pfxo'; o.onclick=e=>{ if(e.target===o) o.remove(); }; o.innerHTML='<div class="pfxP">'+h+'</div>'; document.body.appendChild(o); };
   /* Цоожтой хүрээн дээр дарахад: яаж авах, шалгуур, одоогийн явц */
@@ -21567,7 +21567,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
   +'#tascr .t2cn{position:absolute;left:0;right:0;bottom:0;padding:'+D(24)+' 0 '+D(8)+';text-align:center;background:linear-gradient(transparent,#000c 55%);line-height:1.15}#tascr .t2cn b{display:block;font-size:'+D(30)+';color:#fff;text-shadow:0 2px 3px #000}#tascr .t2cn span{font-size:'+D(26)+';color:#ffd770;font-weight:bold}'
   +'#tascr .t2pk{display:flex;gap:'+D(14)+';margin:'+D(18)+' '+D(34)+' 0;align-items:flex-start}'
   +'#tascr .t2fl{flex:0 0 '+D(176)+';display:flex;flex-direction:column;gap:'+D(6)+'}'
-  +'#tascr .t2fl button{padding:'+D(14)+' '+D(8)+';border:'+D(2)+' solid #5b3f18;border-radius:'+D(8)+';background:linear-gradient(#2a1c0e,#1a1008);color:#d9c79a;font-size:'+D(24)+';font-weight:bold;text-align:left}'
+  +'#tascr .t2fl button{padding:'+D(14)+' '+D(8)+';border:'+D(2)+' solid #5b3f18;border-radius:'+D(8)+';background:linear-gradient(#2a1c0e,#1a1008);color:#d9c79a;font-size:'+D(24)+';font-weight:bold;text-align:center}'
   +'#tascr .t2fl button.on{background:linear-gradient(#f0b53a,#b9751a);color:#2b1700;border-color:#ffd770}'
   +'#tascr .t2g{flex:1;min-width:0;display:grid;grid-template-columns:repeat(5,1fr);gap:'+D(8)+';max-height:'+D(292)+';overflow-y:auto;scrollbar-width:none;padding:'+D(2)+'}#tascr .t2g::-webkit-scrollbar{display:none}'
   +'#tascr .t2gc{position:relative;box-sizing:border-box;height:0;padding-bottom:100%;border:'+D(3)+' solid #8a5f1e;border-radius:'+D(9)+';overflow:hidden;background:#2a160c;cursor:pointer}'
@@ -25095,6 +25095,11 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   '.oqr{border-color:rgba(201,151,43,.55)!important;background:rgba(0,0,0,.28)!important}';
   st.textContent+='.pib{'+BIG+'padding:22px 24px 24px!important;max-width:320px!important}'+
   '.mnx{display:block;width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent}.mnx img{width:100%;display:block;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}.mnx:active{transform:scale(.97)}';
+  st.textContent+='#pfxo .pfxG{grid-template-columns:repeat(2,minmax(0,1fr))!important}#pfxo .pfxC{min-width:0;overflow:hidden}'+
+  '.invb{width:min(380px,96vw)!important;box-sizing:border-box!important}.invb .btn{min-width:0;padding-left:6px!important;padding-right:6px!important;font-size:13px!important;white-space:nowrap}'+
+  '.bcard{min-width:0!important}.bcard .btn{width:88%!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+  '#isdep{max-width:calc(100vw - 16px)!important;box-sizing:border-box!important}#isdep>div{min-width:0;flex:1 1 auto}#isdepgo,#isdeprs{flex:none}'+
+  '#rwov,#lvov{overflow:hidden}#wmbar,#wmheroes{overflow:hidden}';
   document.head.appendChild(st);
   /* Цэс: Их Засаг, Клан хуралдай зурагтай хавтан */
   try{ MND['Их Засаг']='Хууль батлаж тосгондоо бонус авна'; MND['Клан хуралдай']='Кланаараа санал өгч 7 хоногийн бонус'; }catch(e){}
