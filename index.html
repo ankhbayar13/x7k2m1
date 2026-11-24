@@ -8387,9 +8387,9 @@ function wmSpread(pts,fixed,cx,cy,ky,DX,DY){
       }
     }catch(e){ m=null; }
     if(m){ CWD.my=m; CWD.w=wmWeek();
-      try{ const me=(typeof CL!=='undefined'&&CL.uid)||'', set=m.filter(x=>x.id!==me).slice(0,14), key=set.map(x=>x.id).sort().join(',')+'|'+Math.round(D.C.x)+','+Math.round(D.C.y)+'|'+k;
+      try{ const me=(typeof CL!=='undefined'&&CL.uid)||'', set=m.filter(x=>x.id!==me).slice(0,14), _tr=(typeof ctTrRect==='function')?ctTrRect():null, key=set.map(x=>x.id).sort().join(',')+'|'+Math.round(D.C.x)+','+Math.round(D.C.y)+'|'+k+'|'+(_tr?_tr.k+','+Math.round(_tr.x):'');
         if(key!==WMMK){ WMMK=key; const pts=set.map(x=>x.id).sort().map(id=>{ const h=hsh(String(id)), a=(h%360)*Math.PI/180, rad=170+((h>>>8)%130); return {id:id,x:D.C.x+Math.cos(a)*rad,y:D.C.y+Math.sin(a)*rad*0.75}; });
-          const fx=[{x:D.C.x,y:D.C.y,w:150,h:95}]; try{ (D.camps||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:90,h:70})); (D.nodes||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:70,h:60})); (D.chests||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:60,h:60})); wmYams().forEach(n=>fx.push({x:n.x,y:n.y,w:80,h:60})); }catch(e){} try{ const q=CLN[k]; if(q) fx.push({x:q.x-190,y:q.y-175,w:230,h:150}); }catch(e){}
+          const fx=[{x:D.C.x,y:D.C.y,w:150,h:95}]; if(_tr) fx.push(_tr); try{ (D.camps||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:90,h:70})); (D.nodes||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:70,h:60})); (D.chests||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:60,h:60})); wmYams().forEach(n=>fx.push({x:n.x,y:n.y,w:80,h:60})); }catch(e){} try{ const q=CLN[k]; if(q) fx.push({x:q.x-190,y:q.y-175,w:230,h:150}); }catch(e){}
           wmSpread(pts,fx,D.C.x,D.C.y,0.75,100,88); WMMP={}; pts.forEach(p=>{ WMMP[p.id]={x:p.x,y:p.y}; }); } }catch(e){} }
     try{
       const r=_d.apply(this,arguments);
@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='f9c655ebe0';
+var UPDB='15bb0c68cc';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -19226,6 +19226,7 @@ body.sh2fs #modal .box>.x{position:fixed!important;left:10px!important;right:aut
     if(!T||T.w<tw){ if(typeof CL!=='undefined'&&CL.ok) trResolve(tw); }
     return (T&&T.k>=0)?{k:T.k,w:T.w}:null; }catch(e){ return null; } };
   const TIMG=new Image(); TIMG.src='rts/trophy_mon.webp?v=1'; window.ctTrophyImg=TIMG;
+  window.ctTrRect=function(){ try{ const H=ctHolder(); if(!H) return null; const i=H.k, q=CLN[i]; if(!q) return null; const my=wmClanId(), ok=WMT.ok&&wmS('wm_hq0'), s=ok?wmS('wm_hq'+i):null, isMy=i===my, ww=s?(isMy?0.85:0.78)*s.iw:0, hh=s?ww*s.ih/s.iw:0, qx=isMy&&s?q.x-190:q.x, qy=isMy&&s?q.y-175:q.y, mx=qx+(s?ww*0.74:160), my2=qy+(s?hh*0.06:30); return {x:mx,y:my2-60,w:150,h:170,k:i}; }catch(e){ return null; } };
   /* газрын зураг дээр: ялсан кланы төвийн дээр алтан цом */
   if(typeof wmClanDraw==='function'){ const _wd=wmClanDraw; wmClanDraw=function(c,D,z,t,vis,items){
     _wd.apply(this,arguments);
@@ -24818,7 +24819,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   /* газрын зураг дээр холбоосыг зурна */
   var _yd=wmYamDraw;
   wmYamDraw=function(c,t,vis,items){ var r=_yd.apply(this,arguments);
-    try{ var N=net(); if(N.links.length) items.push({y:-1e6+8,f:function(){ var z=(typeof WMV!=='undefined'&&WMV&&WMV.z)||1, lw=Math.max(2.5,2.4/z); c.save(); c.lineCap='round'; c.setLineDash([lw*5,lw*3]); c.lineDashOffset=-((t||0)*18)%(lw*8);
+    try{ var N=net(); if(0&&N.links.length) items.push({y:-1e6+8,f:function(){ var z=(typeof WMV!=='undefined'&&WMV&&WMV.z)||1, lw=Math.max(2.5,2.4/z); c.save(); c.lineCap='round'; c.setLineDash([lw*5,lw*3]); c.lineDashOffset=-((t||0)*18)%(lw*8);
         N.links.forEach(function(l){ var a=l[0],b=l[1]; c.strokeStyle='rgba(0,0,0,.4)'; c.lineWidth=lw*2; c.beginPath(); c.moveTo(a.x,a.y); c.lineTo(b.x,b.y); c.stroke(); });
         N.links.forEach(function(l){ var a=l[0],b=l[1]; c.strokeStyle='#9fee6f'; c.lineWidth=lw; c.beginPath(); c.moveTo(a.x,a.y); c.lineTo(b.x,b.y); c.stroke(); });
         c.restore(); }}); }catch(x){}
