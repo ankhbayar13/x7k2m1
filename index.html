@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='9d59d78256';
+var UPDB='234e3e5af6';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25380,6 +25380,78 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _db=drawBuilding; drawBuilding=function(k){ if(k!=='khk'||S.sites.khk) return _db.apply(this,arguments);
     var p=S.pos.khk, d=bdims('khk'), n=Math.max(1,stg()), z=SZ[n-1], sc=d.w/SZ[4][0], w=z[0]*sc, h=z[1]*sc;
     if(stg()===0) ctx.globalAlpha=0.6; spr('khk'+n,p.x+(d.w-w)/2,p.y+d.h-h,w); ctx.globalAlpha=1; };
+})();
+</script>
+<script id="wonders2">
+/* Нэмэлт гайхамшиг: Хархорум 5/5 → Лалын сүм (5 шат) → Христийн сүм (5 шат). Тус бүр тосгонд тусдаа барилга, шат бүрт байнгын бонус. */
+(function(){
+  var WD={
+    ls:{n:'Лалын сүм',e:'🕌',bk:'lsm',sz:[[371,212],[377,230],[391,298],[393,322],[462,352]],alt:700,
+      need:function(){ return (S.hk||0)>=5; }, lockTxt:'Хархорум 5/5 болсны дараа нээгдэнэ.',
+      d:'Хархорумын лалын худалдаачдын сүм. Шат бүрт байнгын бонус.',
+      st:[{n:'Суурь тавих',c:{gold:10000,wood:800},ef:{eco_sell:0.05},d:'Зарах үнэ +5%'},
+          {n:'Хана босгох',c:{gold:30000,wood:1800,grain:600},ef:{eco_prod:0.05},d:'Үйлдвэрлэл +5%'},
+          {n:'Хөх бөмбөгөр',c:{gold:80000,wood:3000,wool:600},ef:{eco_proc:0.10},d:'Цехийн боловсруулалт +10%'},
+          {n:'Минарет',c:{gold:180000,meat:800,grain:1200,alt:100},ef:{cul_xp:0.10},d:'Туршлага +10%'},
+          {n:'Их сүм',c:{gold:400000,wood:6000,alt:400},ef:{eco_sell:0.10,mil_all:0.03},d:'Зарах үнэ +10%, хүч +3%'}]},
+    hs:{n:'Христийн сүм',e:'⛪',bk:'hsm',sz:[[371,217],[383,275],[361,303],[386,325],[492,359]],alt:1000,
+      need:function(){ return ((S.wd&&S.wd.ls)||0)>=5; }, lockTxt:'Лалын сүм 5/5 болсны дараа нээгдэнэ.',
+      d:'Хархорумын несторын христийн сүм. Шат бүрт байнгын бонус.',
+      st:[{n:'Суурь тавих',c:{gold:15000,wood:1200},ef:{mil_def:0.05},d:'Хамгаалалт +5%'},
+          {n:'Чулуун хана',c:{gold:45000,wood:2700,grain:900},ef:{mil_hp:0.03},d:'Баатрын бие +3%'},
+          {n:'Улаан дээвэр',c:{gold:120000,wood:4500,wool:900},ef:{eco_prod:0.05},d:'Үйлдвэрлэл +5%'},
+          {n:'Туг, цамхаг',c:{gold:270000,meat:1200,grain:1800,alt:150},ef:{cul_pass:0.10},d:'Шагналын оноо +10%'},
+          {n:'Их сүм',c:{gold:600000,wood:9000,alt:600},ef:{mil_all:0.05,cul_xp:0.10},d:'Хүч +5%, туршлага +10%'}]}
+  };
+  var lv=function(id){ return Math.max(0,Math.min(5,(S.wd&&S.wd[id])||0)); };
+  window.WD2=WD; window.wd2Lv=lv;
+  /* бонус */
+  var _rsb=rsb; rsb=function(k){ var v=_rsb.apply(this,arguments); try{ for(var id in WD){ var n=lv(id); for(var i=0;i<n;i++){ var e=WD[id].st[i].ef[k]; if(e) v+=e; } } }catch(e){} return v; };
+  /* зургууд */
+  for(var id in WD){ for(var i=1;i<=5;i++){ var u='hf/wd/'+id+i+'.webp?v=1', im=new Image(); im.src=u; var z=WD[id].sz[i-1]; SPRDATA[WD[id].bk+i]=[u,z[0],z[1]]; SPR[WD[id].bk+i]={img:im,iw:z[0],ih:z[1]}; } }
+  /* Хархорумын цонх: дэд таб */
+  window.WDT=window.WDT||'hk';
+  window.wdTab=function(t){ WDT=t; fillM(); };
+  function tabs(){ var L=[['hk','🏯 Хархорум',true,(S.hk||0)],['ls','🕌 Лалын сүм',WD.ls.need(),lv('ls')],['hs','⛪ Христийн сүм',WD.hs.need(),lv('hs')]];
+    return '<div style="display:flex;gap:4px;margin-bottom:8px">'+L.map(function(x){ return '<button class="btn'+(WDT===x[0]?' red':'')+'" style="flex:1;padding:6px 2px;font-size:12px;line-height:1.2;min-width:0'+(x[2]?'':';opacity:.55')+'" onclick="wdTab(\''+x[0]+'\')">'+x[1]+'<br><span style="font-size:11px">'+(x[2]?x[3]+'/5':'🔒')+'</span></button>'; }).join('')+'</div>'; }
+  var _wh=wonderHTML; wonderHTML=function(){
+    if(WDT!=='ls'&&WDT!=='hs') return tabs()+_wh.apply(this,arguments);
+    var W=WD[WDT], w=lv(WDT), ok=W.need()&&S.bld.ger>=9, img=SPRDATA[W.bk+Math.max(1,w)];
+    var h=tabs()+'<div class="card" style="text-align:center">'+(img?'<img src="'+img[0]+'" style="width:100%;max-width:300px'+(w?'':';opacity:.5')+'">':'')+'<h3>'+W.n+' · '+w+'/5</h3><div class="sm">'+W.d+(ok?'':' '+W.lockTxt)+'</div></div>';
+    W.st.forEach(function(x,i){ var done=i<w, nxt=i===w; h+='<div class="card" style="opacity:'+(done?0.6:1)+'"><div class="row"><div style="flex:1"><b>'+(i+1)+'. '+x.n+(done?' ✓':'')+'</b><div class="sm">'+x.d+'</div>'+(done?'':'<div class="sm">'+costTxt(x.c)+'</div>')+'</div>'+(nxt&&ok?'<button class="btn" onclick="wd2Build(\''+WDT+'\')">Барих</button>':'')+'</div></div>'; });
+    if(w>=5) h+='<div class="card sm" style="text-align:center;color:#9fe08a">✓ '+W.n+' бүрэн баригдлаа</div>';
+    return h; };
+  window.wd2Build=function(id){ var W=WD[id]; S.wd=S.wd||{}; var i=lv(id), x=W.st[i]; if(!x||!W.need()||S.bld.ger<9) return;
+    if(!canPay(x.c)){ say('Нөөц хүрэхгүй байна'); sfx('err'); return; }
+    for(var k in x.c) S.res[k]-=x.c[k]; S.wd[id]=i+1; sfx('win'); vib([60,40,60,40,120]); say(W.n+': '+x.n+' барилаа!'); try{ passAdd(25); }catch(e){}
+    if(S.wd[id]>=5){ S.res.alt+=W.alt; say(W.n+' дууслаа! +'+W.alt+' Алт'); }
+    try{ save(); }catch(e){} fillM(); refresh(); };
+  /* Хархорум дуусахад дараагийн таб руу шилжүүлнэ */
+  var _wb=wdBuild; wdBuild=function(){ var r=_wb.apply(this,arguments); if((S.hk||0)>=5&&WDT==='hk'){ try{ say('Лалын сүм нээгдлээ! Хархорум → 🕌 Лалын сүм'); }catch(e){} } return r; };
+  /* тосгоны барилга */
+  var BW=54;
+  function reg(){ try{ if(typeof BUILD==='undefined') return;
+    for(var id in WD){ (function(id){ var W=WD[id], k=W.bk;
+      if(!BUILD[k]) BUILD[k]={n:W.n,spr:k+'1',w:BW,cost:id==='ls'?2000:3000,up:0,desc:W.d+' '+W.lockTxt+' Шатаа Судалгаа → Хархорум цонхноос ахиулна.'};
+      if(BKEYS.indexOf(k)<0) BKEYS.push(k);
+      try{ BREQ[k]=9; BRAR[k]='gold'; }catch(e){}
+      try{ var t=BTABS[3][2]; if(t.indexOf(k)<0) t.push(k); }catch(e){}
+      try{ UPEFF[k]=function(){ return 'Шат '+lv(id)+'/5'; }; }catch(e){}
+      if(S&&S.bld){ if(S.bld[k]==null) S.bld[k]=0; if(S.bld[k]>0&&!S.sites[k]) S.bld[k]=Math.max(1,lv(id)); }
+    })(id); } }catch(e){} }
+  reg(); setInterval(reg,1500);
+  var byK={}; for(var id in WD) byK[WD[id].bk]=id;
+  var _bd=bdims0; bdims0=function(k,lvl){ var id=byK[k]; if(id){ var z=WD[id].sz[4]; return {w:BW,h:BW*z[1]/z[0],spr:k+'5'}; } return _bd.apply(this,arguments); };
+  var _gl=gerLow; gerLow=function(){ return _gl.apply(this,arguments).filter(function(x){ return !byK[x]; }); };
+  var _ub=upBlock; upBlock=function(k){ if(byK[k]) return 'Шатыг Судалгаа → Хархорум цонхноос ахиулна'; return _ub.apply(this,arguments); };
+  window.wd2Open=function(id){ try{ radClose(); }catch(e){} RTAB=1; WDT=id; openM('res'); };
+  var _up=upgrade; upgrade=function(k){ if(byK[k]){ wd2Open(byK[k]); return; } return _up.apply(this,arguments); };
+  var _sp=startPlace; startPlace=function(k){ var id=byK[k]; if(id&&!WD[id].need()){ say(WD[id].lockTxt); try{ sfx('err'); }catch(e){} return; } return _sp.apply(this,arguments); };
+  var _rb=radBtns; radBtns=function(k){ var l=_rb.apply(this,arguments), id=byK[k]; if(!id) return l; var w=lv(id), mx=w>=5;
+    l[0]={c:'up'+(mx?' off':''),i:mx?'✔':'⬆',im:'up',t:mx?'':'Шат '+(w+1),a:"wd2Open('"+id+"')"}; l[1]={c:'',i:'ℹ',im:'info',t:'',a:"wd2Open('"+id+"')"}; return l; };
+  var _db=drawBuilding; drawBuilding=function(k){ var id=byK[k]; if(!id||S.sites[k]) return _db.apply(this,arguments);
+    var p=S.pos[k], d=bdims(k), n=Math.max(1,lv(id)), W=WD[id], z=W.sz[n-1], sc=d.w/W.sz[4][0], w=z[0]*sc, h=z[1]*sc;
+    if(lv(id)===0) ctx.globalAlpha=0.6; spr(k+n,p.x+(d.w-w)/2,p.y+d.h-h,w); ctx.globalAlpha=1; };
 })();
 </script>
 </body>
