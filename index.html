@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b408bd220c';
+var UPDB='3c0573d0d4';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25091,6 +25091,61 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     try{ Object.keys(MX).forEach(function(nm){ var m=MX[nm], re=new RegExp('<button class="btn"[^>]*onclick="'+m[0].replace(/[()]/g,'\\$&')+'"[^>]*>[\\s\\S]*?</button>');
       var tile='<div class="mnx" onclick="'+m[0]+'"><img src="'+m[1]+'" alt="'+nm+'"></div>'; h=h.replace(re,(typeof mnWrap==='function'&&typeof MNI!=='undefined'&&MNI)?mnWrap(nm,tile):tile); }); }catch(e){}
     return h; };
+})();
+</script>
+<script id="ntbook">
+/* «Монголын нууц товчоо» — 12 бүлгийн агуулгыг орчин үеийн монгол хэлээр дахин өгүүлсэн ном (hf/nt.json). Бүлэг дуусгавал анх удаа +3 Алт, +40 XP. */
+(function(){
+  var D=null, L=0, V={ch:-1};
+  function st(){ if(!S.nt) S.nt={r:{},l:-1}; if(!S.nt.r) S.nt.r={}; return S.nt; }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  var css=document.createElement('style'); css.textContent=
+  '#ntv{position:fixed;inset:0;z-index:99985;background:url(rts/ui_felt.webp?v=1) center/320px #2a170c;color:#3a2510;display:flex;justify-content:center;font-family:Georgia,"Times New Roman",serif;overflow:hidden}'+
+  '#ntv .bk{position:relative;width:min(760px,100vw);height:100%;display:flex;flex-direction:column;padding:calc(8px + env(safe-area-inset-top,0px)) 10px calc(8px + env(safe-area-inset-bottom,0px));box-sizing:border-box}'+
+  '#ntv .hd{flex:none;display:flex;align-items:center;gap:8px;padding:8px 12px;border:solid transparent;border-width:12px 18px;border-image:url(rts/ui_wide.webp?v=1) 42 52 fill/12px 18px stretch;background:rgba(0,0,0,.35);background-clip:border-box;border-radius:10px;color:#ffd770}'+
+  '#ntv .hd b{flex:1;font-size:20px;text-align:center;text-shadow:0 2px 2px #000}'+
+  '#ntv .ib{flex:none;min-width:40px;height:36px;border-radius:999px;border:2px solid #c9972b;background:linear-gradient(#5a3a1c,#2e1d0e);color:#ffe9b0;font:bold 15px Georgia,serif;cursor:pointer;padding:0 10px}'+
+  '#ntv .pg{flex:1;min-height:0;overflow:auto;margin-top:8px;padding:22px 26px;border:solid transparent;border-width:22px;border-image:url(rts/ui_rect.webp?v=1) 95 fill/22px stretch;background:linear-gradient(rgba(245,230,195,.97),rgba(232,212,168,.97));background-clip:padding-box;-webkit-overflow-scrolling:touch}'+
+  '#ntv .pg h2{margin:0 0 2px;text-align:center;color:#6b2b10;font-size:22px}#ntv .pg .yr{text-align:center;color:#7a5a30;font-size:13px;margin-bottom:12px}'+
+  '#ntv .pg p{font-size:16px;line-height:1.7;margin:0 0 12px;text-align:justify;text-indent:1.4em}'+
+  '#ntv .pg p:first-of-type{text-indent:0}#ntv .pg p:first-of-type::first-letter{font-size:2.1em;color:#8a2a10;font-weight:bold;float:left;line-height:1;margin:2px 6px 0 0}'+
+  '#ntv .it{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:0 0 8px;border:solid transparent;border-width:10px 14px;border-image:url(rts/ui_wide.webp?v=1) 42 52 fill/10px 14px stretch;background:rgba(60,36,14,.9);background-clip:padding-box;color:#f3e2b8;cursor:pointer;border-radius:8px}'+
+  '#ntv .it .no{flex:none;width:34px;height:34px;border-radius:50%;background:radial-gradient(#ffd770,#b07a20);color:#3a2208;font-weight:900;display:flex;align-items:center;justify-content:center}'+
+  '#ntv .it .tx{flex:1;min-width:0}#ntv .it .tx b{display:block;color:#ffd770;font-size:16px}#ntv .it .tx small{opacity:.8;font-size:12px}#ntv .it .ok{color:#8fe36a;font-size:18px}'+
+  '#ntv .intro{font-size:14px;line-height:1.6;margin:0 0 12px;color:#4a3018;font-style:italic;text-align:justify}'+
+  '#ntv .nv{display:flex;gap:8px;justify-content:space-between;margin-top:14px;flex-wrap:wrap}'+
+  '#ntv .bt{flex:1;min-width:120px;border:solid transparent;border-width:10px 22px;border-image:url(rts/ui_btn.webp?v=1) 70 140 fill/10px 22px stretch;background:none;color:#3a2208;font:bold 15px Georgia,serif;cursor:pointer;padding:2px 4px}'+
+  '#ntv .bt.r{border-image:url(rts/ui_pill.webp?v=1) 70 100 fill/10px 20px stretch;color:#ffe9b0;background:linear-gradient(#8a2414,#4a0f08);background-clip:padding-box;border-radius:999px}'+
+  '#ntv .bt[disabled]{opacity:.4;cursor:default}#ntv .pr{height:6px;border-radius:3px;background:rgba(0,0,0,.35);margin:6px 2px 0;overflow:hidden}#ntv .pr i{display:block;height:100%;background:linear-gradient(90deg,#c9972b,#ffd770)}';
+  document.head.appendChild(css);
+  function load(cb){ if(D) return cb(); if(L) return; L=1; fetch('hf/nt.json?v=1').then(function(r){ return r.json(); }).then(function(j){ D=j; L=0; cb(); }).catch(function(){ L=0; try{ say('Ном ачаалж чадсангүй. Интернэтээ шалгана уу'); }catch(e){} }); }
+  function done(){ var r=st().r, n=0; for(var k in r) if(r[k]) n++; return n; }
+  function root(){ var o=document.getElementById('ntv'); if(!o){ o=document.createElement('div'); o.id='ntv'; document.body.appendChild(o); } return o; }
+  function list(){
+    var s=st(), h='<div class="bk"><div class="hd"><button class="ib" onclick="ntClose()">✕</button><b>📖 Монголын нууц товчоо</b><span style="min-width:40px;text-align:right;font-size:13px">'+done()+'/12</span></div>'+
+      '<div class="pr"><i style="width:'+(done()/12*100)+'%"></i></div><div class="pg"><div class="intro">'+esc(D.intro)+'</div>'+
+      (s.l>=0?'<div style="text-align:center;margin-bottom:10px"><button class="bt" onclick="ntRead('+s.l+')">📑 Үргэлжлүүлэн унших: '+(s.l+1)+'-р бүлэг</button></div>':'');
+    D.ch.forEach(function(c,i){ h+='<div class="it" onclick="ntRead('+i+')"><div class="no">'+(i+1)+'</div><div class="tx"><b>'+esc(c.n)+'</b><small>'+esc(c.y)+' · '+esc(c.s)+'</small></div>'+(s.r[i]?'<span class="ok">✓</span>':'<span style="font-size:12px;color:#ffd770">+3 Алт</span>')+'</div>'; });
+    h+='</div></div>'; root().innerHTML=h; V.ch=-1; }
+  function read(i){
+    var c=D.ch[i]; if(!c) return; var s=st(); s.l=i; try{ save(); }catch(e){}
+    var h='<div class="bk"><div class="hd"><button class="ib" onclick="ntList()">☰</button><b>'+(i+1)+'-р бүлэг</b><button class="ib" onclick="ntClose()">✕</button></div>'+
+      '<div class="pr"><i style="width:'+((i+1)/12*100)+'%"></i></div><div class="pg" id="ntpg"><h2>'+esc(c.n)+'</h2><div class="yr">'+esc(c.y)+' · Нууц товчоо '+esc(c.s)+'</div>'+
+      c.p.map(function(t){ return '<p>'+esc(t)+'</p>'; }).join('')+
+      '<div class="nv"><button class="bt r" '+(i?'':'disabled ')+'onclick="ntRead('+(i-1)+')">◀ Өмнөх</button>'+
+      (s.r[i]?'<button class="bt" disabled>✓ Уншсан</button>':'<button class="bt" onclick="ntDone('+i+')">✓ Бүлгийг дуусгалаа (+3 Алт)</button>')+
+      '<button class="bt r" '+(i<11?'':'disabled ')+'onclick="ntRead('+(i+1)+')">Дараах ▶</button></div></div></div>';
+    root().innerHTML=h; V.ch=i; var pg=document.getElementById('ntpg'); if(pg) pg.scrollTop=0; }
+  window.ntOpen=function(){ try{ closeM(); }catch(e){} load(function(){ var s=st(); list(); }); };
+  window.ntList=function(){ load(list); };
+  window.ntRead=function(i){ load(function(){ read(i); }); };
+  window.ntClose=function(){ var o=document.getElementById('ntv'); if(o) o.remove(); };
+  window.ntDone=function(i){ var s=st(); if(s.r[i]) return; s.r[i]=1; S.res.alt=(S.res.alt||0)+3; try{ addXP(40); }catch(e){} try{ if(typeof rkAdd==='function') rkAdd(5,'Нууц товчоо уншсан'); }catch(e){}
+    try{ save(); updateHUD(); sfx('coin'); }catch(e){}
+    try{ say(done()===12?'📖 Нууц товчоог бүрэн уншлаа! +3 Алт':'📖 '+(i+1)+'-р бүлэг уншлаа · +3 Алт'); }catch(e){}
+    if(i<11) read(i+1); else list(); };
+  try{ var g=MENU[3]; if(g&&!g.i.some(function(x){ return x[2]==='ntOpen()'; })) g.i.unshift(['📖','Нууц товчоо','ntOpen()']); }catch(e){}
+  try{ MND['Нууц товчоо']='Монголын түүхийн их ном, 12 бүлэг'; }catch(e){}
 })();
 </script>
 </body>
