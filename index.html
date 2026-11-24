@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='f89d121548';
+var UPDB='b408bd220c';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25081,7 +25081,16 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   '.hz_hr,.hz_jb{'+WIDE+'color:#f3e2b8!important;margin-bottom:10px!important}.hz_hr *,.hz_jb *{color:inherit}.hz_hr b,.hz_jb b{color:#ffd770!important}'+
   '.hz_vb,.hz_rs{background:rgba(0,0,0,.35)!important;border:1px solid #8a6a2a!important;color:#ffe9b0!important}'+
   '#hsp .sm,#hsp small{color:#d8c79a!important}';
+  st.textContent+='.pib{'+BIG+'padding:8px 10px 10px!important;max-width:320px!important}'+
+  '.mnx{display:block;width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent}.mnx img{width:100%;display:block;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}.mnx:active{transform:scale(.97)}';
   document.head.appendChild(st);
+  /* Цэс: Их Засаг, Клан хуралдай зурагтай хавтан */
+  try{ MND['Их Засаг']='Хууль батлаж тосгондоо бонус авна'; MND['Клан хуралдай']='Кланаараа санал өгч 7 хоногийн бонус'; }catch(e){}
+  var MX={'Их Засаг':["openM('zasag')",'hf/mn_zasag.webp?v=1'],'Клан хуралдай':["openM('hural')",'hf/mn_hural.webp?v=1']};
+  var _mh=menuHTML; menuHTML=function(){ var h=_mh.apply(this,arguments);
+    try{ Object.keys(MX).forEach(function(nm){ var m=MX[nm], re=new RegExp('<button class="btn"[^>]*onclick="'+m[0].replace(/[()]/g,'\\$&')+'"[^>]*>[\\s\\S]*?</button>');
+      var tile='<div class="mnx" onclick="'+m[0]+'"><img src="'+m[1]+'" alt="'+nm+'"></div>'; h=h.replace(re,(typeof mnWrap==='function'&&typeof MNI!=='undefined'&&MNI)?mnWrap(nm,tile):tile); }); }catch(e){}
+    return h; };
 })();
 </script>
 </body>
