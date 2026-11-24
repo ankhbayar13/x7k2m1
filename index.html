@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='c4b2d32354';
+var UPDB='9d59d78256';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25349,6 +25349,37 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       '<div class="sinfo" onclick="sumInfo(0)"><b>Гарах магадлал</b><br>Домогт 2% · Эрхэм 6% · Ховор 14% · Сайн 28% · Энгийн 50%.<br>Давхцсан баатар од нэмнэ (хэлтэрхий хүрмэгц автоматаар).<br><span style="color:#ffd35a">Баталгаат Домогт: '+sumPity()+' дуудлагад</span><br><span style="opacity:.7;font-size:11px">Дарж хаана</span></div>'+
     '</div>';
   };
+})();
+</script>
+<script id="khkbld">
+/* Хархорумыг тосгон дээр барилга болгоно: шат бүрт (S.hk 0..5) зураг өөрчлөгдөнө, дарахад Хархорумын цонх нээгдэнэ */
+(function(){
+  var SZ=[[398,228],[402,256],[406,310],[420,360],[526,444]], BW=58;
+  for(var i=1;i<=5;i++){ var u='hf/khk/k'+i+'.webp?v=1', im=new Image(); im.src=u; var z=SZ[i-1];
+    SPRDATA['khk'+i]=[u,z[0],z[1]]; SPR['khk'+i]={img:im,iw:z[0],ih:z[1]};
+    SPRDATA['kk'+i]=[u,z[0],z[1]]; SPR['kk'+i]={img:im,iw:z[0],ih:z[1]}; }
+  var stg=function(){ return Math.max(0,Math.min(5,S.hk||0)); };
+  function reg(){ try{
+    if(typeof BUILD==='undefined') return;
+    if(!BUILD.khk){ BUILD.khk={n:'Хархорум',spr:'khk1',w:BW,cost:1000,up:0,desc:'Монголын эзэнт гүрний нийслэл. Шатаа Хархорумын цонхноос ахиулна. Шат бүрт байнгын бонус.'}; }
+    if(BKEYS.indexOf('khk')<0) BKEYS.push('khk');
+    try{ BREQ.khk=9; BRAR.khk='gold'; }catch(e){}
+    try{ var t=BTABS[3][2]; if(t.indexOf('khk')<0) t.push('khk'); }catch(e){}
+    try{ UPEFF.khk=function(){ return 'Шат '+stg()+'/5'; }; }catch(e){}
+    if(S&&S.bld){ if(S.bld.khk==null) S.bld.khk=0; if(S.bld.khk>0&&!S.sites.khk) S.bld.khk=Math.max(1,stg()); }
+  }catch(e){} }
+  reg(); setInterval(reg,1500);
+  /* талбай нь үргэлж 5-р шатны хэмжээтэй (тосгонд давхцахгүй), зураг нь доод талдаа тулж зурагдана */
+  var _bd=bdims0; bdims0=function(k,lvl){ if(k==='khk'){ var z=SZ[4]; return {w:BW,h:BW*z[1]/z[0],spr:'khk5'}; } return _bd.apply(this,arguments); };
+  var _gl=gerLow; gerLow=function(){ return _gl.apply(this,arguments).filter(function(x){ return x!=='khk'; }); };
+  var _ub=upBlock; upBlock=function(k){ if(k==='khk') return 'Хархорумын шатыг Судалгаа → Хархорум цонхноос ахиулна'; return _ub.apply(this,arguments); };
+  window.khkOpen=function(){ try{ radClose(); }catch(e){} RTAB=1; openM('res'); };
+  if(typeof upgrade==='function'){ var _up=upgrade; upgrade=function(k){ if(k==='khk'){ khkOpen(); return; } return _up.apply(this,arguments); }; }
+  var _rb=radBtns; radBtns=function(k){ var l=_rb.apply(this,arguments); if(k!=='khk') return l; var w=stg(), mx=w>=5;
+    l[0]={c:'up'+(mx?' off':''),i:mx?'✔':'⬆',im:'up',t:mx?'':'Шат '+(w+1),a:'khkOpen()'}; l[1]={c:'',i:'ℹ',im:'info',t:'',a:'khkOpen()'}; return l; };
+  var _db=drawBuilding; drawBuilding=function(k){ if(k!=='khk'||S.sites.khk) return _db.apply(this,arguments);
+    var p=S.pos.khk, d=bdims('khk'), n=Math.max(1,stg()), z=SZ[n-1], sc=d.w/SZ[4][0], w=z[0]*sc, h=z[1]*sc;
+    if(stg()===0) ctx.globalAlpha=0.6; spr('khk'+n,p.x+(d.w-w)/2,p.y+d.h-h,w); ctx.globalAlpha=1; };
 })();
 </script>
 </body>
