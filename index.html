@@ -6216,7 +6216,7 @@ async function rtsLoadU(){ const A=RTA; if(A.U!==undefined) return; A.U=null;
       x.putImageData(id,0,0); U.t[k]={a:img,e:ec,cols:T.cols,an:T.anim}; }
     A.U=U; }catch(e){ A.U=null; } }
 function rtsLoad(R){
-  RTA=RTA||{spr:{},bgc:{},ready:false}; const A=RTA; A.bgc=A.bgc||{}; const bp=R.bgp;
+  RTA=RTA||{spr:{},bgc:{},ready:false}; const A=RTA; A.bgc=A.bgc||{}; let bp=R.bgp;
   const ld=src=>new Promise(r=>{ const i=new Image(); i.onload=()=>r(i); i.onerror=()=>r(null); i.src=src; });
   const names=[]; if(!A.ready){ ['back','front'].forEach(s=>['foot','arch','cav'].forEach(t=>{ names.push(s+'_'+t+'_walk'); names.push(s+'_'+t+'_atk'); names.push(s+'_'+t+'_die'); })); ['foot','arch','cav'].forEach(t=>names.push('pfront_'+t+'_walk')); names.push('pfront_arch_atk'); }
   const bk=bp.f+(bp.tint||'');
@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='7bf309131c';
+var UPDB='6e6f6e361c';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -15933,18 +15933,20 @@ window.sdDbg={build,step,startRound,endRound,aiOrders,cleanOrd,cleanPack,myPack,
 })();
 
 
-/* p32/seasons.js — «Тэмцээн» 14 хоногийн улирал: зэрэг хагасаар буурна, улирлын төгсгөлд зэргээрээ шагнал авна */
+/* p32/seasons.js — «Тэмцээн» сарын улирал (УБ цагаар сар бүрийн 1-нд солигдоно): зэрэг хагасаар буурна, улирлын төгсгөлд зэргээрээ шагнал авна */
 (function(){
-  const EP=Date.UTC(2026,10,2), LEN=14*864e5;
+  const nowL=()=>new Date(Date.now()+8*36e5);
+  const mEnd=n=>Date.UTC(Math.floor(n/12),n%12+1,1)-8*36e5; /* n-р сарын төгсгөл (УБ 00:00) */
+  const mName=n=>Math.floor(n/12)+' оны '+(n%12+1)+'-р сар';
   const RK=[[0,'Шинэ далайчин'],[900,'Далайчин'],[1100,'Ахлагч'],[1300,'Ахмад далайчин'],[1500,'Далайн хаан']];
   const GOLD=[0,300,800,1500,3000], ALT=[0,0,1,2,5];
   const rk=r=>{ let k=0; RK.forEach((x,i)=>{ if(r>=x[0]) k=i; }); return k; };
-  const sid=()=>Math.floor((Date.now()-EP)/LEN);
+  const sid=()=>{ const d=nowL(); return d.getUTCFullYear()*12+d.getUTCMonth(); };
   const sdS=()=>{ if(!S.sd) S.sd={r:1000,w:0,l:0,dd:'',dc:0}; return S.sd; };
-  const duS=()=>{ try{ return stats(); }catch(e){ return null; } };
+  const duS=()=>{ try{ const A=S.ar; return (A&&A.dr!=null)?A:null; }catch(e){ return null; } };
   function check(){
     const n=sid(); if(!S.ssn) S.ssn={id:n,pend:null,hist:[]};
-    const Z=S.ssn; if(Z.id==null) Z.id=n; if(Z.id>=n) return Z;
+    const Z=S.ssn; if(Z.id==null||Z.id<10000){ Z.id=n; try{ save(); }catch(e){} } if(Z.id>=n) return Z; /* хуучин 14 хоногийн дугаарыг сарын дугаарт шилжүүлнэ (шагнал/бууралтгүй) */
     const a=sdS(), d=duS(); const best=Math.max(a.r||1000,d?(d.dr||1000):1000), games=(a.w||0)+(a.l||0)+(d?(d.dw||0)+(d.dl||0):0);
     if(games>0){ const t=rk(best); const old=Z.pend; Z.pend={s:Z.id,t:t,g:GOLD[t]+(old?old.g:0),a:ALT[t]+(old?old.a:0),b:best};
       Z.hist=(Z.hist||[]).concat([{s:Z.id,t:t,b:best}]).slice(-6); }
@@ -15955,9 +15957,9 @@ window.sdDbg={build,step,startRound,endRound,aiOrders,cleanOrd,cleanPack,myPack,
     try{ save(); updateHUD(); }catch(e){} try{ say('🏆 Улирлын шагнал: +'+p.g+' 🪙'+(p.a?' +'+p.a+' Алт':'')); }catch(e){} try{ openM('arena'); }catch(e){} };
   const _a=arenaHTML; arenaHTML=function(){
     let h=_a.apply(this,arguments);
-    try{ const Z=check(), a=sdS(), d=duS(), cur=Math.max(a.r||1000,d?(d.dr||1000):1000), t=rk(cur), left=Math.max(0,Math.ceil((EP+(Z.id+1)*LEN-Date.now())/864e5));
+    try{ const Z=check(), a=sdS(), d=duS(), cur=Math.max(a.r||1000,d?(d.dr||1000):1000), t=rk(cur), left=Math.max(0,Math.ceil((mEnd(Z.id)-Date.now())/864e5));
       const img=k=>'<img src="hf/sq/rk'+k+'.webp?v=2" style="height:34px;vertical-align:middle">';
-      let c='<div class="card" style="border:2px solid #ffd770"><h3>🏆 Улирал '+(Z.id+1)+'</h3><div class="sm">14 хоногийн улирал · дуустал <b>'+left+'</b> өдөр. Шинэ улирал эхлэхэд зэрэг хагасаар буурна, хуучин зэргээрээ шагнал авна.</div>'
+      let c='<div class="card" style="border:2px solid #ffd770"><h3>🏆 Улирал: '+mName(Z.id)+'</h3><div class="sm">Сарын улирал · дуустал <b>'+left+'</b> өдөр. Сар солигдоход зэрэг хагасаар буурна, өнгөрсөн сарын зэргээрээ шагнал авна.</div>'
         +'<div class="row" style="margin-top:6px"><div>'+img(t)+' <b>'+RK[t][1]+'</b><div class="sm">Одоогийн дээд зэрэг: '+cur+'</div></div></div>'
         +'<div class="sm" style="margin-top:6px">Шагнал: '+RK.map((x,i)=>i?img(i).replace('34px','22px')+' '+GOLD[i]+'🪙'+(ALT[i]?'+'+ALT[i]+'Алт':''):'').filter(Boolean).join(' · ')+'</div>';
       if(Z.pend){ c+='<div class="row" style="margin-top:8px"><div>Өмнөх улирал: '+img(Z.pend.t)+' <b>'+RK[Z.pend.t][1]+'</b><div class="sm">+'+Z.pend.g+' 🪙'+(Z.pend.a?' · +'+Z.pend.a+' Алт':'')+'</div></div><button class="btn red" onclick="ssnClaim()">🎁 Шагнал авах</button></div>'; }
@@ -21738,7 +21740,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
   +'#ndx .ndx-m .ndx-e{font-size:2.05cqw}#ndx .ndx-b .ndx-e{font-size:2.15cqw}'
   +'#ndx b{font-weight:bold}'
   +'#ndx .ndx-i{width:100%}#ndx .ndx-tab .ndx-i,#ndx .ndx-bt .ndx-i,#ndx .ndx-btn .ndx-i,#ndx .ndx-sh .ndx-i,#ndx .ndx-ttl .ndx-i,#ndx .ndx-lp .ndx-i,#ndx .ndx-pl .ndx-i,#ndx .ndx-it .ndx-i,#ndx .ndx-warn .ndx-i,#ndx .ndx-ec .ndx-i{text-align:center}'
-  +'#ndx .ndx-x{background:transparent;cursor:pointer}'
+  +'#ndx .ndx-x{background:transparent;cursor:pointer}#ndx .ndx-x .ndx-i::after{content:"✕";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-weight:900;font-size:4.2cqw;line-height:1;text-shadow:0 1px 2px #000}'
   +'#ndx .ndx-ttl{align-items:center;text-align:center;font-weight:bold;color:#ffe7a8;text-shadow:0 .25cqw .4cqw #000,0 0 1.2cqw #8a4a10;white-space:nowrap}'
   +'#ndx .ndx-m .ndx-ttl{font-size:6.2cqw}#ndx .ndx-b .ndx-ttl{font-size:5.4cqw}'
   +'#ndx .ndx-it{align-items:center;text-align:center;color:#e6d3a4;font-size:1.9cqw!important;line-height:1.3}'
@@ -24785,21 +24787,22 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   };
   function src(){ return window.hrSrc||FB; }
   function leader(k){ try{ if(window.hrSrc) return !!window.hrLeader; var r=ckRole(k); return r==='own'||r==='act'; }catch(e){ return false; } }
-  function members(k){ try{ return window.hrSrc?(window.hrM||5):Math.max(1,ckRows(k).length); }catch(e){ return 1; } }
+  /* гишүүдийн жагсаалт ачаалагдаагүй бол null — тэр үед «олонх шууд батлах» ажиллахгүй */
+  function members(k){ try{ if(window.hrSrc) return window.hrM||5; if(!CKD.mem[k]) return null; return Math.max(1,ckRows(k).length); }catch(e){ return null; } }
   function okProposer(k,u){ if(window.hrSrc) return true; try{ var d=CKD.docs[k]; return !!d&&(u===d.ow||u===ckActing(k)); }catch(e){ return false; } }
   function kicked(k,u){ try{ return !window.hrSrc&&ckKicked(CKD.docs[k],u); }catch(e){ return false; } }
   /* Төлөв тооцоо: бүх үйлдэл зөвхөн түүхийн бичлэгээс гарна */
   function calc(k){
-    var ev=H.ev[k]||[], t=now(), uid=(typeof CL!=='undefined'&&CL.uid)||'me', M=members(k), q=Math.min(M,Math.max(2,Math.ceil(M*0.3)));
+    var ev=H.ev[k]||[], t=now(), uid=(typeof CL!=='undefined'&&CL.uid)||'me', M0=members(k), M=M0||1, q=M0?Math.min(M,Math.max(2,Math.ceil(M*0.3))):2;
     var ps=ev.filter(function(r){ return r.e==='hp'&&okProposer(k,r.u)&&t-r.t<LIFE&&r.x>=0&&r.x<DEC.length; }).sort(function(a,b){ return a.t-b.t; });
     var res=ps.map(function(p){
       var by={}; ev.forEach(function(r){ if(r.e!=='vt'||Math.floor(r.x/2)!==p.t||r.t<p.t||r.t>p.t+WIN+60000||kicked(k,r.u)) return; if(!by[r.u]||by[r.u].t<r.t) by[r.u]=r; });
       var yes=0,no=0; Object.keys(by).forEach(function(u){ if(by[u].x%2) yes++; else no++; });
-      var st; if(yes>M/2) st='passed'; else if(t<p.t+WIN) st='voting'; else st=(yes>no&&yes+no>=q)?'passed':'failed';
-      return {p:p,idx:p.x,yes:yes,no:no,M:M,q:q,st:st,end:p.t+WIN,until:p.t+LIFE,my:by[uid]?(by[uid].x%2?1:0):-1};
+      var Mx=M0||Math.max(1,yes+no), st; if(M0&&yes>M/2) st='passed'; else if(t<p.t+WIN) st='voting'; else st=(yes>no&&yes+no>=q)?'passed':'failed';
+      return {p:p,idx:p.x,yes:yes,no:no,M:Mx,q:q,st:st,end:p.t+WIN,until:p.t+LIFE,my:by[uid]?(by[uid].x%2?1:0):-1};
     });
     var cur=res.length?res[res.length-1]:null, act=null; for(var i=res.length-1;i>=0;i--){ if(res[i].st==='passed'){ act=res[i]; break; } }
-    return {cur:cur,act:act,q:q,M:M};
+    return {cur:cur,act:act,q:q,M:M,mk:!!M0};
   }
   function hrS(){ if(!S.hr) S.hr={}; return S.hr; }
   function apply(k){
@@ -24810,6 +24813,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   }
   async function hrRef(force){
     var k=K(); if(k<0||!online()) return null;
+    if(!window.hrSrc){ try{ await ckFetch(false); }catch(e){} try{ await ckMem(k,false); }catch(e){} }
     var f=false; if(force||!H.t[k]||Date.now()-H.t[k]>60000){ f=true; try{ var a=await src().fetch(k); var loc=(H.ev[k]||[]).filter(function(r){ return r._l&&!a.some(function(x){ return x.t===r.t&&x.u===r.u&&x.e===r.e; }); }); H.ev[k]=a.concat(loc); H.t[k]=Date.now(); H.err=''; }catch(e){ H.err='net'; H.t[k]=Date.now()-40000; } }
     var c=apply(k); if(c) c.f=f; return c;
   }
@@ -24835,7 +24839,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     if(k<0){ return h+'<div class="card"><b>Та кланд нэгдээгүй байна.</b><div class="sm">Дэлхийн газрын зураг дээр «Клан»-аас нутгаа сонгож нэгдэнэ.</div></div>'; }
     if(!online()){ return h+'<div class="card"><b>Клан сүлжээнд холбогдсонгүй.</b><div class="sm">Интернэт, нэвтрэлтээ шалгаад дахин нээнэ үү.</div></div>'; }
     var c=calc(k), lead=leader(k), cn=(CLN[k]||{}).n||'';
-    h+='<div class="sm" style="margin:2px 2px 6px">Клан: <b>'+cn+'</b> · гишүүн ≈ '+c.M+' · дор хаяж '+c.q+' санал хэрэгтэй'+(H.err?' · <span style="color:#ff8a7a">холболт тасалдсан</span>':'')+'</div>';
+    h+='<div class="sm" style="margin:2px 2px 6px">Клан: <b>'+cn+'</b> · гишүүн ≈ '+(c.mk?c.M:'?')+' · дор хаяж '+c.q+' санал хэрэгтэй'+(H.err?' · <span style="color:#ff8a7a">холболт тасалдсан</span>':'')+'</div>';
     if(c.act){ var D=DEC[c.act.idx]; h+='<div class="card" style="border:2px solid #9fe39a;background:rgba(79,157,58,.16)"><b>✅ Идэвхтэй зарлиг: '+D.n+'</b><div class="sm" style="color:#9fe39a;margin-top:2px">▲ '+D.d+'</div><div class="sm" style="opacity:.8">Үлдсэн: '+left(c.act.until-now())+'</div></div>'; }
     var cur=c.cur;
     if(cur&&cur.st==='voting'){ var D2=DEC[cur.idx];
