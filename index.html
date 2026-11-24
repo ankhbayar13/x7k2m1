@@ -1470,7 +1470,7 @@ function iconTag(x,y,ch,px){ const k=Math.max(0.1,px/(SC*Z)/8); ctx.save(); ctx.
 function treeAt(x,y){ const th=sprH('tree'); let b=null; for(const tr of L.trees){ if(x>=tr.x-1&&x<=tr.x+SZ.tree+1&&y>=tr.y-1&&y<=tr.y+th+1&&zoneOpenAt(tr.x+SZ.tree/2,tr.y+th)) b=tr; } return b; }
 function nearestTree(e){ let b=null,bd=1e9; const th=sprH('tree'); for(const tr of L.trees){ if(!zoneOpenAt(tr.x+SZ.tree/2,tr.y+th)) continue; const d=Math.hypot(tr.x-e.x,tr.y-e.y); if(d<bd){bd=d;b=tr;} } return b; }
 function huntAt(x,y){ return ents.find(e=>e.kind==='wild'&&HUNT[e.type]&&!e.friend&&x>=e.x-2&&x<=e.x+entW(e)+2&&y>=e.y-2&&y<=e.y+entH(e)+2&&zoneOpenAt(e.x,e.y)); }
-function nearestPrey(p){ let b=null,bd=1e9; ents.forEach(e=>{ if(e.kind!=='wild'||!HUNT[e.type]||e.friend||!zoneOpenAt(e.x,e.y)) return; const d=Math.hypot(e.x-p.x,e.y-p.y); if(d<bd){bd=d;b=e;} }); return b; }
+function nearestPrey(p){ let b=null,bd=1e9; ents.forEach(e=>{ if(e.kind!=='wild'||!HUNT[e.type]||e.friend||e.rare||!zoneOpenAt(e.x,e.y)) return; const d=Math.hypot(e.x-p.x,e.y-p.y); if(d<bd){bd=d;b=e;} }); return b; }
 function giveTask(e,task){ if(e.friend) e.speed=e.type==='dog'?14:11; e.task=task; e.wait=0; e.amb=null; e.icon=(task.type==='haul'?({wood:'🪵',meat:'🥩',grain:'🌾'}[task.res]||'🪵'):TICON[task.type]); e.say={t:e.type==='dog'?'Гав!':TSAY[task.type],ttl:2.4,delay:0}; }
 function woodTask(e,tr){ const ew=entW(e), eh=entH(e), th=sprH('tree'); return {type:'wood',tr,x:tr.x-ew*0.6,y:tr.y+th-eh,phase:'go',t:0}; }
 function quickTask(kind){
@@ -1604,8 +1604,9 @@ function workStep(e,dt){
     if(!t.shot&&t.t>0.7){ t.shot=1; shots.push({x0:e.x+3,y0:e.y+4,x1:t.tg.x+entW(t.tg)/2,y1:t.tg.y+entH(t.tg)/2,t:0}); }
     if(t.t>=1.6){
       const g=Math.round(HUNT[t.tg.type]*(1+rsb('mil_hunt'))); spawnBlood(t.tg.x+entW(t.tg)/2,t.tg.y+entH(t.tg)/2,12);
+      if(t.tg.rare){ try{ window.rareFine&&rareFine(t.tg); }catch(_){} }
       S.res.meat=Math.min(cap(),S.res.meat+g); addFloat(t.tg.x+2,t.tg.y-2,'+'+g+' мах','#ff8a7a');
-      huntQ.push({type:t.tg.type,hx:t.tg.hx,hy:t.tg.hy,t:70+Math.random()*40}); addDeath(t.tg); spawnBlood(t.tg.x+4,t.tg.y+3,6); ents.splice(ents.indexOf(t.tg),1); say('Ан олзлоо!'); endTask(e);
+      if(!t.tg.rare) huntQ.push({type:t.tg.type,hx:t.tg.hx,hy:t.tg.hy,t:70+Math.random()*40}); addDeath(t.tg); spawnBlood(t.tg.x+4,t.tg.y+3,6); ents.splice(ents.indexOf(t.tg),1); say('Ан олзлоо!'); endTask(e);
     }
   } else if(t.type==='farm'){
     const fm=S.farm;
@@ -1645,7 +1646,7 @@ function updPerson(e,dt){
 let ftimer=0, howlT=0;
 let raid=null, raidT=0, raidNext=30, gdT=0;
 function raidStart(){
-  const kinds=['wolf']; if(S.bld.ger>=2) kinds.push('lynx'); if(S.bld.ger>=3) kinds.push('bear'); const kind=kinds[Math.floor(Math.random()*kinds.length)], KN={wolf:'Чоно',lynx:'Шилүүс',bear:'Баавгай'}[kind];
+  const kinds=['wolf']; if(S.bld.ger>=2) kinds.push('lynx'); if(S.bld.ger>=2){ kinds.push('bear'); } const kind=kinds[Math.floor(Math.random()*kinds.length)], KN={wolf:'Чоно',lynx:'Шилүүс',bear:'Баавгай'}[kind];
   const wolves=ents.filter(e=>e.kind==='wild'&&e.type===kind);
   const an=ents.filter(e=>e.kind==='animal');
   if(!wolves.length||!an.length||herdCount()<2) return;
@@ -1780,7 +1781,7 @@ function ensureGuards(){
 function initWild(){
   for(let i=ents.length-1;i>=0;i--) if(ents[i].kind==='wild') ents.splice(i,1);
   const r=rng(77);
-  [['wolf',30],['bear',16],['fox',14],['deer',12],['gazelle',10],['lynx',12],['marmot',6],['argali',6],['eagle',5],['leopard',3]].forEach(([type,n])=>{
+  [['wolf',30],['bear',16],['fox',14],['deer',12],['gazelle',10],['lynx',12],['marmot',6],['argali',6],['eagle',5]].forEach(([type,n])=>{
     if(!(SPR[type]||WILDDIM[type])) return;
     for(let i=0;i<n;i++){
       let hx,hy,t=0;
@@ -2431,7 +2432,7 @@ function tap(x,y){
   const hp=ents.filter(e=>{ if(e._in||(e.kind!=='person'&&!(e.kind==='wild'&&e.friend))) return false; const w=entW(e), h=entH(e); return x>=e.x-6&&x<=e.x+w+6&&y>=e.y-9&&y<=e.y+h+5; }).sort((a,b)=>Math.hypot(x-a.x-entW(a)/2,y-a.y-entH(a)/2)-Math.hypot(x-b.x-entW(b)/2,y-b.y-entH(b)/2))[0];
   if(hp){ if(sel===hp){ talkSel(); } else select(hp); return; }
   const hw=ents.find(e=>{ if(e.kind!=='wild') return false; const ly=(e.type==='eagle'&&!e.friend)?12:0; return x>=e.x-2&&x<=e.x+entW(e)+2&&y>=e.y-2-ly&&y<=e.y+entH(e)+2; });
-  if(hw&&!sel){ const m={wolf:'Чоно! Малаа хашаандаа байлгаарай.',bear:'Баавгай! Холуур байсан нь дээр.',fox:'Үнэг гөлрөн явна.',deer:'Буга нуур зорьж яваа юм.',gazelle:'Зээр! Анчин мах авчирна.',lynx:'Шилүүс! Хурга, ишиг авч явах вий.',dog:'Банхар нохой малаа манаж байна.',guard:'Манаач: Бүгд амар, дарга аа.',hunter:'Анчин: Өнөөдөр буга олжилно.',marmot:'Тарвага өвөлдөө бэлдэж байна.',argali:'Аргаль хад чулуун дээгүүр гүйнэ.',leopard:'Ирвэс! Маш ховор амьтан.',eagle:'Бүргэд тэнгэрт эргэнэ.'}; say(m[hw.type]||'Зэрлэг амьтан'); return; }
+  if(hw&&!sel){ const m={wolf:'Чоно! Малаа хашаандаа байлгаарай.',bear:'Баавгай! Холуур байсан нь дээр.',fox:'Үнэг гөлрөн явна.',deer:'Буга нуур зорьж яваа юм.',gazelle:'Зээр! Анчин мах авчирна.',lynx:'Шилүүс! Хурга, ишиг авч явах вий.',dog:'Банхар нохой малаа манаж байна.',guard:'Манаач: Бүгд амар, дарга аа.',hunter:'Анчин: Өнөөдөр буга олжилно.',marmot:'Тарвага өвөлдөө бэлдэж байна.',argali:'Аргаль хад чулуун дээгүүр гүйнэ.',leopard:'Ирвэс! Маш ховор амьтан — агнахыг хориглоно (−1000 зоос).',mazaalai:'Мазаалай! Говийн ховор баавгай — агнахыг хориглоно (−1000 зоос).',takhi:'Тахь! Ховор зэрлэг адуу — агнахыг хориглоно (−1000 зоос).',eagle:'Бүргэд тэнгэрт эргэнэ.'}; say(m[hw.type]||'Зэрлэг амьтан'); return; }
   if(group){ commandAll(x,y); return; }
   if(sel){ command(x,y); return; }
   for(const k of BKEYS){
@@ -8588,7 +8589,7 @@ document.addEventListener('visibilitychange',()=>{ if(document.hidden) return; s
 
   function huntTarget(e){
     const hx=e.hx, hy=e.hy, cand=[];
-    ents.forEach(a=>{ if(a.kind==='wild'&&!a.friend&&HUNT[a.type]&&zoneOpenAt(a.x,a.y)){ const d=Math.hypot(a.x-hx,a.y-hy); if(d>40&&d<300) cand.push({a,d,x:a.x+entW(a)/2,y:a.y+entH(a)/2}); } });
+    ents.forEach(a=>{ if(a.kind==='wild'&&!a.friend&&!a.rare&&HUNT[a.type]&&zoneOpenAt(a.x,a.y)){ const d=Math.hypot(a.x-hx,a.y-hy); if(d>40&&d<300) cand.push({a,d,x:a.x+entW(a)/2,y:a.y+entH(a)/2}); } });
     cand.sort((u,v)=>u.d-v.d);
     if(cand.length){ const c=cand[Math.floor(Math.random()*Math.min(3,cand.length))]; return {pr:c.a,x:c.x,y:c.y}; }
     const th=(typeof sprH==='function')?sprH('tree'):20, tr=[];
@@ -11154,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b318f80af3';
+var UPDB='e45846e655';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25190,6 +25191,82 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     var g=document.getElementById('goBtn'); if((g&&getComputedStyle(g).display!=='none')||document.getElementById('splash')||document.getElementById('gate')||!(document.getElementById('res')||{}).children||!document.getElementById('res').children.length) return;
     show(); clearInterval(iv);
   }catch(e){} },1200);
+})();
+</script>
+<script id="dogwild">
+/* Нохой: түвшнээр 2→6, өдөр малаа дагана. Зэрлэг амьтан бэлчээр/суурингаас хол (зөвхөн дайрахдаа ирнэ). Ховор амьтад (ирвэс, мазаалай, тахь): агнавал −1000 зоос. */
+(function(){
+  var DN=['Банхар','Хар','Цагаан','Бор','Алаг','Шар','Хасар','Шарга'];
+  function want(){ var L=S.pl||1; return 2+(L>=5)+(L>=10)+(L>=15)+(L>=20); }
+  function dogs(){ return ents.filter(function(e){ return e.kind==='wild'&&e.friend&&e.type==='dog'; }); }
+  var ready=0;
+  var _eg=ensureGuards; ensureGuards=function(){ var r=_eg.apply(this,arguments);
+    try{ var g=S.pos&&S.pos.ger; if(!g) return r; var D=dogs(), w=want(), used={}; D.forEach(function(d){ used[d.name]=1; });
+      while(D.length<w){ var nm=DN.filter(function(n){ return !used[n]; })[0]||('Нохой '+(D.length+1)); used[nm]=1;
+        var hx=g.x-10+D.length*9, hy=g.y+10; ents.push({kind:'wild',friend:1,name:nm,role:'Нохой',type:'dog',x:hx,y:hy,tx:hx,ty:hy,hx:hx,hy:hy,r:16,dir:1,wait:Math.random()*2,moving:false,speed:5});
+        if(ready){ try{ say('🐕 Шинэ нохой ирлээ: '+nm+' ('+(D.length+1)+'/6)'); addFloat(hx,hy-6,'🐕 '+nm,'#ffe9a0'); }catch(e){} }
+        D=dogs(); }
+      ready=1; }catch(e){}
+    return r; };
+
+  /* ---- бэлчээр ба суурин: зэрлэг амьтан энд орохгүй ---- */
+  function zones(){ var Z=[]; try{ var g=S.pos&&S.pos.ger; if(g) Z.push({x:g.x+15,y:g.y+15,r:210});
+      if(window.GZ&&GZ.types){ GZ.types().forEach(function(k){ var a=GZ.anchor(k); if(a) Z.push({x:a.x,y:a.y,r:120}); }); } }catch(e){} return Z; }
+  function push(x,y,Z){ for(var i=0;i<Z.length;i++){ var z=Z[i], dx=x-z.x, dy=y-z.y, d=Math.hypot(dx,dy); if(d<z.r){ if(d<1){ dx=1; dy=0; d=1; } x=z.x+dx/d*z.r; y=z.y+dy/d*z.r; } }
+    x=Math.max(20,Math.min(WW-40,x)); y=Math.max(60,Math.min(WH-40,y)); return {x:x,y:y}; }
+  var zt=0, ZC=[];
+  /* ---- нохой малаа дагана ---- */
+  function herdC(k){ var A=ents.filter(function(e){ return e.kind==='animal'&&e.type===k; }); if(!A.length) return null; var x=0,y=0; A.forEach(function(a){ x+=a.x; y+=a.y; }); return {x:x/A.length,y:y/A.length}; }
+
+  /* ---- ховор амьтад ---- */
+  var RARE={leopard:{n:'Ирвэс',m:20},mazaalai:{n:'Мазаалай',m:24},takhi:{n:'Тахь',m:18}};
+  Object.keys(RARE).forEach(function(k){ if(!HUNT[k]) HUNT[k]=RARE[k].m; });
+  SZ.mazaalai=SZ.mazaalai||9.5; SZ.takhi=SZ.takhi||10.5;
+  function tint(src,k,f){ try{ if(SPR[k]) return; var s=SPR[src]; if(!s||!s.img||!(s.img.naturalWidth||s.img.width)) return; var w=s.img.naturalWidth||s.img.width, h=s.img.naturalHeight||s.img.height, c=document.createElement('canvas'); c.width=w; c.height=h; var x=c.getContext('2d'); x.filter=f; x.drawImage(s.img,0,0); c.complete=true; c.naturalWidth=w; SPR[k]={img:c,iw:s.iw,ih:s.ih}; }catch(e){} }
+  function ensureArt(){ if(!AOK.mazaalai) tint('bear','mazaalai','sepia(.55) saturate(.7) brightness(1.35) hue-rotate(-8deg)'); if(!AOK.takhi) tint('horse','takhi','sepia(.6) saturate(1.1) brightness(1.08)'); }
+  window.rareFine=function(a){ try{ var f=1000; S.res.gold=Math.max(0,(S.res.gold||0)-f); addFloat(a.x,a.y-8,'−1000 🪙 торгууль','#ff6a5a'); say('⚠ Ховор амьтан ('+(RARE[a.type]||{n:''}).n+') агнасан тул 1000 зоос торгууль!'); sfx('err'); vib([80,40,80]); refresh(); }catch(e){} };
+  var rt=90+Math.random()*60;
+  function spawnRare(){ ensureArt(); var keys=Object.keys(RARE).filter(function(k){ return SPR[k]||SPR['wl_'+k+'_r0']||SPR['wl_'+k+'_r_r0']; }); if(!keys.length) return;
+    if(ents.some(function(e){ return e.rare; })) return; var k=keys[Math.floor(Math.random()*keys.length)], g=S.pos&&S.pos.ger; if(!g) return;
+    for(var t=0;t<80;t++){ var a=Math.random()*6.283, d=(t<40?220:140)+Math.random()*260, x=g.x+Math.cos(a)*d, y=g.y+Math.sin(a)*d*0.7;
+      if(x<30||y<70||x>WW-50||y>WH-50) continue; if(typeof zoneOpenAt==='function'&&!zoneOpenAt(x,y)) continue;
+      if(ZC.some(function(z,j){ return j>0&&Math.hypot(x-z.x,y-z.y)<100; })) continue; var p={x:x,y:y};
+      ents.push({kind:'wild',type:k,x:p.x,y:p.y,tx:p.x,ty:p.y,hx:p.x,hy:p.y,r:26,dir:1,wait:1,moving:false,speed:4,rare:1,rareT:150+Math.random()*60});
+      try{ say('✨ Ховор амьтан харагдлаа: '+RARE[k].n+'! Агнахыг хориглоно.'); }catch(e){} return; } }
+
+  var _up=update;
+  update=function(dt){
+    var noRaid=!((typeof raid!=='undefined')&&raid), act=[];
+    try{
+      zt-=dt; if(zt<=0){ zt=1; ZC=zones(); }
+      /* зэрлэг амьтан: гэр, бэлчээрээс хол (дайралт, ан хийгдэж буйг эс тооцно) */
+      ents.forEach(function(e){ if(e.kind!=='wild'||e.friend||e.raid||e.rare) return; var h=push(e.hx,e.hy,ZC); e.hx=h.x; e.hy=h.y; var t=push(e.tx,e.ty,ZC); e.tx=t.x; e.ty=t.y; });
+      /* ховор амьтан: хугацаа дуусвал алга болно */
+      rt-=dt; if(rt<=0){ rt=240+Math.random()*180; if(Math.random()<0.7) spawnRare(); }
+      for(var i=ents.length-1;i>=0;i--){ var e=ents[i]; if(e.rare){ e.rareT-=dt; if(e.rareT<=0&&!ents.some(function(p){ return p.task&&p.task.tg===e; })) ents.splice(i,1); } }
+      /* нохой: өдөр бэлчээрт малаа дагана */
+      var out=window.GZ&&GZ.out&&GZ.out(), T=(window.GZ&&GZ.types)?GZ.types():[];
+      if(noRaid&&out&&T.length){ dogs().forEach(function(d,i){ if(d.task||d.sel||d.def||d.hp!=null) return; if(i>=T.length) return; var c=herdC(T[i])||GZ.anchor(T[i]); if(!c) return;
+          d._fw=(d._fw||0)-dt; if(d._fw<=0||!d._fp){ d._fw=2.5+Math.random()*3; var a=Math.random()*6.283, rr=14+Math.random()*14; d._fp={dx:Math.cos(a)*rr,dy:Math.sin(a)*rr*0.6}; }
+          d.tx=c.x+d._fp.dx; d.ty=c.y+d._fp.dy; d.speed=Math.hypot(d.tx-d.x,d.ty-d.y)>60?13:6; if(d._nl){ d._nl=null; } d.def=true; act.push(d); }); }
+    }catch(x){}
+    var r=_up.apply(this,arguments);
+    act.forEach(function(d){ d.def=false; });
+    return r; };
+
+  /* ховор амьтны дээр шошго */
+  var _ds=drawSpeech; drawSpeech=function(){ var r=_ds.apply(this,arguments);
+    try{ if(typeof Z!=='undefined'&&Z<0.5) return r; ents.forEach(function(e){ if(!e.rare) return; var k=Math.max(0.12,10.5/(SC*Z)/7), tx=e.x+entCx(e), ty=e.y-6;
+        ctx.save(); ctx.translate(tx,ty); ctx.scale(k,k); ctx.font='bold 7px sans-serif'; ctx.textAlign='center'; var t='✨ '+(RARE[e.type]||{n:''}).n+' · ховор', w=ctx.measureText(t).width+8;
+        ctx.fillStyle='rgba(60,20,10,.85)'; ctx.fillRect(-w/2,-12,w,10); ctx.strokeStyle='#ffd770'; ctx.lineWidth=0.6; ctx.strokeRect(-w/2,-12,w,10); ctx.fillStyle='#ffe9a0'; ctx.fillText(t,0,-4.5); ctx.restore(); }); }catch(e){}
+    return r; };
+  /* ---- AI зураг: ирвэс, мазаалай, тахь, баавгай (4 кадр алхалт) ---- */
+  var AM=[["leopard", 0, 0, 0, 350, 140], ["leopard", 1, 350, 0, 350, 140], ["leopard", 2, 700, 0, 350, 140], ["leopard", 3, 1050, 0, 350, 140], ["mazaalai", 0, 0, 140, 248, 140], ["mazaalai", 1, 248, 140, 248, 140], ["mazaalai", 2, 496, 140, 248, 140], ["mazaalai", 3, 744, 140, 248, 140], ["takhi", 0, 0, 280, 214, 140], ["takhi", 1, 214, 280, 214, 140], ["takhi", 2, 428, 280, 214, 140], ["takhi", 3, 642, 280, 214, 140], ["bear", 0, 0, 420, 251, 140], ["bear", 1, 251, 420, 251, 140], ["bear", 2, 502, 420, 251, 140], ["bear", 3, 753, 420, 251, 140]], ASZ={leopard:12,mazaalai:9.5,takhi:10.5,bear:11.5}, AOK={};
+  (function(){ var im=new Image(); im.onload=function(){ AM.forEach(function(m){ var k=m[0]+'_w'+m[1], o={img:im,sx:m[2],sy:m[3],iw:m[4],ih:m[5]}; SPR[k]=o; SZ[k]=ASZ[m[0]]; if(m[1]===0&&m[0]!=='bear'&&m[0]!=='leopard') SPR[m[0]]=o; AOK[m[0]]=1; }); }; im.src='hf/rare_anim.webp?v=1'; })();
+  var _eb=entBase; entBase=function(e){ if(e&&e.kind==='wild'&&!e.friend&&AOK[e.type]) return null; return _eb.apply(this,arguments); };
+  var _ef=entFrame; entFrame=function(e){ if(e&&e.kind==='wild'&&!e.friend&&AOK[e.type]){ var i=(e.moving||e.biting)?Math.floor(performance.now()/(e.type==='leopard'?110:140)+(e.hx||0))%4:0; return {k:e.type+'_w'+i,leg:1}; } return _ef.apply(this,arguments); };
+  window.rareTest=function(){ ZC=zones(); spawnRare(); return ents.filter(function(e){ return e.rare; }).length; };
+  setTimeout(function(){ try{ ensureGuards(); }catch(e){} },3000);
 })();
 </script>
 </body>
