@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b086f28aee';
+var UPDB='266f847d43';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25061,6 +25061,26 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   /* Агуулах / Цүнх табын мөр */
   '.sh2-tabs{background:url(hf/hd_panel.webp) center/100% 100%!important;border-top:0!important}'+
   '.sh2-tabs button.on{background:none!important;border:solid transparent;border-width:0 20px;border-image:url(hf/hd_tab_on.webp) 0 40 0 40 fill/0 20px 0 20px stretch}';
+  /* 2-р шат: олдсон үлдсэн цонхнууд */
+  var BIG='border-style:solid!important;border-color:transparent!important;border-width:22px!important;border-image:url(rts/ui_rect.webp?v=1) 95 fill/22px stretch!important;background:'+W+'!important;background-clip:border-box!important;border-radius:14px!important;box-shadow:0 8px 28px rgba(0,0,0,.65)!important;';
+  var SQ='border-style:solid!important;border-color:transparent!important;border-width:10px!important;border-image:url(rts/ui_sq.webp?v=1) 90 fill/10px stretch!important;background:rgba(0,0,0,.3)!important;background-clip:border-box!important;border-radius:10px!important;';
+  var WIDE='border-style:solid!important;border-color:transparent!important;border-width:10px 14px!important;border-image:url(rts/ui_wide.webp?v=1) 42 52 fill/10px 14px stretch!important;background:rgba(0,0,0,.32)!important;background-clip:border-box!important;border-radius:10px!important;';
+  var BTN='border-style:solid!important;border-color:transparent!important;border-width:10px 22px!important;border-image:url(rts/ui_btn.webp?v=1) 70 140 fill/10px 22px stretch!important;background:none!important;color:#3a2208!important;border-radius:0!important;text-shadow:0 1px 0 rgba(255,240,190,.6)!important;';
+  var PILL='border-style:solid!important;border-color:transparent!important;border-width:10px 20px!important;border-image:url(rts/ui_pill.webp?v=1) 70 100 fill/10px 20px stretch!important;background:linear-gradient(#5a3a1c,#2e1d0e)!important;background-clip:border-box!important;border-radius:999px!important;color:#ffe9b0!important;';
+  st.textContent+=
+  '.av2p,#bqpop>div,#wmpn>.pb{'+BIG+'padding:6px 8px 8px!important}'+
+  '#tgo{background:'+W+'!important}#tgw{border:12px solid transparent!important;border-image:url(rts/ui_sq.webp?v=1) 90/12px stretch!important;border-radius:0!important}'+
+  '#hsp{background:'+W+'!important;color:#f3e2b8!important}.hz_hh{background:url(hf/hd_panel.webp) center/100% 100%!important;border-bottom:0!important}.hz_hb{background:transparent!important;color:#f3e2b8!important}'+
+  '.hz_hbn{'+WIDE+'background:linear-gradient(90deg,rgba(156,58,42,.85),rgba(200,85,58,.85))!important}.hz_hx{'+PILL+'padding:0 4px!important}.hz_bt>button,#hbtn{'+BTN+'}'+
+  '.cgbox{'+WIDE+'}.cgbtn{'+PILL+'}.cgbtn.go{'+BTN+'}'+
+  '#rwov .it{'+SQ+'}#lvov .bar{border-top:0!important;border-bottom:0!important;'+WIDE+'background:rgba(20,12,4,.85)!important}'+
+  '#isdeprs{'+PILL+'padding:2px 6px!important}#isdepgo{'+BTN+'padding:2px 6px!important;color:#fff!important;text-shadow:0 1px 2px #000!important;filter:hue-rotate(-35deg) saturate(1.5)}'+
+  '.pssc{'+SQ+'}.pssn{border-color:#c9972b!important}'+
+  '#chtabs>button{'+PILL+'}#chtabs>button.on{'+BTN+'}.kF>button{'+BTN+'}#chin{border:2px solid #8a6a2a!important;border-radius:8px!important;background:rgba(0,0,0,.35)!important;color:#f3e2b8!important}'+
+  '.hs-bk{'+PILL+'padding:0 6px!important}'+
+  '.hz_hr,.hz_jb{'+WIDE+'color:#f3e2b8!important;margin-bottom:10px!important}.hz_hr *,.hz_jb *{color:inherit}.hz_hr b,.hz_jb b{color:#ffd770!important}'+
+  '.hz_vb,.hz_rs{background:rgba(0,0,0,.35)!important;border:1px solid #8a6a2a!important;color:#ffe9b0!important}'+
+  '#hsp .sm,#hsp small{color:#d8c79a!important}';
   document.head.appendChild(st);
 })();
 </script>
