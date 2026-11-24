@@ -2127,7 +2127,7 @@ function profHTML(){
   const src=S.prof.img||(SPRDATA[S.prof.sp]||SPRDATA.npc1)[0];
   const ths=[1,2,3,4,5,6,7,8,9,10,11,12].map(i=>'<img src="'+SPRDATA['npc'+i][0]+'" onclick="setSp(\'npc'+i+'\')" style="width:44px;height:52px;object-fit:cover;object-position:top;border-radius:8px;background:#4a6a2a;border:2px solid '+((!S.prof.img&&S.prof.sp==='npc'+i)?'#ffd35a':'#0000')+'">').join('');
   const L=S.pl||1, need=xpNeed(L), xp=S.xp||0, hn=Object.keys(S.heroes).length, tr=TR.reduce((a,T)=>a+(S.res[T.k]||0),0), zn=Object.keys(S.zones||{}).length, bn=Object.keys(S.bld).filter(k=>S.bld[k]>0).length;
-  const ft=L<5?0:L<10?1:L<20?2:L<30?3:4, et=L<3?0:L<6?1:L<10?2:L<15?3:L<25?4:5, fh=PFH[ft], asz=Math.round(fh[2]*132*2.1);
+  const ft=L<5?0:L<10?1:L<20?2:L<30?3:4, et=L<3?0:L<6?1:L<10?2:L<15?3:L<25?4:5, fh=PFH[ft], asz=Math.round(fh[2]*132*2.32);
   const st=(c,v,t)=>'<div class="s'+c+'"><span>'+v+'</span><small>'+t+'</small></div>';
   const nAn=ents.filter(e=>e.kind==='animal').length;
   const MED=MEDS(); S.medal=S.medal||{};
@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='03c42c00c8';
+var UPDB='3dcdee3b4a';
 (function(){
   const K='updTry';
   const _go=updGo;
