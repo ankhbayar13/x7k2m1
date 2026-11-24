@@ -8766,8 +8766,8 @@ document.addEventListener('visibilitychange',()=>{ if(document.hidden) return; s
   /* ---------- 4) Шинэ дэлгэц ---------- */
   resHTML=function(){
     rsInit();
-    const a=ageIdx(), A=AGES[a], nx=a<3?TECH.filter(t=>t.age===a+1).length:0;
-    let h='<h2>'+qa('🔬',28)+' Судалгаа'+(S.rs.sage?' <span style="font-size:13px;color:#ffd770">🎓 Мэргэн Хаан</span>':'')+'</h2><div class="card row"><div>'+qa(A.e,30,'age'+a)+' <b>'+A.s+' үе · '+A.n+'</b></div><div class="sm">'+(a<3?'Дараагийн үе: гол гэр '+AGES[a+1].min+'-р түвшин'+(nx?' · '+nx+' шинэ судалгаа':''):'Дээд үе')+'</div></div>';
+    const a=ageIdx(), A=AGES[a], nx=a<AGES.length-1?TECH.filter(t=>t.age===a+1).length:0;
+    let h='<h2>'+qa('🔬',28)+' Судалгаа'+(S.rs.sage?' <span style="font-size:13px;color:#ffd770">🎓 Мэргэн Хаан</span>':'')+'</h2><div class="card row"><div>'+qa(A.e,30,'age'+a)+' <b>'+A.s+' үе · '+A.n+'</b></div><div class="sm">'+(a<AGES.length-1?ageNextTxt(a)+(nx?' · '+nx+' шинэ судалгаа':''):'Дээд үе')+'</div></div>';
     h+='<div style="display:flex;gap:5px;margin-bottom:8px">'+['🔬 Судалгаа','🏯 Хархорум','🏆 Ялалт'].map((x,i)=>'<button class="btn'+(RTAB===i?' red':'')+'" style="flex:1;padding:6px 2px;font-size:12px" onclick="rsTab('+i+')">'+x+'</button>').join('')+'</div>';
     if(RTAB===1) return h+wonderHTML(); if(RTAB===2) return h+victoryHTML();
     // идэвхтэй судалгаа
@@ -8784,7 +8784,7 @@ document.addEventListener('visibilitychange',()=>{ if(document.hidden) return; s
       const L=TECH.filter(t=>t.b===b), ch=L.filter(t=>!t.sp), sp=L.filter(t=>t.sp), dn=L.filter(t=>S.rs.done[t.id]).length, got=S.rs.bd&&S.rs.bd[b];
       h+='<div class="card"><h3 style="color:'+BR[b].c+'">'+BR[b].e+' '+BR[b].n+' <span class="sm" style="font-weight:normal">'+dn+'/'+L.length+(got?' ✓':'')+'</span></h3>'+(got?'':'<div class="sm">Салбарыг бүрэн дуусгавал +100 Алт</div>');
       const row=t=>{ const done=S.rs.done[t.id], cu=slots().some(s=>S.rs[s].id===t.id), prev=rsPrev(t), blk=prev&&!S.rs.done[prev.id], lockA=a<t.age, cs=rsCost(t);
-        return '<div class="row" style="margin-top:6px;opacity:'+(done?0.6:1)+'"><div style="flex:1">'+qa(t.e,22,'rsi_'+t.id)+' <b>'+t.n+'</b>'+(done?' ✓':'')+'<div class="sm">'+t.d+'</div>'+(done||cu?(cu?'<div class="sm">⏳ Судлагдаж байна</div>':''):'<div class="sm">'+(lockA?'🔒 '+AGES[t.age].n+'-д нээгдэнэ (гол гэр '+AGES[t.age].min+')':blk?'🔒 Өмнөхийг судал':costTxt(cs)+' · '+fmtT(rsSecs(t)))+'</div>')+'</div>'+(done||cu||lockA||blk?'':'<button class="btn" '+(free?'':'disabled')+' onclick="rsStart(\''+t.id+'\')">Судлах</button>')+'</div>'; };
+        return '<div class="row" style="margin-top:6px;opacity:'+(done?0.6:1)+'"><div style="flex:1">'+qa(t.e,22,'rsi_'+t.id)+' <b>'+t.n+'</b>'+(done?' ✓':'')+'<div class="sm">'+t.d+'</div>'+(done||cu?(cu?'<div class="sm">⏳ Судлагдаж байна</div>':''):'<div class="sm">'+(lockA?'🔒 '+AGES[t.age].n+'-д нээгдэнэ ('+(AGES[t.age].wd?(AGES[t.age].wd==='ls'?'Лалын сүм':'Христийн сүм')+' 5/5':'гол гэр '+AGES[t.age].min)+')':blk?'🔒 Өмнөхийг судал':costTxt(cs)+' · '+fmtT(rsSecs(t)))+'</div>')+'</div>'+(done||cu||lockA||blk?'':'<button class="btn" '+(free?'':'disabled')+' onclick="rsStart(\''+t.id+'\')">Судлах</button>')+'</div>'; };
       ch.forEach(t=>{ h+=row(t); });
       if(sp.length){ h+='<div class="sm" style="margin-top:10px;color:#ffd770">✨ Нэмэлт судалгаа · дарааллаас хамаарахгүй</div>'; sp.forEach(t=>{ h+=row(t); }); }
       h+='</div>'; });
@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='234e3e5af6';
+var UPDB='463f9c3de6';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25452,6 +25452,31 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _db=drawBuilding; drawBuilding=function(k){ var id=byK[k]; if(!id||S.sites[k]) return _db.apply(this,arguments);
     var p=S.pos[k], d=bdims(k), n=Math.max(1,lv(id)), W=WD[id], z=W.sz[n-1], sc=d.w/W.sz[4][0], w=z[0]*sc, h=z[1]*sc;
     if(lv(id)===0) ctx.globalAlpha=0.6; spr(k+n,p.x+(d.w-w)/2,p.y+d.h-h,w); ctx.globalAlpha=1; };
+})();
+</script>
+<script id="ages56">
+/* V үе (Лалын сүм 5/5), VI үе (Христийн сүм 5/5) ба шинэ судалгаанууд */
+(function(){
+  AGES.push({n:'Их Монгол улсын үе',s:'V',min:13,e:'🕌',wd:'ls'},{n:'Дэлхийн эзэнт гүрний үе',s:'VI',min:13,e:'🌍',wd:'hs'});
+  ageIdx=function(){ var a=0; AGES.forEach(function(x,i){ if((S.bld.ger||1)>=x.min&&(!x.wd||(typeof wd2Lv==='function'&&wd2Lv(x.wd)>=5))) a=i; }); return a; };
+  window.ageNextTxt=function(a){ var N=AGES[a+1]; if(!N) return ''; if(N.wd) return 'Дараагийн үе: '+(N.wd==='ls'?'🕌 Лалын сүм':'⛪ Христийн сүм')+' 5/5'; return 'Дараагийн үе: гол гэр '+N.min+'-р түвшин'; };
+  var H=3600, NEW=[
+    {id:'e8',b:'e',n:'Хархорумын их зах',d:'Зарах үнэ +20%',ef:{eco_sell:0.20},age:4,e:'🏪',cost:{gold:400000,wood:2500},secs:4*H},
+    {id:'e9',b:'e',n:'Ямын шуудан',d:'Үйлдвэрлэл +20%, нөөцийн багтаамж +500',ef:{eco_prod:0.20,eco_cap:500},age:4,e:'🐎',cost:{gold:700000,wood:4000},secs:5*H},
+    {id:'m8',b:'m',n:'Манжаан цэрэг',d:'Цэргийн хүч +20%',ef:{mil_troop:0.20},age:4,e:'🏇',cost:{gold:400000,wool:1500},secs:4*H},
+    {id:'m9',b:'m',n:'Бүслэлтийн машин',d:'Баатрын хүч +10%, цохилт +10%',ef:{mil_all:0.10,mil_atk:0.10},age:4,e:'🪨',cost:{gold:700000,wool:2500},secs:5*H},
+    {id:'c8',b:'c',n:'Шашны эрх чөлөө',d:'Шагналын оноо +25%',ef:{cul_pass:0.25},age:4,e:'🕊',cost:{gold:400000,milk:2000},secs:4*H},
+    {id:'c9',b:'c',n:'Олон хэлт бичээч',d:'Туршлага +25%',ef:{cul_xp:0.25},age:4,e:'📚',cost:{gold:700000,milk:3000},secs:5*H},
+    {id:'eA',b:'e',n:'Дэлхийн худалдаа',d:'Зарах үнэ +25%, үйлдвэрлэл +20%',ef:{eco_sell:0.25,eco_prod:0.20},age:5,e:'🌐',cost:{gold:1200000,wood:6000,alt:100},secs:6*H},
+    {id:'eB',b:'e',n:'Алтан ордны сан',d:'Нөөцийн багтаамж +1000, цех 20% хурдан',ef:{eco_cap:1000,eco_proc:0.20},age:5,e:'💰',cost:{gold:2000000,wood:9000,alt:200},secs:8*H},
+    {id:'mA',b:'m',n:'Түмэн түмт',d:'Цэргийн хүч +25%',ef:{mil_troop:0.25},age:5,e:'🚩',cost:{gold:1200000,wool:4000,alt:100},secs:6*H},
+    {id:'mB',b:'m',n:'Дэлхийн байлдан дагуулагч',d:'Баатрын хүч +15%, бие +15%',ef:{mil_all:0.15,mil_hp:0.15},age:5,e:'⚔',cost:{gold:2000000,wool:6000,alt:200},secs:8*H},
+    {id:'cA',b:'c',n:'Монголын амар амгалан',d:'Шагналын оноо +30%, туршлага +20%',ef:{cul_pass:0.30,cul_xp:0.20},age:5,e:'☮',cost:{gold:1200000,milk:5000,alt:100},secs:6*H},
+    {id:'cB',b:'c',n:'Их хаадын ухаан',d:'Туршлага +25%, скилл 10% хурдан бэлэн болно',ef:{cul_xp:0.25,cul_cd:0.10},age:5,e:'👑',cost:{gold:2000000,milk:8000,alt:200},secs:8*H}];
+  NEW.forEach(function(t){ if(!TECH.some(function(x){ return x.id===t.id; })) TECH.push(t); });
+  /* шинэ судалгаа нэмэгдсэн тул дууссан салбарын шагнал/цол хэвээр (S.rs.bd), харин эхлэхэд өмнөх шатыг шаардана */
+  var ORD={e:['e7','e8','e9','eA','eB'],m:['m7','m8','m9','mA','mB'],c:['c7','c8','c9','cA','cB']};
+  var _st=rsStart; rsStart=function(id){ try{ rsInit(); for(var b in ORD){ var L=ORD[b], i=L.indexOf(id); if(i>0&&!S.rs.done[L[i-1]]){ var p=TECH.find(function(x){ return x.id===L[i-1]; }); say('Эхлээд «'+(p?p.n:L[i-1])+'» судал'); return; } } }catch(e){} return _st.apply(this,arguments); };
 })();
 </script>
 </body>
