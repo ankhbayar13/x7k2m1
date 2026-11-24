@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='463f9c3de6';
+var UPDB='a09b42909e';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -14296,13 +14296,13 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
   const GEO=[0.4992,0.5388,0.2607,1.0777];
   /* Аваргын хүрээ: тэмцээний 1-р байр (өндөр шалгууртай). 1 сар (кланы дайн 7 хоног) хүчинтэй, 3 удаа түрүүлбэл үүрд. */
   const CH=[['ca','Аваргын бамбай','Багийн арена',[0.4968,0.5376,0.2798,1]],['cw','Ертөнцийн эзэн','Дэлхийн Топ 10',[0.4971,0.5665,0.2771,1]],['cs','Мэргэн морь','Шатрын арена',[0.4976,0.5422,0.2732,1]],
-    ['cd','Далайн луу','Онлайн тулаан',[0.4918,0.5067,0.2653,1]],['cn','Далайн хаан','Тэмцээний улирал',[0.4981,0.5501,0.2626,1]],['ck','Түмэн ноён','Кланы дайн',[0.4979,0.538,0.2542,1]],['cc','Хаадын хөзөр','Картын тулаан',[0.4973,0.5237,0.2911,1]],['kh','Хааны хүрээ','Хааны шагнал',[0.4984,0.5371,0.2286,1]],['jm','Жамухын хүрээ','Жамуха',[0.4877,0.5458,0.2199,1]]];
+    ['cd','Далайн луу','Онлайн тулаан',[0.4918,0.5067,0.2653,1]],['cn','Далайн хаан','Тэмцээний улирал',[0.4981,0.5501,0.2626,1]],['ck','Түмэн ноён','Кланы дайн',[0.4979,0.538,0.2542,1]],['cc','Хаадын хөзөр','Картын тулаан',[0.4973,0.5237,0.2911,1]],['kh','Хааны хүрээ','Хааны шагнал',[0.4984,0.5371,0.2286,1]],['dw','Дэлхийн эзэн','VI үе',[0.4955,0.5431,0.332,1]],['jm','Жамухын хүрээ','Жамуха',[0.4877,0.5458,0.2199,1]]];
   CH.forEach(c=>FR.push({id:c[0],nm:c[1],tn:c[2],ch:1,geo:c[3],src:'hf/pfc_'+c[0]+'.webp?v=1'}));
   const chS=()=>S.chf||(S.chf={});
   const chOk=id=>{ const x=chS()[id]; return !!x&&(x.p||(x.u||0)>Date.now()); };
   const byId=id=>{ const k=String(id||'').replace(/3$/,''); return FR.find(f=>f.id===k); };
   const mine=()=>{ const f=byId(S.pfx); return (f&&(f.ch?chOk(f.id):rkLv()>=f.min))?f:null; };
-  const pxOut=f=>f?(f.id+((f.ch&&f.id!=='jm'&&f.id!=='kh'&&(chS()[f.id]||{}).p)?'3':'')):'';
+  const pxOut=f=>f?(f.id+((f.ch&&f.id!=='jm'&&f.id!=='kh'&&f.id!=='dw'&&(chS()[f.id]||{}).p)?'3':'')):'';
   const pxMe=()=>pxOut(mine());
   const gOf=f=>(f&&f.geo)||GEO;
   const badge=fid=>/3$/.test(String(fid||''))?'<b style="position:absolute;right:2%;bottom:4%;font:900 11px/1 Georgia,serif;color:#ffe9a0;background:#5a1410;border:1px solid #ffd770;border-radius:6px;padding:1px 4px;pointer-events:none">III</b>':'';
@@ -14364,13 +14364,14 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
     ck:()=>({how:'Кланы долоо хоногийн тэмцээнд түрүүлсэн кланы хамгийн их оноо авчирсан гишүүн бол.',crit:'Клан 1-р байр + кландаа 1-р оноо.',prog:'Хугацаа: 7 хоног (бусад нь 1 сар).',go:"openM('wmap')",gn:'🌍 Дэлхий'}),
     kh:()=>({how:'«Үйл явдал» → «Хааны шагнал» худалдаж аваад 1-р шатны Хааны шагналыг ав.',crit:'Хааны шагнал идэвхтэй байх.',prog:(S.pass&&S.pass.vip)?'<span class="ok">Хааны шагнал идэвхтэй ✓</span>':'<span class="no">Хааны шагнал аваагүй</span>',go:"evoShow(1)",gn:'👑 Хааны шагнал',dur:'Тухайн 20 хоногийн улирал дуустал'}),
     jm:()=>({how:'Жамуха баатрыг ав (хэлтэрхий цуглуулж, худалдаж, эсвэл хүрдээр). Мөн Жамухын өдрийн хүрдэнд маш ховор (0.5%) унана.',crit:'Жамуха баатар эзэмших.',prog:(S.heroes&&S.heroes.jamukha)?'<span class="ok">Жамуха байгаа ✓</span>':'<span class="no">Жамуха аваагүй</span>',go:"try{jamOpen()}catch(e){}",gn:'🗡 Жамуха',dur:'Үүрд'}),
+    dw:()=>{ const L=TECH.filter(t=>t.age===5), n=L.filter(t=>S.rs&&S.rs.done[t.id]).length; return {how:'VI үе «Дэлхийн эзэнт гүрний үе»-ийн бүх судалгааг дуусга (Судалгаа цэс).',crit:'Христийн сүм 5/5 → VI үе нээгдэнэ → 6 судалгаа. Хүрээ үүрд таных.',prog:'Судалгаа: '+v(n,L.length,n>=L.length),go:"RTAB=0;openM('res')",gn:'🔬 Судалгаа',dur:'Үүрд таных.'}; },
     cc:()=>{ const g=S.cg||{}, w=(g.mm===miNow())?(g.mw||0):0; return {how:'Картын тулааны сарын Топ 10-ын 1-р байр эзэл (онлайн ялалтаар).',crit:'Тухайн сард ≥50 онлайн ялалт (ботын ялалт тооцохгүй).',prog:'Энэ сар: '+v(w,50,w>=50)+' ялалт',go:"cardOpen()",gn:'🃏 Картын тулаан'}; }
   };
   window.pfxInfo=function(id){
     const f=byId(id); if(!f) return; const old=document.getElementById('pfxi'); if(old) old.remove(); let h='<h3>'+f.nm+'</h3>'+comp(myAv(),Math.min(92,Math.round(innerHeight*0.16)),f.src,gOf(f),'margin:0 auto 6px',pxOut(f));
     if(f.ch){ const I=INFO[f.id](), x=chS()[f.id];
       h+='<div class="pfxr"><b>Яаж авах:</b> '+I.how+'</div><div class="pfxr"><b>Шалгуур:</b> '+I.crit+'</div><div class="pfxr"><b>Хугацаа:</b> '+(I.dur||((f.id==='ck'?'7 хоног':'1 сар')+'. 3 удаа түрүүлбэл үүрд (III).'))+'</div><div class="pfxr"><b>Таны явц:</b> '+I.prog+'</div>'+
-        (x?'<div class="pfxr">Өмнө нь <b>'+x.n+'</b> удаа авсан. Дахин түрүүлбэл сэргэнэ.</div>':'');
+        (x&&x.n?'<div class="pfxr">Өмнө нь <b>'+x.n+'</b> удаа авсан. Дахин түрүүлбэл сэргэнэ.</div>':'');
       h+='<div class="pfxbt">'+(I.go?'<button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();try{closeM()}catch(e){};'+I.go+'">'+I.gn+' руу очих</button>':'')+'<button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
     else { const L=rkLv(); h+='<div class="pfxr"><b>Яаж авах:</b> Хааны зэрэг Lv '+f.min+' хүр.</div><div class="pfxr"><b>Таны явц:</b> одоо Lv '+v(L,f.min,L>=f.min)+'</div><div class="pfxr">Хааны зэргийн оноо: даалгавар, тулаан, барилгаар цуглана.</div><div class="pfxbt"><button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();openM(\'rank\')">👑 Хааны зэрэг</button><button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
     const o=document.createElement('div'); o.id='pfxi'; o.onclick=e=>{ if(e.target===o) o.remove(); }; o.innerHTML='<div class="pi">'+h+'</div>'; document.body.appendChild(o); try{ sfx('click'); }catch(e){} };
@@ -25474,6 +25475,11 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     {id:'cA',b:'c',n:'Монголын амар амгалан',d:'Шагналын оноо +30%, туршлага +20%',ef:{cul_pass:0.30,cul_xp:0.20},age:5,e:'☮',cost:{gold:1200000,milk:5000,alt:100},secs:6*H},
     {id:'cB',b:'c',n:'Их хаадын ухаан',d:'Туршлага +25%, скилл 10% хурдан бэлэн болно',ef:{cul_xp:0.25,cul_cd:0.10},age:5,e:'👑',cost:{gold:2000000,milk:8000,alt:200},secs:8*H}];
   NEW.forEach(function(t){ if(!TECH.some(function(x){ return x.id===t.id; })) TECH.push(t); });
+  /* VI үеийн бүх судалгааг дуусгасан бол «Дэлхийн эзэн» хүрээ (үүрд) */
+  setInterval(function(){ try{ if(!S||!S.rs||!S.rs.done) return; var L=TECH.filter(function(t){ return t.age===5; }); if(!L.length||!L.every(function(t){ return S.rs.done[t.id]; })) return;
+    S.chf=S.chf||{}; if(S.chf.dw&&S.chf.dw.p) return; S.chf.dw={p:1};
+    try{ mailAdd('Дэлхийн эзэн','VI үеийн бүх судалгааг дуусгалаа! «Дэлхийн эзэн» хүрээ үүрд таных боллоо. Миний хөрөг → Хүрээ хэсгээс сонгоорой.'); }catch(e){}
+    try{ say('🌍 «Дэлхийн эзэн» хүрээ авлаа!'); sfx('win'); vib([60,40,60,40,120]); }catch(e){} try{ save(); }catch(e){} }catch(e){} },3000);
   /* шинэ судалгаа нэмэгдсэн тул дууссан салбарын шагнал/цол хэвээр (S.rs.bd), харин эхлэхэд өмнөх шатыг шаардана */
   var ORD={e:['e7','e8','e9','eA','eB'],m:['m7','m8','m9','mA','mB'],c:['c7','c8','c9','cA','cB']};
   var _st=rsStart; rsStart=function(id){ try{ rsInit(); for(var b in ORD){ var L=ORD[b], i=L.indexOf(id); if(i>0&&!S.rs.done[L[i-1]]){ var p=TECH.find(function(x){ return x.id===L[i-1]; }); say('Эхлээд «'+(p?p.n:L[i-1])+'» судал'); return; } } }catch(e){} return _st.apply(this,arguments); };
