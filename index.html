@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='f37e433df3';
+var UPDB='fc7c3467b9';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25095,7 +25095,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   document.head.appendChild(st);
   /* Цэс: Их Засаг, Клан хуралдай зурагтай хавтан */
   try{ MND['Их Засаг']='Хууль батлаж тосгондоо бонус авна'; MND['Клан хуралдай']='Кланаараа санал өгч 7 хоногийн бонус'; }catch(e){}
-  var MX={'Их Засаг':["openM('zasag')",'hf/mn_zasag.webp?v=1'],'Клан хуралдай':["openM('hural')",'hf/mn_hural.webp?v=1']};
+  var MX={'Их Засаг':["openM('zasag')",'hf/mn_zasag.webp?v=1'],'Нууц товчоо':["ntOpen()",'hf/mn_nt.webp?v=1'],'Клан хуралдай':["openM('hural')",'hf/mn_hural.webp?v=1']};
   var _mh=menuHTML; menuHTML=function(){ var h=_mh.apply(this,arguments);
     try{ Object.keys(MX).forEach(function(nm){ var m=MX[nm], re=new RegExp('<button class="btn"[^>]*onclick="'+m[0].replace(/[()]/g,'\\$&')+'"[^>]*>[\\s\\S]*?</button>');
       var tile='<div class="mnx" onclick="'+m[0]+'"><img src="'+m[1]+'" alt="'+nm+'"></div>'; h=h.replace(re,(typeof mnWrap==='function'&&typeof MNI!=='undefined'&&MNI)?mnWrap(nm,tile):tile); }); }catch(e){}
