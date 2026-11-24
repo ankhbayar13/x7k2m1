@@ -8154,7 +8154,7 @@ const JAMBAN="data:image/webp;base64,UklGRnycAQBXRUJQVlA4IHCcAQCwtASdASroA8MBPlU
 
 /* 181: Жамуха — 45 өдрийн онцгой баатар (цэс, хэлтэрхий, худалдан авалт, «Анд андгай» чадвар) */
 const JAM={id:'jamukha',start:Date.UTC(2026,9,28,16,0,0),days:45,need:120,price:2000,dsh:15,min:200,login:1,win:2,week:5,box:200,boxN:10,boxMax:3};
-JAM.end=JAM.start+JAM.days*864e5; JAM.spPrice=200; JAM.spMax=Infinity;
+JAM.end=Date.UTC(2026,11,3,16,0,0); JAM.days=Math.round((JAM.end-JAM.start)/864e5); /* 2026-12-04 00:00 УБ-д дуусна */ JAM.spPrice=200; JAM.spMax=Infinity;
 HEROES.push({id:'jamukha',n:'Жамуха',s:4,lim:1});
 HSK.jamukha=['anda','Анд андгай','Чингис хаан багт байвал хоёулаа +40% цохилт (8с), 12% эдгээнэ, бусад +10%. Ганцаараа бол бүх цэрэгт +20% (8с)',14,1];
 SKI.anda=['🤝','Анд андгай']; try{ SKIC.anda='🤝'; }catch(e){}
@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='e45846e655';
+var UPDB='166545cc42';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -14296,13 +14296,13 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
   const GEO=[0.4992,0.5388,0.2607,1.0777];
   /* Аваргын хүрээ: тэмцээний 1-р байр (өндөр шалгууртай). 1 сар (кланы дайн 7 хоног) хүчинтэй, 3 удаа түрүүлбэл үүрд. */
   const CH=[['ca','Аваргын бамбай','Багийн арена',[0.4968,0.5376,0.2798,1]],['cw','Ертөнцийн эзэн','Дэлхийн Топ 10',[0.4971,0.5665,0.2771,1]],['cs','Мэргэн морь','Шатрын арена',[0.4976,0.5422,0.2732,1]],
-    ['cd','Далайн луу','Онлайн тулаан',[0.4918,0.5067,0.2653,1]],['cn','Далайн хаан','Тэмцээний улирал',[0.4981,0.5501,0.2626,1]],['ck','Түмэн ноён','Кланы дайн',[0.4979,0.538,0.2542,1]],['cc','Хаадын хөзөр','Картын тулаан',[0.4973,0.5237,0.2911,1]]];
+    ['cd','Далайн луу','Онлайн тулаан',[0.4918,0.5067,0.2653,1]],['cn','Далайн хаан','Тэмцээний улирал',[0.4981,0.5501,0.2626,1]],['ck','Түмэн ноён','Кланы дайн',[0.4979,0.538,0.2542,1]],['cc','Хаадын хөзөр','Картын тулаан',[0.4973,0.5237,0.2911,1]],['kh','Хааны хүрээ','Хааны шагнал',[0.4984,0.5371,0.2286,1]],['jm','Жамухын хүрээ','Жамуха',[0.4877,0.5458,0.2199,1]]];
   CH.forEach(c=>FR.push({id:c[0],nm:c[1],tn:c[2],ch:1,geo:c[3],src:'hf/pfc_'+c[0]+'.webp?v=1'}));
   const chS=()=>S.chf||(S.chf={});
   const chOk=id=>{ const x=chS()[id]; return !!x&&(x.p||(x.u||0)>Date.now()); };
   const byId=id=>{ const k=String(id||'').replace(/3$/,''); return FR.find(f=>f.id===k); };
   const mine=()=>{ const f=byId(S.pfx); return (f&&(f.ch?chOk(f.id):rkLv()>=f.min))?f:null; };
-  const pxOut=f=>f?(f.id+((f.ch&&(chS()[f.id]||{}).p)?'3':'')):'';
+  const pxOut=f=>f?(f.id+((f.ch&&f.id!=='jm'&&f.id!=='kh'&&(chS()[f.id]||{}).p)?'3':'')):'';
   const pxMe=()=>pxOut(mine());
   const gOf=f=>(f&&f.geo)||GEO;
   const badge=fid=>/3$/.test(String(fid||''))?'<b style="position:absolute;right:2%;bottom:4%;font:900 11px/1 Georgia,serif;color:#ffe9a0;background:#5a1410;border:1px solid #ffd770;border-radius:6px;padding:1px 4px;pointer-events:none">III</b>':'';
@@ -14347,7 +14347,7 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
     let h='<h3>🖼 Профайлын хүрээ</h3><div class="sm" style="font-size:12px;margin-bottom:8px">Хааны зэрэг ахихад шинэ хүрээ нээгдэнэ. 🏆 Аваргын хүрээг тэмцээнд 1-р байр (шалгууртай) эзэлж авна: 1 сар хүчинтэй, 3 удаа түрүүлбэл үүрд. Сонгосон хүрээ найз, чат дээр харагдана.</div><div class="pfxG">';
     h+=card('','Анхны',comp(av,64,PFR[ft],PFH[ft]),false,cur===''?'✓ Сонгосон':'Сонгох');
     FR.forEach(f=>{ if(f.ch){ const x=chS()[f.id], ok=chOk(f.id), dl=x&&!x.p?Math.max(0,Math.ceil((x.u-Date.now())/864e5)):0;
-        h+=card(f.id,f.nm,comp(av,64,f.src,gOf(f),'',pxOut(f)),!ok,!x?'🏆 '+f.tn+' · 1-р байр':!ok?'⌛ Хугацаа дууссан ('+x.n+'×)':(cur===f.id?'✓ ':'')+(x.p?'♾ Үүрд':'⏳ '+dl+' өдөр')); return; }
+        h+=card(f.id,f.nm,comp(av,64,f.src,gOf(f),'',pxOut(f)),!ok,!x?(f.id==='kh'?'👑 Хааны шагнал':f.id==='jm'?'🗡 Жамуха':'🏆 '+f.tn+' · 1-р байр'):!ok?'⌛ Хугацаа дууссан ('+x.n+'×)':(cur===f.id?'✓ ':'')+(x.p?'♾ Үүрд':'⏳ '+dl+' өдөр')); return; }
       const lock=rkLv()<f.min; h+=card(f.id,f.nm,comp(av,64,f.src,GEO),lock,lock?'🔒 Хааны зэрэг Lv '+f.min:(cur===f.id?'✓ Сонгосон':'Сонгох')); });
     h+='</div><button class="btn" style="margin-top:10px" onclick="document.getElementById(\'pfxo\').remove()">Хаах</button>';
     const o=document.createElement('div'); o.id='pfxo'; o.onclick=e=>{ if(e.target===o) o.remove(); }; o.innerHTML='<div class="pfxP">'+h+'</div>'; document.body.appendChild(o); };
@@ -14362,12 +14362,14 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
     cd:()=>{ const k=mv(S.war&&S.war.m,'k'); return {how:'Онлайн тулааны сарын Топ 10-ын 1-р байр эзэл.',crit:'Тухайн сард ≥50 ялалт.',prog:'Энэ сар: '+v(k,50,k>=50)+' ялалт'}; },
     cn:()=>{ const a=S.sd||{}, d=S.ar||{}, n=(a.w||0)+(a.l||0)+(d.dw||0)+(d.dl||0), r=Math.max(a.r||1000,d.dr||1000); return {how:'«Тэмцээн»-ий сарын улирлыг хамгийн дээд зэрэгтэй («Далайн хаан») дуусга.',crit:'Зэрэг ≥1500, улиралд ≥60 тоглолт.',prog:'Энэ улирал: зэрэг '+v(r,1500,r>=1500)+' · '+v(n,60,n>=60)+' тоглолт',go:"openM('arena')",gn:'⚔ Тэмцээн'}; },
     ck:()=>({how:'Кланы долоо хоногийн тэмцээнд түрүүлсэн кланы хамгийн их оноо авчирсан гишүүн бол.',crit:'Клан 1-р байр + кландаа 1-р оноо.',prog:'Хугацаа: 7 хоног (бусад нь 1 сар).',go:"openM('wmap')",gn:'🌍 Дэлхий'}),
+    kh:()=>({how:'«Үйл явдал» → «Хааны шагнал» худалдаж аваад 1-р шатны Хааны шагналыг ав.',crit:'Хааны шагнал идэвхтэй байх.',prog:(S.pass&&S.pass.vip)?'<span class="ok">Хааны шагнал идэвхтэй ✓</span>':'<span class="no">Хааны шагнал аваагүй</span>',go:"evoShow(1)",gn:'👑 Хааны шагнал',dur:'Тухайн 20 хоногийн улирал дуустал'}),
+    jm:()=>({how:'Жамуха баатрыг ав (хэлтэрхий цуглуулж, худалдаж, эсвэл хүрдээр). Мөн Жамухын өдрийн хүрдэнд маш ховор (0.5%) унана.',crit:'Жамуха баатар эзэмших.',prog:(S.heroes&&S.heroes.jamukha)?'<span class="ok">Жамуха байгаа ✓</span>':'<span class="no">Жамуха аваагүй</span>',go:"try{jamOpen()}catch(e){}",gn:'🗡 Жамуха',dur:'Үүрд'}),
     cc:()=>{ const g=S.cg||{}, w=(g.mm===miNow())?(g.mw||0):0; return {how:'Картын тулааны сарын Топ 10-ын 1-р байр эзэл (онлайн ялалтаар).',crit:'Тухайн сард ≥50 онлайн ялалт (ботын ялалт тооцохгүй).',prog:'Энэ сар: '+v(w,50,w>=50)+' ялалт',go:"cardOpen()",gn:'🃏 Картын тулаан'}; }
   };
   window.pfxInfo=function(id){
     const f=byId(id); if(!f) return; const old=document.getElementById('pfxi'); if(old) old.remove(); let h='<h3>'+f.nm+'</h3>'+comp(myAv(),Math.min(92,Math.round(innerHeight*0.16)),f.src,gOf(f),'margin:0 auto 6px',pxOut(f));
     if(f.ch){ const I=INFO[f.id](), x=chS()[f.id];
-      h+='<div class="pfxr"><b>Яаж авах:</b> '+I.how+'</div><div class="pfxr"><b>Шалгуур:</b> '+I.crit+'</div><div class="pfxr"><b>Хугацаа:</b> '+(f.id==='ck'?'7 хоног':'1 сар')+'. 3 удаа түрүүлбэл үүрд (III).</div><div class="pfxr"><b>Таны явц:</b> '+I.prog+'</div>'+
+      h+='<div class="pfxr"><b>Яаж авах:</b> '+I.how+'</div><div class="pfxr"><b>Шалгуур:</b> '+I.crit+'</div><div class="pfxr"><b>Хугацаа:</b> '+(I.dur||((f.id==='ck'?'7 хоног':'1 сар')+'. 3 удаа түрүүлбэл үүрд (III).'))+'</div><div class="pfxr"><b>Таны явц:</b> '+I.prog+'</div>'+
         (x?'<div class="pfxr">Өмнө нь <b>'+x.n+'</b> удаа авсан. Дахин түрүүлбэл сэргэнэ.</div>':'');
       h+='<div class="pfxbt">'+(I.go?'<button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();try{closeM()}catch(e){};'+I.go+'">'+I.gn+' руу очих</button>':'')+'<button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
     else { const L=rkLv(); h+='<div class="pfxr"><b>Яаж авах:</b> Хааны зэрэг Lv '+f.min+' хүр.</div><div class="pfxr"><b>Таны явц:</b> одоо Lv '+v(L,f.min,L>=f.min)+'</div><div class="pfxr">Хааны зэргийн оноо: даалгавар, тулаан, барилгаар цуглана.</div><div class="pfxbt"><button class="btn" onclick="document.getElementById(\'pfxi\').remove();var o=document.getElementById(\'pfxo\');if(o)o.remove();openM(\'rank\')">👑 Хааны зэрэг</button><button class="btn" onclick="document.getElementById(\'pfxi\').remove()">Хаах</button></div>'; }
@@ -25267,6 +25269,45 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _ef=entFrame; entFrame=function(e){ if(e&&e.kind==='wild'&&!e.friend&&AOK[e.type]){ var i=(e.moving||e.biting)?Math.floor(performance.now()/(e.type==='leopard'?110:140)+(e.hx||0))%4:0; return {k:e.type+'_w'+i,leg:1}; } return _ef.apply(this,arguments); };
   window.rareTest=function(){ ZC=zones(); spawnRare(); return ents.filter(function(e){ return e.rare; }).length; };
   setTimeout(function(){ try{ ensureGuards(); }catch(e){} },3000);
+})();
+</script>
+<script id="khpass">
+/* Хааны шагнал: 20 хоногийн улирал (дуусахад аваагүй шагналыг автоматаар олгож, дахин эхэлнэ; Хааны шагнал тухайн улиралд хүчинтэй).
+   1-р шатны Хааны шагналд «Хааны хүрээ» (улирал дуустал). Жамухын хүрээ: Жамуха авахад эсвэл хүрдээр 0.5%. */
+(function(){
+  var SEP=Date.UTC(2026,10,24,16,0,0), LEN=20*864e5;
+  function now(){ try{ return srvNow(); }catch(e){ return Date.now(); } }
+  function sid(){ return Math.floor((now()-SEP)/LEN); }
+  function send(n){ return SEP+(n+1)*LEN; }
+  window.passSeason=function(){ return {id:sid(),end:send(sid()),left:send(sid())-now()}; };
+  function frame(id,until,perm){ S.chf=S.chf||{}; var x=S.chf[id]||(S.chf[id]={n:0,u:0,p:0}); x.n=(x.n||0)+1; if(perm) x.p=1; else x.u=Math.max(x.u||0,until);
+    if(!S.pfx||S.pfx==='') S.pfx=id; try{ if(typeof clPushL==='function') clPushL(true); }catch(e){} }
+  /* 1-р шатны Хааны шагналд хүрээ */
+  var _pp=passPrem; passPrem=function(i){ var r=_pp.apply(this,arguments); if(i===0){ r=Object.assign({},r,{frame:'kh'}); } return r; };
+  var _gr=givR; givR=function(r){ var o=_gr.apply(this,arguments); try{ if(r&&r.frame==='kh'){ frame('kh',send(sid())); say('👑 Хааны хүрээ авлаа! (улирал дуустал)'); } }catch(e){} return o; };
+  var _rt=rewT; rewT=function(r){ var h=_rt.apply(this,arguments); if(r&&r.frame==='kh') h+='<br><small>+ 👑 Хааны хүрээ</small>'; return h; };
+  /* улирал солих */
+  function check(){ try{ if(typeof S==='undefined'||!S) return; if(!S.pass) S.pass={p:0,c:0}; var P=S.pass, n=sid();
+      if(P.sn==null){ P.sn=n; try{ save(); }catch(e){} return; }               /* хуучин тоглогч: энэ улиралд одоогийн төлөв хэвээр */
+      if(P.sn>=n) return;
+      var got=0; if(P.vip){ P.vc=P.vc||0; while(P.vc<PASSN&&P.p>=(P.vc+1)*PASSP){ var pr=passPrem(P.vc); if(pr.frame) pr=Object.assign({},pr,{frame:0}); _gr(pr); P.vc++; got++; } }
+      while(P.c<PASSN&&P.p>=(P.c+1)*PASSP){ _gr(passRew(P.c)); P.c++; got++; }
+      S.pass={p:0,c:0,vc:0,vip:0,sn:n};
+      try{ save(); refresh(); }catch(e){}
+      try{ say('👑 Хааны шагналын шинэ улирал эхэллээ (20 хоног)'+(got?' · өмнөх улирлын '+got+' шагнал автоматаар олгогдлоо':'')); }catch(e){}
+    }catch(e){} }
+  setTimeout(check,4000); setInterval(check,60000);
+  var _eo=evoShow; evoShow=function(tab){ check(); var r=_eo.apply(this,arguments);
+    try{ if(tab){ var o=document.getElementById('hbio'); var L=send(sid())-now(), d=Math.floor(L/864e5), h=Math.floor(L%864e5/36e5); var es=o&&o.querySelector('.epS'); if(es&&!o.querySelector('.khsn')){ es.insertAdjacentHTML('beforeend','<span class="khsn"> · ⏳ '+d+'ө '+h+'ц</span>'); }
+        var hb=o&&o.querySelector('.hbn'); if(!es&&hb&&!o.querySelector('.khsn')){ hb.insertAdjacentHTML('afterend','<div class="sm khsn" style="text-align:center;color:#ffd770;margin:2px 0 4px">⏳ Улирал дуустал: <b>'+d+' өдөр '+h+' цаг</b></div>'); } } }catch(e){}
+    return r; };
+  /* Жамухын хүрээ */
+  function jmGive(msg){ try{ var x=S.chf&&S.chf.jm; if(x&&x.p) return false; frame('jm',0,1); try{ save(); }catch(e){} if(msg){ say(msg); try{ sfx('win'); vib([60,40,60]); }catch(e){} } return true; }catch(e){ return false; } }
+  var _gh=giveHero; giveHero=function(id){ var r=_gh.apply(this,arguments); try{ if(id==='jamukha') jmGive('🖼 Жамухын хүрээ авлаа!'); }catch(e){} return r; };
+  try{ var _sp=jamSpin; jamSpin=function(){ var J=null, n0=0; try{ J=jamS(); n0=(J.sd===jamDay()?J.sn:0)||0; }catch(e){} var r=_sp.apply(this,arguments);
+      try{ var J2=jamS(), n1=(J2.sd===jamDay()?J2.sn:0)||0; if(n1>n0&&!(S.chf&&S.chf.jm&&S.chf.jm.p)&&Math.random()<0.005){ setTimeout(function(){ jmGive('✨🖼 Маш ховор! Жамухын хүрээ хүрдээс унав!'); },4200); } }catch(e){}
+      return r; }; }catch(e){}
+  setTimeout(function(){ try{ if(S.heroes&&S.heroes.jamukha) jmGive(''); }catch(e){} },5000);
 })();
 </script>
 </body>
