@@ -11154,7 +11154,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='3dcdee3b4a';
+var UPDB='b318f80af3';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25155,6 +25155,41 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     if(i<11) read(i+1); else list(); };
   try{ var g=MENU[3]; if(g&&!g.i.some(function(x){ return x[2]==='ntOpen()'; })) g.i.unshift(['📖','Нууц товчоо','ntOpen()']); }catch(e){}
   try{ MND['Нууц товчоо']='Монголын түүхийн их ном, 12 бүлэг'; }catch(e){}
+})();
+</script>
+<script id="nmask">
+/* Шинэ тоглогч анх ороход нэрээ солих санал (заавал биш, нэг удаа) */
+(function(){
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  var st=document.createElement('style'); st.textContent=
+  '#nmaskov{position:fixed;inset:0;z-index:2147482500;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box}'+
+  '#nmaskov .b{width:min(92vw,360px);border:22px solid transparent;border-image:url(rts/ui_rect.webp?v=1) 95 fill/22px stretch;background:url(rts/ui_felt.webp?v=1) center/320px;background-clip:border-box;border-radius:14px;padding:4px 8px 8px;color:#f3e2b8;text-align:center;box-shadow:0 8px 28px rgba(0,0,0,.65);font-family:Georgia,"Times New Roman",serif}'+
+  '#nmaskov h3{margin:0 0 4px;color:#ffd770;font-size:20px}#nmaskov .sm{font-size:13px;opacity:.9;line-height:1.4}'+
+  '#nmaskov input{width:100%;box-sizing:border-box;margin:10px 0 4px;padding:10px 12px;font-size:18px;text-align:center;border:2px solid #c9972b;border-radius:10px;background:rgba(0,0,0,.4);color:#fff;font-family:inherit}'+
+  '#nmaskov .r{display:flex;gap:8px;margin-top:10px}#nmaskov .r .btn{flex:1}';
+  document.head.appendChild(st);
+  function close(){ var o=document.getElementById('nmaskov'); if(o) o.remove(); try{ S.nmAsk=1; save(); }catch(e){} }
+  function show(){
+    if(document.getElementById('nmaskov')) return;
+    var o=document.createElement('div'); o.id='nmaskov';
+    o.innerHTML='<div class="b"><h3>👑 Хаан минь, нэрээ сонгоно уу</h3><div class="sm">Таны нэр бусад тоглогчид, чат, жагсаалтад харагдана. Хүсвэл одоогийн нэрээрээ үргэлжлүүлж болно, дараа нь «Миний хөрөг»-өөс сольж болно.</div>'+
+      '<input id="nmaskin" maxlength="14" value="'+esc((S.prof&&S.prof.name)||'')+'" autocomplete="off"><div class="sm" style="font-size:12px;opacity:.7">2–14 тэмдэгт, үсэг ба тоо</div>'+
+      '<div class="r"><button class="btn" id="nmlater">Дараа</button><button class="btn red" id="nmsave">✓ Хадгалах</button></div></div>';
+    document.body.appendChild(o);
+    var inp=document.getElementById('nmaskin');
+    document.getElementById('nmlater').onclick=function(){ close(); };
+    document.getElementById('nmsave').onclick=async function(){ var v=(inp.value||'').trim(); if(v===(S.prof&&S.prof.name)){ close(); return; } var b=this; b.disabled=true;
+      var ok=false; try{ ok=await setName(v); }catch(e){} b.disabled=false; if(ok){ close(); try{ sfx('ok'); }catch(e){} } };
+    inp.addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('nmsave').click(); });
+  }
+  window.nmAskShow=show;
+  var iv=setInterval(function(){ try{
+    if(typeof S==='undefined'||!S||!S.prof) return; if(S.nmAsk){ clearInterval(iv); return; }
+    if(!S.prof.auto){ S.nmAsk=1; clearInterval(iv); return; }
+    if((S.pl||1)>3){ S.nmAsk=1; clearInterval(iv); return; }          /* хуучин тоглогчид гаргахгүй */            /* нэрээ аль хэдийн сольсон эсвэл хуучин тоглогч */
+    var g=document.getElementById('goBtn'); if((g&&getComputedStyle(g).display!=='none')||document.getElementById('splash')||document.getElementById('gate')||!(document.getElementById('res')||{}).children||!document.getElementById('res').children.length) return;
+    show(); clearInterval(iv);
+  }catch(e){} },1200);
 })();
 </script>
 </body>
