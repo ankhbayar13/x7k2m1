@@ -8388,15 +8388,15 @@ function wmSpread(pts,fixed,cx,cy,ky,DX,DY){
     }catch(e){ m=null; }
     if(m){ CWD.my=m; CWD.w=wmWeek();
       try{ const me=(typeof CL!=='undefined'&&CL.uid)||'', set=m.filter(x=>x.id!==me).slice(0,14), _tr=(typeof ctTrRect==='function')?ctTrRect():null, key=set.map(x=>x.id).sort().join(',')+'|'+Math.round(D.C.x)+','+Math.round(D.C.y)+'|'+k+'|'+(_tr?_tr.k+','+Math.round(_tr.x):'');
-        if(key!==WMMK){ WMMK=key; const pts=set.map(x=>x.id).sort().map(id=>{ const h=hsh(String(id)), a=(h%360)*Math.PI/180, rad=170+((h>>>8)%130); return {id:id,x:D.C.x+Math.cos(a)*rad,y:D.C.y+Math.sin(a)*rad*0.75}; });
+        if(key!==WMMK){ WMMK=key; const pts=set.map(x=>x.id).sort().map(id=>{ const h=hsh(String(id)), a=(h%360)*Math.PI/180, rad=170+((h>>>8)%130); return {id:id,x:wmCC(D).x+Math.cos(a)*rad,y:wmCC(D).y+Math.sin(a)*rad*0.75}; });
           const fx=[{x:D.C.x,y:D.C.y,w:150,h:95}]; if(_tr) fx.push(_tr); try{ (D.camps||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:90,h:70})); (D.nodes||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:70,h:60})); (D.chests||[]).forEach(n=>fx.push({x:n.x,y:n.y,w:60,h:60})); wmYams().forEach(n=>fx.push({x:n.x,y:n.y,w:80,h:60})); }catch(e){} try{ const q=CLN[k]; if(q) fx.push({x:q.x-190,y:q.y-175,w:230,h:150}); }catch(e){}
-          wmSpread(pts,fx,D.C.x,D.C.y,0.75,100,88); WMMP={}; pts.forEach(p=>{ WMMP[p.id]={x:p.x,y:p.y}; }); } }catch(e){} }
+          wmSpread(pts,fx,wmCC(D).x,wmCC(D).y,0.75,100,88); WMMP={}; pts.forEach(p=>{ WMMP[p.id]={x:p.x,y:p.y}; }); } }catch(e){} }
     try{
       const r=_d.apply(this,arguments);
       // гишүүдийн гэрт хамгаалалтын бурхуул (идэвхтэй байдлаар)
       try{ if(m&&WMT.ok){ const now=wmNow(); m.filter(x=>!(typeof CL!=='undefined'&&x.id===CL.uid)).slice(0,14).forEach(x=>{
         const act=Math.max(0,(now-(x.t||0))/3600e3); if(act>=24) return;
-        const h=hsh(String(x.id)), a=(h%360)*Math.PI/180, rad=170+((h>>>8)%130), mp=WMMP[x.id], px=mp?mp.x:D.C.x+Math.cos(a)*rad, py=mp?mp.y:D.C.y+Math.sin(a)*rad*0.75; if(!vis(px,py,60)) return;
+        const h=hsh(String(x.id)), a=(h%360)*Math.PI/180, rad=170+((h>>>8)%130), mp=WMMP[x.id], px=mp?mp.x:wmCC(D).x+Math.cos(a)*rad, py=mp?mp.y:wmCC(D).y+Math.sin(a)*rad*0.75; if(!vis(px,py,60)) return;
         items.push({y:py+1,f:()=>{ wmDome(c,px,py,act<12?0:1,t,0.17); if(act<12) wmLabel(c,'🛡 Хамгаалалттай',px,py+35,'#9fd0ff',9); }}); }); } }catch(e){}
       return r;
     } finally{ CWD.my=sv; CWD.w=sw; }
@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='c163808da5';
+var UPDB='e8a0a2efdd';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25544,6 +25544,85 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   /* Цэргийн хүрээгүй ч «Баатар» товч үнэгүй дуудлага руу шууд аваачна */
   if(typeof menuGo==='function'){ var _mg=menuGo; menuGo=function(k){ try{ if(k==='baatar'&&n()>0&&(S.bld.hureo||0)<1){ openM('summon'); return; } }catch(e){} return _mg.apply(this,arguments); }; }
   setInterval(tick,700);
+})();
+</script>
+<script id="wmmove">
+/* Нүүлгэгч: дэлхийн газрын зураг дээр дурын газар сонгож нүүнэ. Хугацаа = бодит аяллын өдөр → минут (1 өдөр = 1 мин, ~40 км/өдөр).
+   Алтаар хурдасгана (1 мин = 10 Алт). Өөр кланы нутагт байвал хамгаалалт −50%, кланы +5% бонусгүй. Клан хэвээр. */
+(function(){
+  var KM=0.8, KMD=40, AM=10, TERR=700;
+  window.wmCC=function(D){ try{ if(S.wmHome){ var k=wmClanId(); if(k>=0&&CLN[k]) return {x:CLN[k].x,y:CLN[k].y}; } }catch(e){} return D.C; };
+  var _hp=wmHomePos; wmHomePos=function(){ var h=S&&S.wmHome; if(h&&isFinite(h.x)&&isFinite(h.y)) return {x:h.x,y:h.y}; return _hp.apply(this,arguments); };
+  var terrAt=function(x,y){ var bi=-1,bd=1e12; for(var q=0;q<CLN.length;q++){ var c=CLN[q]; if(!c) continue; var d=Math.hypot(x-c.x,y-c.y); if(d<bd){ bd=d; bi=q; } } return bd<=TERR?bi:-1; };
+  var hostile=function(x,y){ var t=terrAt(x,y), k=wmClanId(); return t>=0&&t!==k?t:-1; };
+  window.wmHostile=function(){ var h=S.wmHome; return h?hostile(h.x,h.y):-1; };
+  var mins=function(a,b){ return Math.max(5,Math.round(Math.hypot(a.x-b.x,a.y-b.y)*KM/KMD)); };
+  var MV=window.WMMV={pick:0,c:null};
+  var mv=function(){ return S.wmMv||null; };
+  var fmt=function(ms){ var m=Math.ceil(ms/60000); return m>=60?Math.floor(m/60)+'ц '+(m%60)+'м':m+' мин'; };
+  function placeName(x,y){ try{ var b=null,bd=1e12; wmAll().forEach(function(e){ if(e.t!=='kingdom') return; var d=Math.hypot(e.x-x,e.y-y); if(d<bd){ bd=d; b=e; } }); var t=terrAt(x,y); if(t>=0&&CLN[t]) return CLN[t].n+' кланы нутаг'; return b&&bd<1600?('Ойролцоо: '+b.n):'Хол газар'; }catch(e){ return ''; } }
+  function okAt(x,y){ try{ if(wmBlk(x,y)) return 'Ус, уул дээр тавих боломжгүй';
+      var near=wmAll().some(function(e){ return e.t!=='city'&&Math.hypot(e.x-x,e.y-y)<130; }); if(near) return 'Хот, отог, барилгад хэт ойр байна';
+      for(var q=0;q<CLN.length;q++){ if(CLN[q]&&Math.hypot(CLN[q].x-x,CLN[q].y-y)<200) return 'Кланы төвд хэт ойр байна'; }
+      var C=wmGen().C; if(Math.hypot(C.x-x,C.y-y)<60) return 'Одоогийн байрлал'; return ''; }catch(e){ return ''; } }
+  /* эхлүүлэх */
+  window.sh2TpUse=function(){
+    if(((S.it&&S.it.tp)||0)<1){ say('Нүүлгэгч алга'); try{ sfx('err'); }catch(e){} return; }
+    if(mv()){ say('Тосгон нүүж явж байна'); return; }
+    if(!(S.clan!=null&&S.clan>=0&&CLN[S.clan])){ say('Та кланд нэгдээгүй байна. Эхлээд клан сонгоно уу'); try{ sfx('err'); }catch(e){} return; }
+    try{ closeM(); }catch(e){} try{ if(!document.getElementById('wmap')) wmOpen(); }catch(e){}
+    setTimeout(function(){ MV.pick=1; MV.c=null; say('📍 Газрын зураг дээр нүүх газраа дар'); sheet(); },450); };
+  function sheet(){ var sh=$('wmsheet'); if(!sh) return; var c=MV.c;
+    var h='<h3>🚚 Нүүх газар сонгох</h3>';
+    if(!c) h+='<div class="sm">Газрын зураг дээр хүссэн газраа дар (Англи, Франц гээд хаашаа ч болно). Ногоон бол тавьж болно.</div>';
+    else { var C=wmGen().C, m=mins(C,c), hs=hostile(c.x,c.y), bad=okAt(c.x,c.y);
+      h+='<div class="sm"><b>'+placeName(c.x,c.y)+'</b><br>Зай: ~'+Math.round(Math.hypot(C.x-c.x,C.y-c.y)*KM)+' км · Аян: <b>'+m+' өдөр → '+fmt(m*60000)+'</b></div>';
+      if(bad) h+='<div class="sm" style="color:#ff8a7a">✖ '+bad+'</div>';
+      else if(hs>=0) h+='<div class="sm" style="color:#ff8a7a">⚠ '+CLN[hs].n+' кланы нутаг: хамгаалалт −50%, кланы бонусгүй.</div>';
+      if(!bad) h+='<button class="btn" onclick="wmMvGo()">📍 Энд нүүх · 1 Нүүлгэгч</button>'; }
+    h+='<button class="btn" style="background:#5b3d1e" onclick="wmMvCancel()">Болих</button>';
+    sh.innerHTML=h; sh.style.display='block'; }
+  window.wmMvCancel=function(){ MV.pick=0; MV.c=null; var sh=$('wmsheet'); if(sh) sh.style.display='none'; };
+  window.wmMvGo=function(){ var c=MV.c; if(!c) return; var bad=okAt(c.x,c.y); if(bad){ say(bad); return; }
+    if(wmSt().m.length){ say('Эхлээд цуваа буцаж ирэхийг хүлээнэ үү'); return; }
+    if(((S.it&&S.it.tp)||0)<1){ say('Нүүлгэгч алга'); return; }
+    var go=function(){ var C=wmGen().C, m=mins(C,c); S.it.tp--; S.wmMv={fx:C.x,fy:C.y,tx:c.x,ty:c.y,t0:Date.now(),d:m*60000}; MV.pick=0; MV.c=null; var sh=$('wmsheet'); if(sh) sh.style.display='none'; try{ sfx('build'); }catch(e){} say('🚚 Нүүдэл эхэллээ · '+fmt(m*60000)); try{ save(); }catch(e){} };
+    var hs=hostile(c.x,c.y); if(hs>=0&&typeof dxAsk==='function') dxAsk('Энэ бол <b>'+CLN[hs].n+'</b> кланы нутаг.<br><span class="sm">Энд байх хугацаанд хамгаалалт −50% болно. Нүүх үү?</span>','Нүүх',go,'Болих'); else go(); };
+  /* хурдасгах */
+  var left=function(){ var m=mv(); return m?Math.max(0,m.t0+m.d-Date.now()):0; };
+  var rushC=function(){ return Math.max(1,Math.ceil(left()/60000))*AM; };
+  window.wmMvRush=function(){ var m=mv(); if(!m) return; var c=rushC(); if((S.res.alt||0)<c){ say('Алт хүрэхгүй байна'); try{ sfx('err'); }catch(e){} return; }
+    var fin=function(){ S.res.alt-=c; m.d=0; arrive(); try{ refresh(); }catch(e){} };
+    if(typeof dxAsk==='function') dxAsk('Нүүдлийг '+c+' Алтаар дуусгах уу?','⚡ Дуусгах',fin,'Болих'); else fin(); };
+  function arrive(){ var m=mv(); if(!m||Date.now()<m.t0+m.d) return; S.wmHome={x:Math.round(m.tx),y:Math.round(m.ty)}; S.wmMv=null; WMD=null; try{ wmGen(); if(document.getElementById('wmap')) wmHome(); }catch(e){}
+    var hs=wmHostile(); say('🏠 Тосгон шинэ газартаа ирлээ'+(hs>=0?' · ⚠ '+CLN[hs].n+' кланы нутаг, хамгаалалт −50%':'')); try{ sfx('win'); }catch(e){} try{ mailAdd('Нүүдэл дууслаа','Тосгон шинэ газартаа буулаа.'); }catch(e){} try{ save(); }catch(e){} try{ if(typeof clPushL==='function') clPushL(true); }catch(e){} }
+  setInterval(function(){ try{ arrive(); bar(); }catch(e){} },1000);
+  function bar(){ var m=mv(), w=document.getElementById('wmap'), b=document.getElementById('wmmvb');
+    if(!m||!w){ if(b) b.remove(); return; }
+    if(!b){ b=document.createElement('div'); b.id='wmmvb'; b.style.cssText='position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 118px);z-index:30;background:rgba(30,18,8,.94);border:2px solid #c9972b;border-radius:10px;padding:6px 10px;color:#ffe9b0;font:bold 13px sans-serif;display:flex;gap:8px;align-items:center;white-space:nowrap'; w.appendChild(b); }
+    var p=Math.min(1,(Date.now()-m.t0)/Math.max(1,m.d));
+    b.innerHTML='🚚 Нүүж байна · '+fmt(left())+' <span style="display:inline-block;width:60px;height:6px;background:#1a0f08;border-radius:3px;overflow:hidden"><i style="display:block;height:100%;width:'+Math.round(p*100)+'%;background:#ffd770"></i></span><button class="btn" style="padding:3px 8px;font-size:12px;min-width:0" onclick="wmMvRush()">⚡ '+rushC()+' Алт</button>'; }
+  /* цуваа гаргахыг хориглоно */
+  if(typeof wmSend==='function'){ var _sd=wmSend; wmSend=function(){ if(mv()){ say('Тосгон нүүж явж байхад цуваа гаргах боломжгүй'); return; } return _sd.apply(this,arguments); }; }
+  /* газар сонгох товшилт */
+  var _tp=wmTap; wmTap=function(px,py){ if(MV.pick){ try{ MV.c={x:WMV.x+px/WMV.z,y:WMV.y+py/WMV.z}; sheet(); }catch(e){} return; } return _tp.apply(this,arguments); };
+  var _ws=wmShut; wmShut=function(){ MV.pick=0; MV.c=null; return _ws.apply(this,arguments); };
+  /* зурах: сонгосон газар, нүүж яваа цуваа, дайсны нутгийн анхааруулга */
+  var _wn=wmNodes; wmNodes=function(c,D,vis,items,t){
+    try{ if(MV.pick&&MV.c){ var q=MV.c, ok=!okAt(q.x,q.y), hs=hostile(q.x,q.y);
+        items.push({y:q.y+2e5,f:function(){ c.save(); c.globalAlpha=0.35; c.fillStyle=ok?(hs>=0?'#ffb347':'#4cff6a'):'#ff3b2a'; c.beginPath(); c.ellipse(q.x,q.y,70,40,0,0,7); c.fill(); c.globalAlpha=0.9; try{ wmDrawS(c,'ger',q.x,q.y,64); }catch(e){} c.globalAlpha=1; wmLabel(c,ok?'📍 Энд':'✖',q.x,q.y+22,ok?'#9fff9a':'#ff8a7a',14); c.restore(); }}); }
+      var m=mv(); if(m){ var p=Math.min(1,(Date.now()-m.t0)/Math.max(1,m.d)), x=m.fx+(m.tx-m.fx)*p, y=m.fy+(m.ty-m.fy)*p, sea=typeof wmLandAt==='function'&&!wmLandAt(x,y,0);
+        items.push({y:-1e6+9,f:function(){ var z=(WMV&&WMV.z)||1; c.save(); c.setLineDash([10/z+4,8/z+3]); c.strokeStyle='rgba(255,215,112,.8)'; c.lineWidth=2/z+1; c.beginPath(); c.moveTo(m.fx,m.fy); c.lineTo(m.tx,m.ty); c.stroke(); c.restore(); }});
+        items.push({y:y+999,f:function(){ try{ if(sea) wmShip(c,x,y); else wmDrawS(c,'u_lightcav',x,y,44); }catch(e){} wmLabel(c,'🚚 '+fmt(left()),x,y+14,'#ffe29a',11); }}); }
+      var hz=wmHostile(); if(hz>=0&&!m){ var C=D.C; items.push({y:C.y+3,f:function(){ wmLabel(c,'⚠ Дайсны нутагт · Хамгаалалт −50%',C.x,C.y+62,'#ff8a7a',11); }}); }
+    }catch(e){}
+    return _wn.apply(this,arguments); };
+  /* бусдад харагдах байрлал ба хамгаалалтын торгууль */
+  var _ss=socSnap; socSnap=function(){ var o=_ss.apply(this,arguments); try{ if(S.wmHome){ o.hm=[S.wmHome.x,S.wmHome.y]; if(wmHostile()>=0) o.dp=0.5; } }catch(e){} return o; };
+  var _ce=wmCwEnts; wmCwEnts=function(){ var L=_ce.apply(this,arguments); try{ var rows=(CWD&&CWD.op)||[]; L.forEach(function(e){ if(!e.real||e._mv) return; var r=rows.find(function(x){ return x.id===e.uid; }); if(r&&r.v){ if(r.v.hm){ e.x=r.v.hm[0]; e.y=r.v.hm[1]; } if(r.v.dp) e.p=Math.round(e.p*r.v.dp); } e._mv=1; }); }catch(e){} return L; };
+  setInterval(function(){ try{ if(typeof WMMP==='undefined'||!CWD||!CWD.my) return; CWD.my.forEach(function(x){ if(x&&x.v&&x.v.hm&&WMMP) WMMP[x.id]={x:x.v.hm[0],y:x.v.hm[1]}; }); }catch(e){} },1000);
+  /* өөрийн тосгоны хамгаалалт: дайсны нутагт −50%, кланы +5%-гүй */
+  if(typeof defMul==='function'){ var _dm=defMul; defMul=function(){ var v=_dm.apply(this,arguments); try{ if(wmHostile()>=0) v=Math.max(0.1,(v-0.05)*0.5); }catch(e){} return v; }; }
 })();
 </script>
 </body>
