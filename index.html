@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='3245906d69';
+var UPDB='9ad9fa4e5b';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -14010,7 +14010,7 @@ heroListHTML=function(){
    Хураасан самбарын товч дараагийнхынхаа яг дээр шахагдаж зэрэгцэнэ. Доод цэс хүртэл багтахгүй бол Захиалга, дараа нь Бүлэг самбар намсаж (дотроо гүйлгэнэ). */
 (function(){
   const shown=e=>!!e&&e.getClientRects().length>0&&getComputedStyle(e).display!=='none';
-  const nat=e=>{ const sv=e.style.maxHeight; e.style.maxHeight='none'; const h=e.scrollHeight+(e.offsetHeight-e.clientHeight); e.style.maxHeight=sv; return h; };
+  const nat=e=>{ const sv=e.style.maxHeight, st=e.scrollTop; e.style.maxHeight='none'; const h=e.scrollHeight+(e.offsetHeight-e.clientHeight); e.style.maxHeight=sv; if(st) e.scrollTop=st; return h; };
   const TAB=44, GAP=6;
   function clear(t){ if(t.dataset.dk){ t.style.top=''; t.style.bottom=''; t.style.maxHeight=''; t.style.overflowY=''; delete t.dataset.dk; } }
   function dock(){ try{
@@ -14024,7 +14024,7 @@ heroListHTML=function(){
     /* Захиалга */
     if(ov){
       if(oc){ o.style.top=(y-8)+'px'; y+=TAB+GAP; }
-      else{ const oNat=Math.min(260,nat(o)), tNat=(tv&&!tc)?nat(t)+8:0; let oh=oNat;
+      else{ const oNat=Math.min(380,nat(o)), tNat=(tv&&!tc)?nat(t)+8:0; let oh=oNat;
         if(y+oh+tNat>limit) oh=Math.max(Math.min(oNat,130),limit-y-tNat);
         o.style.maxHeight=Math.round(oh)+'px'; o.style.overflowY='auto'; o.style.top=y+'px'; y+=Math.round(Math.min(oh,nat(o)))+8; } }
     /* Бүлэг */
@@ -21037,7 +21037,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
     ors.forEach((o,i)=>{ h+=rowHTML(o,i,false); });
     if(L>0) h+=tripsHTML(); else h+='<div class="oqt" style="cursor:pointer" onclick="closeM();openM(\'barilga\')"><span>Захиалгын байр барь</span><b>›</b></div>';
     const sig=h.replace(/>\d+:\d\d</g,'><'); // цагийн өөрчлөлтөөр сигнал өөрчлөхгүй
-    if(force||sig!==SIG||h!==p.getAttribute('data-h')){ if(sig!==SIG||force) p.innerHTML=h; else { /* зөвхөн цаг шинэчилнэ */ const ts=p.querySelectorAll('.oqt b'), nt=document.createElement('div'); nt.innerHTML=h; const ns=nt.querySelectorAll('.oqt b'); ts.forEach((e,i)=>{ if(ns[i]) e.textContent=ns[i].textContent; }); } SIG=sig; p.setAttribute('data-h',h); }
+    if(force||sig!==SIG||h!==p.getAttribute('data-h')){ if(sig!==SIG||force){ const st0=p.scrollTop; p.innerHTML=h; p.scrollTop=st0; } else { /* зөвхөн цаг шинэчилнэ */ const ts=p.querySelectorAll('.oqt b'), nt=document.createElement('div'); nt.innerHTML=h; const ns=nt.querySelectorAll('.oqt b'); ts.forEach((e,i)=>{ if(ns[i]) e.textContent=ns[i].textContent; }); } SIG=sig; p.setAttribute('data-h',h); }
   }catch(e){} }
   window.oqRender=oqRender;
   function oqSync(){ try{
@@ -26199,6 +26199,14 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     return h+'</div>'; }
   const _b=bldHTML; bldHTML=function(k){ const h=_b.apply(this,arguments); if(k!=='school'||!(S.bld.school>0)) return h; try{ step(); return h+card(); }catch(e){ return h; } };
 })();
+</script>
+<script id="oqwide">
+/* Захиалгын самбар: өргөн болгож, нэр нь үсгээр тасрахгүй */
+(function(){ const st=document.createElement('style');
+  st.textContent='#oqp{width:250px!important;box-sizing:border-box}#oqp.oqc{transform:translateX(-290px)!important}'+
+    '#oqp .oqh{gap:8px!important}#oqp .oqn{min-width:0;flex:1 1 auto}#oqp .oqn div,#oqp .oqn{word-break:normal!important;overflow-wrap:normal!important;hyphens:none}'+
+    '#oqp .oqn div{white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;font-size:12px!important}#oqp .oqp{min-width:64px}';
+  document.head.appendChild(st); })();
 </script>
 </body>
 </html>
