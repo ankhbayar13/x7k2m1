@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='395965e38c';
+var UPDB='3ba1eb3d9f';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26126,6 +26126,37 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
 
     }catch(e){} }
   setInterval(tick,600);
+  const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); tick(); return r; };
+})();
+</script>
+<script id="mdot">
+/* Цэс доторх хавтангууд дээр улаан цэг: Захиалга (бэлэн захиалга), Судалгаа (сул суваг + эхлүүлэх судалгаа), Түүхэн аян (тэнхээ дүүрсэн),
+   Өдрийн бэлэг (үнэгүй эргүүлэг), Дайн (өнөөдрийн дайралт үлдсэн), Наадам (өнөөдрийн оролдлого үлдсэн). Аль нэг нь байвал «Цэс» товч дээр бас цэг. */
+(function(){
+  const T={
+    'Захиалга':()=>{ try{ return (S.bld.orders||0)>0&&ordReady()>0; }catch(e){ return false; } },
+    'Судалгаа':()=>{ try{ rsInit(); const idle=!S.rs.cur||(S.rs.s2&&!S.rs.c2); if(!idle) return false; const a=ageIdx();
+        return TECH.some(t=>{ if(S.rs.done[t.id]||a<t.age) return false; if(S.rs.cur&&S.rs.cur.id===t.id) return false; const pv=TECH.find(x=>x.b===t.b&&Number(x.id[1])===Number(t.id[1])-1); return !pv||!!S.rs.done[pv.id]; }); }catch(e){ return false; } },
+    'Түүхэн аян':()=>{ try{ return typeof stmGet==='function'&&stmGet().v>=STM_MAX; }catch(e){ return false; } },
+    'Өдрийн бэлэг':()=>{ try{ return typeof patrolBadge==='function'&&patrolBadge()>0; }catch(e){ return false; } },
+    'Дайн':()=>{ try{ return (S.bld.hureo||0)>=1&&dnLeft()>0&&(S.won||0)<ENEMIES.length; }catch(e){ return false; } },
+    'Наадам':()=>{ try{ return [archInfo(),raceInfo(),wrestInfo()].some(a=>a&&(a.n||0)<3); }catch(e){ return false; } }
+  };
+  const st=document.createElement('style');
+  st.textContent='.mdot{position:relative}.mdot::before{content:"";position:absolute;top:4px;right:6px;width:16px;height:16px;border-radius:50%;background:#e8281c;border:2px solid #fff;box-shadow:0 0 4px rgba(0,0,0,.7);z-index:3;pointer-events:none}'+
+    '.mgw.mdot::before{top:10px;right:12px}#rcol button.mdot::before{top:0;right:2px;width:12px;height:12px}';
+  document.head.appendChild(st);
+  function any(){ for(const k in T){ if(T[k]()) return true; } return false; }
+  function tick(){ try{
+      const m=document.getElementById('modal');
+      if(m&&m.style.display==='flex'&&cur==='menu'){
+        document.querySelectorAll('#mbody .mnx,#mbody .mnc').forEach(t=>{ const im=t.querySelector('img'), al=im?im.getAttribute('alt'):''; if(T[al]) t.classList.toggle('mdot',T[al]()); });
+        document.querySelectorAll('#mbody .mgw').forEach(t=>t.classList.toggle('mdot',T['Өдрийн бэлэг']()));
+      }
+      const mb=document.querySelector('#rcol [data-x=menu]'), num=document.getElementById('menub');
+      if(mb){ const has=num&&num.style.display==='block'; mb.classList.toggle('mdot',!has&&any()); }
+    }catch(e){} }
+  setInterval(tick,800);
   const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); tick(); return r; };
 })();
 </script>
