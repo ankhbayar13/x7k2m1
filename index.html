@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b8b1d1b153';
+var UPDB='d846aeafab';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -14366,7 +14366,7 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
     ck:()=>({how:'Кланы долоо хоногийн тэмцээнд түрүүлсэн кланы хамгийн их оноо авчирсан гишүүн бол.',crit:'Клан 1-р байр + кландаа 1-р оноо.',prog:'Хугацаа: 7 хоног (бусад нь 1 сар).',go:"openM('wmap')",gn:'🌍 Дэлхий'}),
     kh:()=>({how:'«Үйл явдал» → «Хааны шагнал» худалдаж аваад 1-р шатны Хааны шагналыг ав.',crit:'Хааны шагнал идэвхтэй байх.',prog:(S.pass&&S.pass.vip)?'<span class="ok">Хааны шагнал идэвхтэй ✓</span>':'<span class="no">Хааны шагнал аваагүй</span>',go:"evoShow(1)",gn:'👑 Хааны шагнал',dur:'Тухайн 20 хоногийн улирал дуустал'}),
     jm:()=>({how:'Жамуха баатрыг ав (хэлтэрхий цуглуулж, худалдаж, эсвэл хүрдээр). Мөн Жамухын өдрийн хүрдэнд маш ховор (0.5%) унана.',crit:'Жамуха баатар эзэмших.',prog:(S.heroes&&S.heroes.jamukha)?'<span class="ok">Жамуха байгаа ✓</span>':'<span class="no">Жамуха аваагүй</span>',go:"try{jamOpen()}catch(e){}",gn:'🗡 Жамуха',dur:'Үүрд'}),
-    dw:()=>{ const n=(S.wd&&S.wd.hs)||0; return {how:'⛪ Христийн сүмийг 5/5 болгож барьж дуусга (Судалгаа → Хархорум → Христийн сүм).',crit:'Христийн сүм 5/5.',prog:'Христийн сүм: '+v(n,5,n>=5),go:"RTAB=1;WDT='hs';openM('res')",gn:'⛪ Христийн сүм',dur:'Үүрд таных.'}; },
+    dw:()=>{ const n=(S.wdx&&S.wdx.hs)||0; return {how:'⛪ Христийн сүмийг 5/5 болгож барьж дуусга (Судалгаа → Хархорум → Христийн сүм).',crit:'Христийн сүм 5/5.',prog:'Христийн сүм: '+v(n,5,n>=5),go:"RTAB=1;WDT='hs';openM('res')",gn:'⛪ Христийн сүм',dur:'Үүрд таных.'}; },
     cc:()=>{ const g=S.cg||{}, w=(g.mm===miNow())?(g.mw||0):0; return {how:'Картын тулааны сарын Топ 10-ын 1-р байр эзэл (онлайн ялалтаар).',crit:'Тухайн сард ≥50 онлайн ялалт (ботын ялалт тооцохгүй).',prog:'Энэ сар: '+v(w,50,w>=50)+' ялалт',go:"cardOpen()",gn:'🃏 Картын тулаан'}; }
   };
   window.pfxInfo=function(id){
@@ -25400,7 +25400,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
           {n:'Минарет',c:{gold:180000,meat:800,grain:1200,alt:100},ef:{cul_xp:0.10},d:'Туршлага +10%'},
           {n:'Их сүм',c:{gold:400000,wood:6000,alt:400},ef:{eco_sell:0.10,mil_all:0.03},d:'Зарах үнэ +10%, хүч +3%'}]},
     hs:{n:'Христийн сүм',e:'⛪',bk:'hsm',sz:[[371,217],[383,275],[361,303],[386,325],[492,359]],alt:1000,
-      need:function(){ return ((S.wd&&S.wd.ls)||0)>=5; }, lockTxt:'Лалын сүм 5/5 болсны дараа нээгдэнэ.',
+      need:function(){ return ((S.wdx&&S.wdx.ls)||0)>=5; }, lockTxt:'Лалын сүм 5/5 болсны дараа нээгдэнэ.',
       d:'Хархорумын несторын христийн сүм. Шат бүрт байнгын бонус.',
       st:[{n:'Суурь тавих',c:{gold:15000,wood:1200},ef:{mil_def:0.05},d:'Хамгаалалт +5%'},
           {n:'Чулуун хана',c:{gold:45000,wood:2700,grain:900},ef:{mil_hp:0.03},d:'Баатрын бие +3%'},
@@ -25408,7 +25408,10 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
           {n:'Туг, цамхаг',c:{gold:270000,meat:1200,grain:1800,alt:150},ef:{cul_pass:0.10},d:'Шагналын оноо +10%'},
           {n:'Их сүм',c:{gold:600000,wood:9000,alt:600},ef:{mil_all:0.05,cul_xp:0.10},d:'Хүч +5%, туршлага +10%'}]}
   };
-  var lv=function(id){ return Math.max(0,Math.min(5,(S.wd&&S.wd[id])||0)); };
+  try{ if(S&&S.wd&&(S.wd.ls||S.wd.hs)&&!S.wdx){ S.wdx={ls:S.wd.ls||0,hs:S.wd.hs||0}; } }catch(e){}
+  /* алдагдсан шатыг сэргээх: Христийн сүм барьсан бол Лалын сүм 5/5 байсан; «Дэлхийн эзэн» хүрээтэй бол Христийн сүм 5/5 */
+  try{ S.wdx=S.wdx||{}; if((S.bld&&(S.bld.hsm>0||(S.sites&&S.sites.hsm)))&&(S.wdx.ls||0)<5) S.wdx.ls=5; if(S.chf&&S.chf.dw&&S.chf.dw.p&&(S.wdx.hs||0)<5) S.wdx.hs=5; }catch(e){}
+  var lv=function(id){ return Math.max(0,Math.min(5,(S.wdx&&S.wdx[id])||0)); };
   window.WD2=WD; window.wd2Lv=lv;
   /* бонус */
   var _rsb=rsb; rsb=function(k){ var v=_rsb.apply(this,arguments); try{ for(var id in WD){ var n=lv(id); for(var i=0;i<n;i++){ var e=WD[id].st[i].ef[k]; if(e) v+=e; } } }catch(e){} return v; };
@@ -25426,10 +25429,10 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     W.st.forEach(function(x,i){ var done=i<w, nxt=i===w; h+='<div class="card" style="opacity:'+(done?0.6:1)+'"><div class="row"><div style="flex:1"><b>'+(i+1)+'. '+x.n+(done?' ✓':'')+'</b><div class="sm">'+x.d+'</div>'+(done?'':'<div class="sm">'+costTxt(x.c)+'</div>')+'</div>'+(nxt&&ok?'<button class="btn" onclick="wd2Build(\''+WDT+'\')">Барих</button>':'')+'</div></div>'; });
     if(w>=5) h+='<div class="card sm" style="text-align:center;color:#9fe08a">✓ '+W.n+' бүрэн баригдлаа</div>';
     return h; };
-  window.wd2Build=function(id){ var W=WD[id]; S.wd=S.wd||{}; var i=lv(id), x=W.st[i]; if(!x||!W.need()||S.bld.ger<9) return;
+  window.wd2Build=function(id){ var W=WD[id]; S.wdx=S.wdx||{}; var i=lv(id), x=W.st[i]; if(!x||!W.need()||S.bld.ger<9) return;
     if(!canPay(x.c)){ say('Нөөц хүрэхгүй байна'); sfx('err'); return; }
-    for(var k in x.c) S.res[k]-=x.c[k]; S.wd[id]=i+1; sfx('win'); vib([60,40,60,40,120]); say(W.n+': '+x.n+' барилаа!'); try{ passAdd(25); }catch(e){}
-    if(S.wd[id]>=5){ S.res.alt+=W.alt; say(W.n+' дууслаа! +'+W.alt+' Алт'); }
+    for(var k in x.c) S.res[k]-=x.c[k]; S.wdx[id]=i+1; sfx('win'); vib([60,40,60,40,120]); say(W.n+': '+x.n+' барилаа!'); try{ passAdd(25); }catch(e){}
+    if(S.wdx[id]>=5){ S.res.alt+=W.alt; say(W.n+' дууслаа! +'+W.alt+' Алт'); }
     try{ save(); }catch(e){} fillM(); refresh(); };
   /* Хархорум дуусахад дараагийн таб руу шилжүүлнэ */
   var _wb=wdBuild; wdBuild=function(){ var r=_wb.apply(this,arguments); if((S.hk||0)>=5&&WDT==='hk'){ try{ say('Лалын сүм нээгдлээ! Хархорум → 🕌 Лалын сүм'); }catch(e){} } return r; };
@@ -25484,7 +25487,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     {id:'cB',b:'c',n:'Их хаадын ухаан',d:'Туршлага +25%, скилл 10% хурдан бэлэн болно',ef:{cul_xp:0.25,cul_cd:0.10},age:5,e:'👑',cost:{gold:2000000,milk:8000,alt:200},secs:8*H}];
   NEW.forEach(function(t){ if(!TECH.some(function(x){ return x.id===t.id; })) TECH.push(t); });
   /* Христийн сүм 5/5 болсон бол «Дэлхийн эзэн» хүрээ (үүрд) */
-  setInterval(function(){ try{ if(!S||!S.wd||(S.wd.hs||0)<5) return;
+  setInterval(function(){ try{ if(!S||!S.wdx||(S.wdx.hs||0)<5) return;
     S.chf=S.chf||{}; if(S.chf.dw&&S.chf.dw.p) return; S.chf.dw={p:1};
     try{ mailAdd('Дэлхийн эзэн','Христийн сүмийг барьж дуусгалаа! «Дэлхийн эзэн» хүрээ үүрд таных боллоо. Миний хөрөг → Хүрээ хэсгээс сонгоорой.'); }catch(e){}
     try{ say('🌍 «Дэлхийн эзэн» хүрээ авлаа!'); sfx('win'); vib([60,40,60,40,120]); }catch(e){} try{ save(); }catch(e){} }catch(e){} },3000);
@@ -25503,7 +25506,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     '@keyframes rdotP{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}';
   document.head.appendChild(st);
   var has=function(k){ return (S.bld[k]||0)>0||!!(S.sites&&S.sites[k]); };
-  var wdOk=function(k){ if(k==='lsm') return has('khk')&&!(S.sites&&S.sites.khk)&&(S.hk||0)>=5; if(k==='hsm') return has('lsm')&&!(S.sites&&S.sites.lsm)&&((S.wd&&S.wd.ls)||0)>=5; return true; };
+  var wdOk=function(k){ if(k==='lsm') return has('khk')&&!(S.sites&&S.sites.khk)&&(S.hk||0)>=5; if(k==='hsm') return has('lsm')&&!(S.sites&&S.sites.lsm)&&((S.wdx&&S.wdx.ls)||0)>=5; return true; };
   window.bCanNew=function(k){ try{
     if(k==='gmain') return false;
     if(k.indexOf('pen:')===0) return !has('hashaa')&&S.bld.ger>=(BREQ.hashaa||1);
