@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='ae7ba2c426';
+var UPDB='1d23387ca3';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25840,7 +25840,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     var t0=tierOf(h.lv)||1, GW=(IMD[t0].d[0]*sc(t0)*1.05), GH=IMD[t0].d[1]*sc(t0)*1.05, TF=GTF[t0], SP2=(TF[1]-TF[0])*GW, LL=Math.round(GH*1.7+16), gates=[];
     e.vt.forEach(function(l){ var q=(gw&&gw.l===l)?gw:(ge&&ge.l===l)?ge:null; if(!q){ segs.push({v:1,x:l.x,a:l.a,b:l.b,n:l.n}); return; }
       var dir=l.n==='W'?-1:1, xi=l.x-dir*SP2, yA=q.c-LL/2, yB=q.c+LL/2;
-      segs.push({v:1,x:l.x,a:l.a,b:yA-GH*0.35,n:l.n}); segs.push({v:1,x:l.x,a:yB,b:l.b,n:l.n}); segs.push({v:1,x:xi,a:yA,b:yB-GH*0.35,n:l.n,cn:1});
+      segs.push({v:1,x:l.x,a:l.a,b:yA-GH*0.35,n:l.n}); segs.push({v:1,x:l.x,a:yB,b:l.b,n:l.n,ga:1}); segs.push({v:1,x:xi,a:yA,b:yB-GH*0.35,n:l.n,cn:1,ga:1});
       var cxg=Math.min(l.x,xi)-TF[0]*GW+GW/2; gates.push({cx:cxg,y:yA,w:GW,dir:dir,x:l.x,xi:xi}); gates.push({cx:cxg,y:yB,w:GW,dir:dir,x:l.x,xi:xi}); });
     /* ус, уулан дээгүүр хэрэм барихгүй: нуур (усан флотын боомт), уул дайрах хэсгийг тасална, үзүүрт нь цамхаг */
     var ends=[], P=((L&&L.ponds)||[]).concat((L&&L.peaks)||[]), M=6, cut=function(s){ var out=[[s.a,s.b]];
@@ -25885,7 +25885,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       var EG=G.edges, eN=EG.hz.find(function(l){ return l.n==='N'; }), eS=EG.hz.find(function(l){ return l.n==='S'; }), eW=EG.vt.find(function(l){ return l.n==='W'; }), eE=EG.vt.find(function(l){ return l.n==='E'; });
       var VW=SP?IMD[t].b[0]*sc(t):0, WT=SP?hrmWallTop(t):0;
       var hA=function(s){ return (SP&&eW&&Math.abs(s.a-eW.x)<0.5)?s.a-VW/2:s.a; }, hB=function(s){ return (SP&&eE&&Math.abs(s.b-eE.x)<0.5)?s.b+VW/2:s.b; };
-      var WK={1:0.79,2:0.76,3:0.48}, WTK=SP?IMD[t].a[1]*sc(t)*WK[t]:0; var vA=function(s){ return (SP&&eN&&Math.abs(s.a-eN.y)<0.5)?s.a-WTK:s.a; }, vB=function(s){ return (SP&&eS&&Math.abs(s.b-eS.y)<0.5)?s.b-WT*0.5:s.b; };
+      var WK={1:0.79,2:0.76,3:0.48}, WTK=SP?IMD[t].a[1]*sc(t)*WK[t]:0; var GK={1:0.5,2:0.62,3:0.44}; var vA=function(s){ if(SP&&s.ga) return s.a-IMD[t].d[1]*sc(t)*1.05*GK[t]; return (SP&&eN&&Math.abs(s.a-eN.y)<0.5)?s.a-WTK:s.a; }, vB=function(s){ return (SP&&eS&&Math.abs(s.b-eS.y)<0.5)?s.b-WT*0.5:s.b; };
       G.segs.forEach(function(s,si){ if(s.h&&SP){ var sa=hA(s), sb=hB(s); if(s.y<y0||s.y-60>y1||sb<x0||sa>x1) return; var a=Math.max(sa,x0), b=Math.min(sb,x1); list.push({y:s.y,f:function(){ hwH(ctx,t,a,b,s.y,k,si+1); }}); hwTowers(t,s.a,s.b).forEach(function(tx){ if(tx>x0-30&&tx<x1+30) list.push({y:s.y+0.15,f:function(){ hwC(ctx,t,tx,s.y+1); }}); }); return; }
         if(s.v&&SP){ var va=vA(s), vb=vB(s); if(s.x<x0-10||s.x>x1+10||vb<y0||va-20>y1) return; var CH=30; for(var a2=va;a2<vb;a2+=CH){ (function(a3){ var b3=Math.min(vb,a3+CH); if(b3<y0||a3-20>y1) return; list.push({y:(va<s.a&&a3<s.a+1)?Math.max(b3,s.a+0.5):b3,f:function(){ hwV(ctx,t,s.x,a3,b3,k,si+1); }}); })(a2); } return; }
         if(s.h){ if(s.y<y0||s.y-20>y1||s.b<x0||s.a>x1) return; var a=Math.max(s.a,x0), b=Math.min(s.b,x1); list.push({y:s.y,f:function(){ faceH(ctx,t,a,b,s.y,k,si+1); }}); }
