@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='0e0cb24107';
+var UPDB='9e421b4104';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25362,7 +25362,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var stg=function(){ return Math.max(0,Math.min(5,S.hk||0)); };
   function reg(){ try{
     if(typeof BUILD==='undefined') return;
-    if(!BUILD.khk){ BUILD.khk={n:'Хархорум',spr:'khk1',w:BW,cost:1000,up:0,desc:'Монголын эзэнт гүрний нийслэл. Шатаа Хархорумын цонхноос ахиулна. Шат бүрт байнгын бонус.'}; }
+    if(!BUILD.khk){ BUILD.khk={n:'Хархорум',w:BW,cost:1000,up:0,desc:'Монголын эзэнт гүрний нийслэл. Шатаа Хархорумын цонхноос ахиулна. Шат бүрт байнгын бонус.'}; Object.defineProperty(BUILD.khk,'spr',{get:function(){ return 'khk'+Math.max(1,stg()); },enumerable:true}); }
     if(BKEYS.indexOf('khk')<0) BKEYS.push('khk');
     try{ BREQ.khk=9; BRAR.khk='gold'; }catch(e){}
     try{ var t=BTABS[3][2]; if(t.indexOf('khk')<0) t.push('khk'); }catch(e){}
@@ -25433,7 +25433,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var BW=54;
   function reg(){ try{ if(typeof BUILD==='undefined') return;
     for(var id in WD){ (function(id){ var W=WD[id], k=W.bk;
-      if(!BUILD[k]) BUILD[k]={n:W.n,spr:k+'1',w:BW,cost:id==='ls'?2000:3000,up:0,desc:W.d+' '+W.lockTxt+' Шатаа Судалгаа → Хархорум цонхноос ахиулна.'};
+      if(!BUILD[k]){ BUILD[k]={n:W.n,w:BW,cost:id==='ls'?2000:3000,up:0,desc:W.d+' '+W.lockTxt+' Шатаа Судалгаа → Хархорум цонхноос ахиулна.'}; Object.defineProperty(BUILD[k],'spr',{get:function(){ return k+Math.max(1,lv(id)); },enumerable:true}); }
       if(BKEYS.indexOf(k)<0) BKEYS.push(k);
       try{ BREQ[k]=9; BRAR[k]='gold'; }catch(e){}
       try{ var t=BTABS[3][2]; if(t.indexOf(k)<0) t.push(k); }catch(e){}
