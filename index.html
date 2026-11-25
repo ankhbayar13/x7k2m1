@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='86ca78d6cc';
+var UPDB='0b19903997';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25993,6 +25993,17 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       var fromMenu=cur&&cur!=='menu'&&(MBACK===1||(window.MH&&MH.indexOf('menu')>=0));
       if(isX&&fromMenu&&document.getElementById('modal').style.display==='flex'){ window.__mret=1; try{ openM('menu'); } finally{ window.__mret=0; } return; } }catch(e){}
     return _c.apply(this,arguments); };
+
+  /* Цэснээс нээсэн бүх цонх/дэлгэц (газрын зураг, шатар, карт, наадам г.м.) хаагдахад цэс рүүгээ буцна */
+  var MR=null;
+  var big=function(){ var ch=document.body.children; for(var i=0;i<ch.length;i++){ var e=ch[i]; if(e.id==='cv'||e.id==='modal'||e.id==='splash'||e.tagName==='SCRIPT'||e.tagName==='STYLE') continue; var c=getComputedStyle(e); if(c.display==='none'||c.visibility==='hidden'||c.position!=='fixed') continue; var r=e.getBoundingClientRect(); if(r.width>=innerWidth*0.9&&r.height>=innerHeight*0.8) return true; } return false; };
+  document.addEventListener('click',function(ev){ try{ if(cur!=='menu') return; var t=ev.target&&ev.target.closest&&ev.target.closest('#mbody [onclick]'); if(!t) return; var b=box(); MR={s:b?b.scrollTop:0,t:Date.now(),st:'go'}; MS=MR.s; }catch(e){} },true);
+  setInterval(function(){ try{ if(!MR) return; var mo=document.getElementById('modal').style.display==='flex';
+      if(mo&&cur==='menu'){ if(MR.st==='away'||Date.now()-MR.t>800) MR=null; return; }
+      var bg=big(); if((mo&&cur!=='menu')||bg){ MR.st='away'; return; }
+      if(MR.st!=='away'){ if(Date.now()-MR.t>3000) MR=null; return; }
+      if((typeof placing!=='undefined'&&placing)||(typeof BT!=='undefined'&&BT)||(typeof RT!=='undefined'&&RT)||document.getElementById('askov')) return;
+      MS=MR.s; MR=null; window.__mret=1; try{ openM('menu'); } finally{ window.__mret=0; } }catch(e){} },300);
 })();
 </script>
 </body>
