@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='4b482bec64';
+var UPDB='ce044e7401';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25807,11 +25807,16 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   [1,2,3].forEach(function(t){ 'abcde'.split('').forEach(function(n){ var im=new Image(); im.src='hf/hr/t'+t+n+'.webp?v=1'; IMG[t+n]=im; }); });
   var ok=function(t){ return 'abcde'.split('').every(function(n){ var im=IMG[t+n]; return im&&im.complete&&im.naturalWidth; }); };
   var sc=function(t){ return IMD[t].tw/IMD[t].a[0]; };
-  window.hrmWallTop=function(t){ return ok(t)?IMD[t].a[1]*sc(t)*(t===3?0.55:0.62):DIM[t].H; };
-  function hwH(g,t,a,b,y,k,seed){ var D=IMD[t], s=sc(t), tw=D.tw, th=D.a[1]*s, A=IMG[t+'a'], E=IMG[t+'e'];
+  window.hrmWallTop=function(t){ return ok(t)?IMD[t].a[1]*sc(t)*(t===3?0.68:t===2?0.9:0.9):DIM[t].H; };
+  /* хэвтээ хэрэм: зургийн дунд хэсгийг (хоёр үзүүрийн цамхаггүй) давтана */
+  var HC={1:[0.04,0.95],2:[0.12,0.9],3:[0.27,0.76]};
+  function hwH(g,t,a,b,y,k,seed){ var D=IMD[t], s=sc(t), C=HC[t], sx0=D.a[0]*C[0], sw=D.a[0]*(C[1]-C[0]), tw=sw*s, th=D.a[1]*s, A=IMG[t+'a'], E=IMG[t+'e'];
     for(var x=a,i=Math.floor(a/tw);x<b;i++){ var x0=i*tw, x1=x0+tw, dx0=Math.max(x,x0), dx1=Math.min(b,x1); if(dx1<=dx0){ x=x1; continue; }
-      var br=hsh(i,seed)<k, im=br?E:A, iw=br?D.e[0]:D.a[0], ih=br?D.e[1]:D.a[1], hh=br?ih*(tw/iw):th, f0=(dx0-x0)/tw, f1=(dx1-x0)/tw;
-      g.drawImage(im,iw*f0,0,iw*(f1-f0),ih,dx0,y-hh,dx1-dx0,hh); x=x1; } }
+      var br=hsh(i,seed)<k, f0=(dx0-x0)/tw, f1=(dx1-x0)/tw;
+      if(br){ var ew=D.e[0], eh=D.e[1], hh=eh*(tw/(ew*0.8)); g.drawImage(E,ew*(0.1+0.8*f0),0,ew*0.8*(f1-f0),eh,dx0,y-hh,dx1-dx0,hh); }
+      else g.drawImage(A,sx0+sw*f0,0,sw*(f1-f0),D.a[1],dx0,y-th,dx1-dx0,th); x=x1; } }
+  /* хэвтээ хэрмийн дагуух завсрын цамхагууд (чулуун хана, их хэрэм) */
+  function hwTowers(t,a,b){ if(t<2) return []; var tw=IMD[t].a[0]*(HC[t][1]-HC[t][0])*sc(t), step=tw*3, out=[]; for(var x=a+step;x<b-step*0.6;x+=step) out.push(x); return out; }
   function hwV(g,t,x,a,b,k,seed){ var D=IMD[t], s=sc(t), w=D.b[0]*s, V0=D.b[1]*0.2, VH=D.b[1]*0.6, tl=VH*s, B=IMG[t+'b'];
     for(var y=a,i=Math.floor(a/tl);y<b;i++){ var y0=i*tl, y1=y0+tl, d0=Math.max(y,y0), d1=Math.min(b,y1); if(d1<=d0){ y=y1; continue; }
       var f0=(d0-y0)/tl, f1=(d1-y0)/tl, br=hsh(i,seed)<k;
@@ -25876,7 +25881,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _fl=fenceList; fenceList=function(list,vis){ var h=st(); if(!h.lv) return _fl.apply(this,arguments); try{ var Gc=geom(); if(clearGates.k!==Gc.key+'|'+(L&&L.trees&&L.trees.length)){ clearGates(Gc); clearGates.k=Gc.key+'|'+(L&&L.trees&&L.trees.length); } }catch(e){} if(!geom.t||performance.now()-geom.t>1500){ geom.t=performance.now(); geom.c=null; }
     try{ var L0=list; list={push:function(o){ o.y+=1e6; L0.push(o); }}; var t=tierOf(h.lv), G=geom(), D=DIM[t], vw=W/Z, vh=H/Z, x0=cam.x-14, x1=cam.x+vw+14, y0=cam.y-20, y1=cam.y+vh+30, k=dmgF(), tm=performance.now()/1000;
       var SP=ok(t); if(SP) D={H:hrmWallTop(t),T:IMD[t].b[0]*sc(t)};
-      G.segs.forEach(function(s,si){ if(s.h&&SP){ if(s.y<y0||s.y-40>y1||s.b<x0||s.a>x1) return; var a=Math.max(s.a,x0), b=Math.min(s.b,x1); list.push({y:s.y,f:function(){ hwH(ctx,t,a,b,s.y,k,si+1); }}); return; }
+      G.segs.forEach(function(s,si){ if(s.h&&SP){ if(s.y<y0||s.y-60>y1||s.b<x0||s.a>x1) return; var a=Math.max(s.a,x0), b=Math.min(s.b,x1); list.push({y:s.y,f:function(){ hwH(ctx,t,a,b,s.y,k,si+1); }}); hwTowers(t,s.a,s.b).forEach(function(tx){ if(tx>x0-30&&tx<x1+30) list.push({y:s.y+0.15,f:function(){ hwC(ctx,t,tx,s.y+1); }}); }); return; }
         if(s.v&&SP){ if(s.x<x0-10||s.x>x1+10||s.b<y0||s.a-20>y1) return; var CH=30; for(var a2=s.a;a2<s.b;a2+=CH){ (function(a3){ var b3=Math.min(s.b,a3+CH); if(b3<y0||a3-20>y1) return; list.push({y:b3,f:function(){ hwV(ctx,t,s.x,a3,b3,k,si+1); }}); })(a2); } return; }
         if(s.h){ if(s.y<y0||s.y-20>y1||s.b<x0||s.a>x1) return; var a=Math.max(s.a,x0), b=Math.min(s.b,x1); list.push({y:s.y,f:function(){ faceH(ctx,t,a,b,s.y,k,si+1); }}); }
         else { if(s.x<x0||s.x>x1||s.b<y0||s.a-20>y1) return; var CH=18; for(var a2=s.a;a2<s.b;a2+=CH){ (function(a3){ var b3=Math.min(s.b,a3+CH); if(b3<y0||a3-20>y1) return; list.push({y:b3,f:function(){ bandV(ctx,t,s.x,a3,b3,b3>=s.b-0.01,k,si+1); }}); })(a2); } } });
