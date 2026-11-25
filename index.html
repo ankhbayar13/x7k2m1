@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='61d0f2c3cb';
+var UPDB='6304e81c0a';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25827,12 +25827,17 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   window.hrmBox=function(){ return bbox(); };
   function geom(){ var e=bbox(), h=st(); var key=e.key+'|'+h.lv; if(geom.c&&geom.c.key===key) return geom.c;
     var W_=e.vt.filter(function(l){ return l.n==='W'; }), E_=e.vt.filter(function(l){ return l.n==='E'; }), gy=WH*0.56;
-    var pick=function(L,mn){ if(!L.length) return null; L=L.slice().sort(function(p,q){ return mn?(p.x-q.x):(q.x-p.x); }); var x0=L[0].x, cs=L.filter(function(l){ return Math.abs(l.x-x0)<1; }).sort(function(p,q){ return (q.b-q.a)-(p.b-p.a); }); var l=cs.find(function(l){ return gy>l.a+20&&gy<l.b-20; })||cs[0]; var c=Math.max(l.a+20,Math.min(l.b-20,gy)); return {l:l,g:[c-12,c+12]}; };
+    var pick=function(L,mn){ if(!L.length) return null; L=L.slice().sort(function(p,q){ return mn?(p.x-q.x):(q.x-p.x); }); var x0=L[0].x, cs=L.filter(function(l){ return Math.abs(l.x-x0)<1; }).sort(function(p,q){ return (q.b-q.a)-(p.b-p.a); }); var l=cs.find(function(l){ return gy>l.a+20&&gy<l.b-20; })||cs[0]; var c=Math.max(l.a+60,Math.min(l.b-60,gy)); return {l:l,c:c}; };
     var gw=pick(W_,1), ge=pick(E_,0), segs=[];
     e.hz.forEach(function(l){ segs.push({h:1,a:l.a,b:l.b,y:l.y,n:l.n}); });
-    e.vt.forEach(function(l){ var gp=(gw&&gw.l===l)?gw.g:(ge&&ge.l===l)?ge.g:null; if(gp){ segs.push({v:1,x:l.x,a:l.a,b:gp[0],n:l.n}); segs.push({v:1,x:l.x,a:gp[1],b:l.b,n:l.n}); } else segs.push({v:1,x:l.x,a:l.a,b:l.b,n:l.n}); });
+    /* давхар хаалга: хэрэм дотогшоо тахийж жижиг хашаа үүсгэнэ, хашааны дээд, доод талд урдаас харсан 2 хаалга */
+    var t0=tierOf(h.lv)||1, GW=(IMD[t0].d[0]*sc(t0)*1.05), GH=IMD[t0].d[1]*sc(t0)*1.05, LL=Math.round(GH*1.5+14), gates=[];
+    e.vt.forEach(function(l){ var q=(gw&&gw.l===l)?gw:(ge&&ge.l===l)?ge:null; if(!q){ segs.push({v:1,x:l.x,a:l.a,b:l.b,n:l.n}); return; }
+      var dir=l.n==='W'?-1:1, xi=l.x-dir*GW, yA=q.c-LL/2, yB=q.c+LL/2;
+      segs.push({v:1,x:l.x,a:l.a,b:yA,n:l.n}); segs.push({v:1,x:l.x,a:yB,b:l.b,n:l.n}); segs.push({v:1,x:xi,a:yA,b:yB,n:l.n,cn:1});
+      gates.push({cx:(l.x+xi)/2,y:yA,w:GW,dir:dir,x:l.x,xi:xi}); gates.push({cx:(l.x+xi)/2,y:yB,w:GW,dir:dir,x:l.x,xi:xi}); });
     var corners=[]; e.hz.forEach(function(l){ corners.push([l.a,l.y]); corners.push([l.b,l.y]); });
-    geom.c={key:key,segs:segs,gates:[gw,ge].filter(Boolean).map(function(q,i){ return {x:q.l.x,g0:q.g[0],g1:q.g[1],dir:q.l.n==='W'?-1:1}; }),corners:corners,edges:e}; return geom.c; }
+    geom.c={key:key,segs:segs,gates:gates,corners:corners,edges:e}; return geom.c; }
   function charAt(c,fd,moving,ph,x,y,sc){ var k='nw'+c+'_'+fd, F=NWF[k]; if(!F) return; var i=moving?Math.floor(ph)%F[0]:F[5], key=k+i; if(!SPR[key]) return; var w=SZ[key]*sc, hh=sprH(key)*sc; spr(key,x-(NWAX[key]||w/2)*sc,y-hh,w); }
   var _fl=fenceList; fenceList=function(list,vis){ var h=st(); if(!h.lv) return _fl.apply(this,arguments); if(!geom.t||performance.now()-geom.t>1500){ geom.t=performance.now(); geom.c=null; }
     try{ var L0=list; list={push:function(o){ o.y+=1e6; L0.push(o); }}; var t=tierOf(h.lv), G=geom(), D=DIM[t], vw=W/Z, vh=H/Z, x0=cam.x-14, x1=cam.x+vw+14, y0=cam.y-20, y1=cam.y+vh+30, k=dmgF(), tm=performance.now()/1000;
@@ -25843,13 +25848,10 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
         else { if(s.x<x0||s.x>x1||s.b<y0||s.a-20>y1) return; var CH=18; for(var a2=s.a;a2<s.b;a2+=CH){ (function(a3){ var b3=Math.min(s.b,a3+CH); if(b3<y0||a3-20>y1) return; list.push({y:b3,f:function(){ bandV(ctx,t,s.x,a3,b3,b3>=s.b-0.01,k,si+1); }}); })(a2); } } });
       if(SP) G.corners.forEach(function(p){ if(p[0]>x0-20&&p[0]<x1+20&&p[1]>y0&&p[1]<y1+40) list.push({y:p[1]+0.2,f:function(){ hwC(ctx,t,p[0],p[1]+2); }}); });
       else if(t>=2) G.corners.forEach(function(p){ if(p[0]>x0&&p[0]<x1&&p[1]>y0&&p[1]<y1+20) list.push({y:p[1]+0.2,f:function(){ tower(ctx,t,p[0],p[1],t===3,tm); }}); });
-      if(SP) G.gates.forEach(function(q){ if(q.x<x0-30||q.x>x1+30||q.g1<y0||q.g0-40>y1) return; var gw=IMD[t].d[0]*sc(t)*1.05;
-        list.push({y:q.g1+0.3,f:function(){ hwG(ctx,t,q.x,q.g1+2); }});
-        [-0.3,0.3].forEach(function(f){ var gx=q.x+gw*f; list.push({y:q.g1+3,f:function(){ charAt(3,'f',false,0,gx,q.g1+4,0.9); }}); }); });
-      else G.gates.forEach(function(q){ if(q.x<x0||q.x>x1||q.g1<y0||q.g0-30>y1) return;
-        list.push({y:q.g0+0.3,f:function(){ tower(ctx,t,q.x,q.g0,1,tm); }}); list.push({y:q.g1+0.3,f:function(){ tower(ctx,t,q.x,q.g1,1,tm); }});
-        list.push({y:q.g1+0.4,f:function(){ gateV(ctx,t,q.x,q.g0,q.g1,tm,q.dir); }});
-        [[q.g0+3.2],[q.g1-1.2]].forEach(function(p,j){ var gx=q.x-q.dir*(D.T/2+3.2); list.push({y:p[0]+0.5,f:function(){ charAt(3,q.dir<0?'l':'r',false,0,gx,p[0],0.9); }}); }); });
+      G.gates.forEach(function(q){ if(q.cx<x0-40||q.cx>x1+40||q.y<y0||q.y-40>y1) return;
+        if(SP) list.push({y:q.y+0.3,f:function(){ hwG(ctx,t,q.cx,q.y+2); }});
+        else { list.push({y:q.y+0.3,f:function(){ tower(ctx,t,q.x,q.y,1,tm); tower(ctx,t,q.xi,q.y,1,tm); ctx.fillStyle='#8f2f22'; ctx.fillRect(Math.min(q.x,q.xi),q.y-DIM[t].H-3,Math.abs(q.xi-q.x),2.2); }}); }
+        [-0.3,0.3].forEach(function(f){ var gx=q.cx+q.w*f; list.push({y:q.y+3,f:function(){ charAt(3,'f',false,0,gx,q.y+4.5,0.9); }}); }); });
       /* эргүүлийн харваачид */
       var n=t===1?2:t===2?4:6, segs=G.segs.filter(function(s){ return (s.b-s.a)>30; }).sort(function(p,q){ return (q.b-q.a)-(p.b-p.a); });
       for(var i=0;i<n&&segs.length;i++){ (function(i){ var s=segs[i%segs.length], len=s.b-s.a, sp=5, ph0=hsh(i,9)*len*2, d=(tm*sp+ph0)%(len*2), fwd=d<len, u=fwd?d:2*len-d, px, py, fd;
@@ -25882,10 +25884,10 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     var c=cost(h.lv+1); if((S.res.gold||0)<c.gold||(S.res.wood||0)<c.wood){ say('Мод/зоос хүрэхгүй байна'); try{ sfx('err'); }catch(e){} return; }
     S.res.gold-=c.gold; S.res.wood-=c.wood; var t0=tierOf(h.lv); h.lv++; h.hp=maxHP(h.lv); geom.c=null; try{ sfx('build'); vib(30); }catch(e){}
     var t1=tierOf(h.lv); say(t1!==t0?'🧱 '+TN[t1]+' боллоо!':'🧱 Хэрэм Lv '+h.lv); try{ save(); refresh(); fillM(); }catch(e){} };
-  window.hrmGo=function(){ try{ closeM(); }catch(e){} var G=geom(), q=G.gates[0]; if(q){ cam.x=q.x-W/Z*(q.dir<0?0.3:0.7); cam.y=(q.g0+q.g1)/2-H/Z*0.45; try{ clampCam(); }catch(e){} } };
+  window.hrmGo=function(){ try{ closeM(); }catch(e){} var G=geom(), q=G.gates[0], q2=G.gates[1]||q; if(q){ cam.x=q.cx-W/Z*0.55; cam.y=(q.y+q2.y)/2-H/Z*0.5; try{ clampCam(); }catch(e){} } };
   window.heremHTML=function(){ var h=st(), t=tierOf(h.lv), M=maxHP(h.lv), r=M?h.hp/M:0, nx=h.lv<MAXL?cost(h.lv+1):null, can=h.lv<(S.bld.ger||1);
     var x='<h2>🧱 Хэрэм</h2><div class="card" style="text-align:center"><img src="'+hrmThumb(Math.max(1,tierOf(h.lv||1)))+'" style="width:180px;max-width:100%;'+(h.lv?'':'opacity:.45;filter:grayscale(.6)')+'"><h3>'+(h.lv?TN[t]+' · Lv '+h.lv+'/'+MAXL:'Баригдаагүй')+'</h3>';
-    if(h.lv) x+='<div class="bar" style="height:10px;margin:6px 0"><i style="width:'+Math.round(r*100)+'%;background:'+(r>0.6?'#6fd04a':r>0.3?'#ffb347':'#ff5a3a')+'"></i></div><div class="sm">Бат бөх: <b>'+h.hp+'/'+M+'</b>'+(h.hp<=0?' · <b style="color:#ff8a7a">НУРСАН</b>':h.rep===1?' · 🔨 Засварлаж байна':h.rep===2?' · ⚠ Засах мод/зоос хүрэхгүй':'')+'</div><div class="sm">Хамгаалалт: <b>+'+pct(hrmBonus())+'%</b> (бүтэн үед +'+pct(baseB(h.lv))+'%) · Дээрмийн алдагдал −'+pct(hrmBonus())+'%</div><div class="sm">Хаалга 2 · Харуул 4 · Эргүүлийн харваач '+(t===1?2:t===2?4:6)+'</div>';
+    if(h.lv) x+='<div class="bar" style="height:10px;margin:6px 0"><i style="width:'+Math.round(r*100)+'%;background:'+(r>0.6?'#6fd04a':r>0.3?'#ffb347':'#ff5a3a')+'"></i></div><div class="sm">Бат бөх: <b>'+h.hp+'/'+M+'</b>'+(h.hp<=0?' · <b style="color:#ff8a7a">НУРСАН</b>':h.rep===1?' · 🔨 Засварлаж байна':h.rep===2?' · ⚠ Засах мод/зоос хүрэхгүй':'')+'</div><div class="sm">Хамгаалалт: <b>+'+pct(hrmBonus())+'%</b> (бүтэн үед +'+pct(baseB(h.lv))+'%) · Дээрмийн алдагдал −'+pct(hrmBonus())+'%</div><div class="sm">Хаалга 4 · Харуул 8 · Эргүүлийн харваач '+(t===1?2:t===2?4:6)+'</div>';
     x+='</div>';
     if(nx){ x+='<div class="card"><div class="row"><div style="flex:1"><b>'+(h.lv?'Lv '+(h.lv+1)+' болгох':'Хэрэм барих')+'</b>'+(tierOf(h.lv+1)!==t?'<div class="sm" style="color:#ffd770">→ '+TN[tierOf(h.lv+1)]+'</div>':'')+'<div class="sm">'+f(nx.gold)+' 🪙 · '+f(nx.wood)+' мод · хамгаалалт +'+pct(baseB(h.lv+1))+'%</div>'+(can?'':'<div class="sm" style="color:#ff8a7a">🔒 Гол гэр Lv '+(h.lv+1)+' хэрэгтэй</div>')+'</div><button class="btn" '+(can?'':'disabled')+' onclick="hrmUp()">'+(h.lv?'⬆ Ахиулах':'Барих')+'</button></div></div>'; }
     x+='<div class="card sm">• Lv 1–5 модон хашлага, Lv 6–10 чулуун хана, Lv 11–15 их хэрэм.<br>• Дээрэмчид, тоглогчид дайрахад хэрэм эвдэрнэ: няцаавал −5–10%, давж орвол −25–40%.<br>• Эвдэрсэн хэмжээгээр хамгаалалт буурна. Нурвал хамгаалалтгүй.<br>• Ажилчид мод, зоосоор автоматаар засна.<br>• Өдөр бүр орж ирвэл 12 цаг 🛡 хамгаалалттай. Хэрэм нурсан + 24 цаг ороогүй бол дайрагч нөөцийн <b>50%</b>-ийг авна.</div>';
