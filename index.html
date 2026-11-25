@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='ab17e03d10';
+var UPDB='69a2ec6ca0';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25951,6 +25951,23 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _bc=bcard; bcard=function(k){ if(k==='herem'){ var h=card(); if(typeof bCanNew==='function'&&bCanNew('herem')){ var i=h.lastIndexOf('</div>'); h=h.slice(0,i)+'<b class="rdot"></b>'+h.slice(i); } return h; } return _bc.apply(this,arguments); };
   try{ var T2=BTABS[2][2]; if(T2.indexOf('herem')<0) T2.unshift('herem'); }catch(e){}
   if(typeof bCanNew==='function'){ var _bn=bCanNew; window.bCanNew=bCanNew=function(k){ if(k==='herem') return !st().lv&&(S.bld.ger||1)>=2; return _bn.apply(this,arguments); }; }
+})();
+</script>
+<script id="clsync">
+/* Төхөөрөмж хооронд тоглоом нэгтгэх: нээхэд (мөн 1+ минут нуугдаад буцаж ирэхэд) cloud-д өөр төхөөрөмж сүүлд хадгалсан бол түүнийг ачаална.
+   Шалгаж дуустал энэ төхөөрөмж cloud руу хадгалахгүй (хуучин өгөгдлөөр дарж бичихгүй). */
+(function(){
+  var CK='dxx_cst', hidAt=0;
+  var _p=clPush; clPush=async function(){ if(!CL.sync) return false; var ok=await _p.apply(this,arguments); if(ok) lsSet(CK,String(Date.now())); return ok; };
+  async function check(why){
+    try{ if(!CL.ok||!CL.uid||!FBM) return; var F=FBM.F, db=FBM.db, sn=await F.getDoc(F.doc(db,'saves',CL.uid)); if(!sn.exists()){ CL.sync=1; return; }
+      var d=sn.data(), t=+d.t||0, me=+(lsGet(CK)||0), own=lsGet('dxx_own');
+      if(own&&own!==CL.uid){ CL.sync=1; return; }
+      if(t>me+3000&&d.d&&acUnpack(d.d)){ lsSet(CK,String(t)); CL.sync=0; try{ say('☁ Өөр төхөөрөмж дээрх сүүлийн тоглоомыг ачаалж байна…'); }catch(e){} clAdopt(d.d,CL.uid); return; }
+      CL.sync=1; }catch(e){ CL.sync=1; } }
+  var iv=setInterval(function(){ if(CL.ok&&FBM){ clearInterval(iv); check('start'); } },300);
+  setTimeout(function(){ if(!CL.sync&&!window._clR) CL.sync=1; },30000);
+  document.addEventListener('visibilitychange',function(){ if(document.hidden){ hidAt=Date.now(); return; } if(hidAt&&Date.now()-hidAt>60000&&CL.ok){ CL.sync=0; check('vis'); } });
 })();
 </script>
 </body>
