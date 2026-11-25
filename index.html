@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b901892be3';
+var UPDB='00c1841df3';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26010,7 +26010,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
 /* Түүхэн аян: бүлгийн цонхонд эсгий (ui_felt) дэвсгэр */
 (function(){
   const st=document.createElement('style');
-  st.textContent='body.cmapbg #modal .box{border-style:solid!important;border-color:transparent!important;border-width:8px!important;border-image:url(rts/ui_rect.webp?v=1) 95 fill/22px stretch!important;background:url(rts/ui_felt.webp?v=1) center top/320px #2a170c!important;background-clip:padding-box!important}'+
+  st.textContent='body.cmapbg #modal .box{border-image-source:url(hf/cmap_frame.webp?v=1)!important;border-image-slice:120 fill!important;background:url(rts/ui_felt.webp?v=1) center top/320px #2a170c!important;background-clip:padding-box!important;box-shadow:none!important}'+
     'body.cmapbg #modal .card{border-image-slice:44!important;background:rgba(20,10,4,.3)!important}';
   document.head.appendChild(st);
   const set=()=>{ try{ document.body.classList.toggle('cmapbg',typeof cur==='string'&&cur.indexOf('cmap:')===0); }catch(e){} };
