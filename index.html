@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='863b129258';
+var UPDB='e93cc1fa50';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25881,6 +25881,10 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   function clearGates(G){ try{ if(!L||!L.trees||!G.gates.length) return; var th=sprH('tree'), R=[];
       for(var i=0;i<G.gates.length;i+=2){ var q1=G.gates[i], q2=G.gates[i+1]||q1, xl=Math.min(q1.x,q1.xi), xr=Math.max(q1.x,q1.xi), y0=q1.y-(q1.w*0.9), y1=q2.y+q1.w*0.5;
         R.push({x0:xl-q1.w*0.9,x1:xr+q1.w*1.1,y0:y0,y1:y1}); }
+      /* хэрмийн дагуу дарагдсан модыг бүгдийг арилгана */
+      try{ var t_=tierOf(st().lv)||1, WH_=ok(t_)?hrmWallTop(t_):DIM[t_].H, WT_=ok(t_)?IMD[t_].b[0]*sc(t_):DIM[t_].T;
+        G.segs.forEach(function(g){ if(g.h) R.push({x0:g.a-10,x1:g.b+10,y0:g.y-WH_-8,y1:g.y+th*0.55});
+          else R.push({x0:g.x-WT_/2-12,x1:g.x+WT_/2+12,y0:g.a-WH_-8,y1:g.b+th*0.55}); }); }catch(e){}
       var hit=function(t){ var tx0=t.x, tx1=t.x+SZ.tree, ty0=t.y, ty1=t.y+th; return R.some(function(r){ return tx1>r.x0&&tx0<r.x1&&ty1>r.y0&&ty0<r.y1; }); };
       var n0=L.trees.length; L.trees=L.trees.filter(function(t){ return !hit(t); }); if(L.trees.length!==n0){ try{ if(typeof propsBuild==='function') propsBuild(); }catch(e){} } }catch(e){} }
   var _fl=fenceList; fenceList=function(list,vis){ var h=st(); if(!h.lv) return _fl.apply(this,arguments); try{ var Gc=geom(); if(clearGates.k!==Gc.key+'|'+(L&&L.trees&&L.trees.length)){ clearGates(Gc); clearGates.k=Gc.key+'|'+(L&&L.trees&&L.trees.length); } }catch(e){} if(!geom.t||performance.now()-geom.t>1500){ geom.t=performance.now(); geom.c=null; }
@@ -26027,6 +26031,22 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   document.head.appendChild(st);
   const mark=()=>{ try{ document.querySelectorAll('#mbody button').forEach(b=>{ if(/^\s*‹/.test(b.textContent)) b.classList.add('bkb'); }); }catch(e){} };
   const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); mark(); return r; };
+})();
+</script>
+<script id="hrmblock">
+/* Хэрэм баригдсан бол мал, анчин, нохой, зэрлэг амьтад хэрмийг нэвтэрч гарахгүй, орохгүй (дайралтын дайсан хамаарахгүй) */
+(function(){
+  if(typeof update!=='function'||typeof hrmBox!=='function') return;
+  const IN=(b,e)=>{ let fx,fy; try{ fx=e.x+entW(e)/2; fy=e.y+entH(e); }catch(_){ fx=e.x; fy=e.y; } return fx>b.x0&&fx<b.x1&&fy>b.y0&&fy<b.y1; };
+  const _u=update;
+  update=function(dt){
+    let b=null, pre=null;
+    try{ if(S.hrm&&S.hrm.lv>0&&typeof ents!=='undefined'){ const e0=hrmBox(), v=e0.vt, h=e0.hz;
+        b={x0:v[0].x,x1:v[1].x,y0:h[0].y,y1:h[1].y};
+        pre=[]; ents.forEach(e=>{ if((e.kind==='wild'||e.kind==='animal')&&!e.raid&&!e.enemy) pre.push([e,e.x,e.y,IN(b,e)]); }); } }catch(_){ b=null; }
+    const r=_u.apply(this,arguments);
+    if(b&&pre){ try{ pre.forEach(p=>{ const e=p[0]; if(IN(b,e)!==p[3]){ e.x=p[1]; e.y=p[2]; e.tx=e.x; e.ty=e.y; e.moving=false; if(e.wait!=null) e.wait=Math.max(e.wait||0,0.5+Math.random()); } }); }catch(_){} }
+    return r; };
 })();
 </script>
 </body>
