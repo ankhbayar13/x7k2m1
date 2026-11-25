@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='9e421b4104';
+var UPDB='bcf0fa446c';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25447,7 +25447,11 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _ub=upBlock; upBlock=function(k){ if(byK[k]) return 'Шатыг Судалгаа → Хархорум цонхноос ахиулна'; return _ub.apply(this,arguments); };
   window.wd2Open=function(id){ try{ radClose(); }catch(e){} RTAB=1; WDT=id; openM('res'); };
   var _up=upgrade; upgrade=function(k){ if(byK[k]){ wd2Open(byK[k]); return; } return _up.apply(this,arguments); };
-  var _sp=startPlace; startPlace=function(k){ var id=byK[k]; if(id&&!WD[id].need()){ say(WD[id].lockTxt); try{ sfx('err'); }catch(e){} return; } return _sp.apply(this,arguments); };
+  var built=function(k){ return (S.bld[k]||0)>0&&!(S.sites&&S.sites[k]); };
+  var _sp=startPlace; startPlace=function(k){ var id=byK[k];
+    if(id==='ls'&&!built('khk')){ say('Эхлээд тосгондоо Хархорумыг барь'); try{ sfx('err'); }catch(e){} return; }
+    if(id==='hs'&&!built('lsm')){ say('Эхлээд тосгондоо Лалын сүмийг барь'); try{ sfx('err'); }catch(e){} return; }
+    if(id&&!WD[id].need()){ say(WD[id].lockTxt); try{ sfx('err'); }catch(e){} return; } return _sp.apply(this,arguments); };
   var _rb=radBtns; radBtns=function(k){ var l=_rb.apply(this,arguments), id=byK[k]; if(!id) return l; var w=lv(id), mx=w>=5;
     l[0]={c:'up'+(mx?' off':''),i:mx?'✔':'⬆',im:'up',t:mx?'':'Шат '+(w+1),a:"wd2Open('"+id+"')"}; l[1]={c:'',i:'ℹ',im:'info',t:'',a:"wd2Open('"+id+"')"}; return l; };
   var _db=drawBuilding; drawBuilding=function(k){ var id=byK[k]; if(!id||S.sites[k]) return _db.apply(this,arguments);
