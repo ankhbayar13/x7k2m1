@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='d096e68e5f';
+var UPDB='38462bb049';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25854,7 +25854,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       var cxg=Math.min(l.x,xi)-TF[0]*GW+GW/2; gates.push({cx:cxg,y:yA,w:GW,dir:dir,x:l.x,xi:xi}); gates.push({cx:cxg,y:yB,w:GW,dir:dir,x:l.x,xi:xi}); });
     /* ус, уулан дээгүүр хэрэм барихгүй: нуур (усан флотын боомт), уул дайрах хэсгийг тасална, үзүүрт нь цамхаг */
     var ends=[], P=((L&&L.ponds)||[]), M=6, cut=function(s){ var out=[[s.a,s.b]];
-      P.forEach(function(q){ var lo,hi; if(s.h){ if(s.y<q.y-M||s.y>q.y+q.h+M) return; lo=q.x-M; hi=q.x+q.w+M; } else { if(s.x<q.x-M||s.x>q.x+q.w+M) return; lo=q.y-M; hi=q.y+q.h+M; }
+      P.forEach(function(q){ var lo,hi; if(s.h){ if(s.y<q.y-M||s.y>q.y+q.h+M) return; lo=q.x-M; hi=q.x+q.w+M; } else { if(s.x<q.x-M||s.x>q.x+q.w+M) return; lo=q.y-M+(q._yl?34:0); hi=q.y+q.h+M-(q._yl?22:0); }
         var nx=[]; out.forEach(function(r){ if(hi<=r[0]||lo>=r[1]){ nx.push(r); return; } if(lo>r[0]) nx.push([r[0],lo]); if(hi<r[1]) nx.push([hi,r[1]]); }); out=nx; });
       return out; };
     var segs2=[]; segs.forEach(function(s){ var rs=cut(s); if(rs.length===1&&rs[0][0]===s.a&&rs[0][1]===s.b){ segs2.push(s); return; }
