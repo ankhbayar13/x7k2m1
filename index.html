@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='e93cc1fa50';
+var UPDB='85b2940639';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -21095,6 +21095,11 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
       const sx=r.x+r.w*0.55, sy=r.y+r.h-1, dr=right?1:-1;
       let soon=1e12;
       q.trips.forEach((tp,i)=>{ const T=Math.max(1,tp.end-tp.start), el=(now-tp.start)/1000, rem=(tp.end-now)/1000, O=Math.min(0.3*T/1000,26), yo=sy+i*3.2; soon=Math.min(soon,tp.end-now);
+        const P=(typeof hrmRoute==='function')?hrmRoute(sx,yo):null;
+        if(P){ const Lp=hrmLen(P), O2=Math.max(4,Math.min(Lp/13,0.45*T/1000)), sp=Lp/O2;
+          if(el<O2){ const p=hrmAt(P,el*sp); tp._d=p.dir||tp._d||1; cartPix(p.x,p.y,tp.cart,tp._d,t); }
+          else if(rem<O2){ const p=hrmAt(P,rem*sp); tp._d=-(p.dir||-(tp._d||-1)); cartPix(p.x,p.y,tp.cart,tp._d,t); }
+          return; }
         if(el<O) cartPix(sx+dr*13*el,yo+Math.min(el,4)*0.9,tp.cart,dr,t);
         else if(rem<O) cartPix(sx+dr*13*rem,yo+Math.min(rem,4)*0.9,tp.cart,-dr,t); });
       nameTag(r.x+r.w/2,r.y-9,'Тэрэг · '+mm(soon/1000),true);
@@ -26047,6 +26052,40 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     const r=_u.apply(this,arguments);
     if(b&&pre){ try{ pre.forEach(p=>{ const e=p[0]; if(IN(b,e)!==p[3]){ e.x=p[1]; e.y=p[2]; e.tx=e.x; e.ty=e.y; e.moving=false; if(e.wait!=null) e.wait=Math.max(e.wait||0,0.5+Math.random()); } }); }catch(_){} }
     return r; };
+})();
+
+/* Хаалгаар орох / гарах зам: дотор цэг (x,y) → хамгийн ойр (баруун/зүүн) хаалга → гадна */
+(function(){
+  let gc=null, gt=0;
+  function gates(){ const now=performance.now(); if(gc&&now-gt<2000) return gc; gt=now; gc=null;
+    try{ if(!(S.hrm&&S.hrm.lv>0)||typeof hrmGeom!=='function') return null; const G=hrmGeom(); if(!G||!G.gates||G.gates.length<2) return null;
+      const out={}; for(let i=0;i<G.gates.length;i+=2){ const a=G.gates[i], b=G.gates[i+1]||a; out[a.dir<0?'W':'E']={cx:a.cx,yA:a.y,yB:b.y,ym:(a.y+b.y)/2,x:a.x,dir:a.dir}; }
+      gc=out; }catch(e){ gc=null; } return gc; }
+  window.hrmGates=gates;
+  /* дотроос гадагш: [дотор цэг, хаалганы дотор тал, хаалганы гадна (хонхор), гадна] */
+  window.hrmRoute=function(x,y,side,far){ const g=gates(); if(!g) return null; const q=g[side||(x<WW/2?'W':'E')]; if(!q) return null;
+    const ox=far!=null?far:q.x+q.dir*40; return [[x,y],[q.cx,q.yA-22],[q.cx,q.ym],[ox,q.ym]]; };
+  window.hrmLen=function(P){ let L=0; for(let i=1;i<P.length;i++) L+=Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]); return L; };
+  window.hrmAt=function(P,d){ for(let i=1;i<P.length;i++){ const a=P[i-1], b=P[i], l=Math.hypot(b[0]-a[0],b[1]-a[1]); if(d<=l||i===P.length-1){ const u=l?Math.max(0,Math.min(1,d/l)):1, dx=b[0]-a[0];
+      return {x:a[0]+dx*u,y:a[1]+(b[1]-a[1])*u,dir:Math.abs(dx)>0.5?(dx>0?1:-1):0,done:d>=l&&i===P.length-1}; } d-=l; } const e=P[P.length-1]; return {x:e[0],y:e[1],dir:0,done:true}; };
+
+  /* Караван: хэрэмтэй бол баруун хаалгаар орж, зүүн хаалгаар гарна */
+  if(typeof carStep==='function'){
+    const _cs=carStep;
+    carStep=function(dt){
+      try{ const g=gates();
+        if(g&&car&&(car.state==='in'||car.state==='out')){
+          const OX=27, OY=14;
+          if(!car.rt||car.rs!==car.state){ car.rs=car.state; car.rd=0;
+            if(car.state==='in'){ const r=hrmRoute(car.tx+OX,car.y+OY,'W',-40); car.rt=r?r.slice().reverse():null; if(car.rt){ car.y=car.rt[0][1]-OY; car.x=car.rt[0][0]-OX; } }
+            else { car.rt=hrmRoute(car.x+OX,car.y+OY,'E',WW+70); } }
+          if(car.rt){ car.t+=dt; car.rd+=16*dt; const p=hrmAt(car.rt,car.rd); car.x=p.x-OX; car.y=p.y-OY;
+            if(p.done){ car.rt=null; if(car.state==='in'){ car.state='stay'; car.t=0; } else { car=null; carT=0; } }
+            return; } }
+        if(car&&car.state==='stay') car.rt=null;
+      }catch(e){}
+      return _cs.apply(this,arguments); };
+  }
 })();
 </script>
 </body>
