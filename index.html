@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='9ad9fa4e5b';
+var UPDB='27cf4f986e';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -20976,7 +20976,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
 
   /* ---------- 3) Жагсаалт (дэлгэгддэг мөр) ---------- */
   const OQ={open:-1,col:false}; window.OQ=OQ; try{ OQ.col=localStorage.getItem('dxx_oqc')==='1'; }catch(e){}
-  function firmDot(f,px){ return '<span class="oqd" style="width:'+px+'px;height:'+px+'px;background:'+COL[f%COL.length]+'">'+esc(FIRMS[f].n.charAt(0))+'</span>'; }
+  function firmDot(f,px){ return '<span class="oqd" style="width:'+px+'px;height:'+px+'px;background:'+COL[f%COL.length]+';overflow:hidden;position:relative">'+(f>=0&&f<8?'<img src="hf/firm/f'+f+'.webp?v=1" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">':esc(FIRMS[f].n.charAt(0)))+'</span>'; }
   function goodsHTML(o){ return Object.keys(o.need).map(k=>{ const hv=Math.floor(S.res[k]||0), ok=hv>=o.need[k];
       return '<div class="oqg">'+iconHTML(k,18)+' <span>'+esc(ITEMS[k].n)+'</span><b style="color:'+(ok?'#8fe39a':'#ff9a8a')+'">'+Math.min(hv,99999)+'/'+o.need[k]+'</b></div>'; }).join(''); }
   function rowHTML(o,i,big){
@@ -26205,7 +26205,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
 (function(){ const st=document.createElement('style');
   st.textContent='#oqp{width:250px!important;box-sizing:border-box}#oqp.oqc{transform:translateX(-290px)!important}'+
     '#oqp .oqh{gap:8px!important}#oqp .oqn{min-width:0;flex:1 1 auto}#oqp .oqn div,#oqp .oqn{word-break:normal!important;overflow-wrap:normal!important;hyphens:none}'+
-    '#oqp .oqn div{white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;font-size:12px!important}#oqp .oqp{min-width:64px}';
+    '#oqp .oqn div{white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;font-size:12px!important}#oqp .oqp{min-width:64px}#oqp .oqh .oqd{width:34px!important;height:34px!important;border-width:2px!important}';
   document.head.appendChild(st); })();
 </script>
 </body>
