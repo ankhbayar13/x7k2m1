@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='d7abc5f182';
+var UPDB='4b482bec64';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25848,6 +25848,24 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     segs=segs2;
     var corners=[]; e.hz.forEach(function(l){ corners.push([l.a,l.y]); corners.push([l.b,l.y]); }); ends.forEach(function(p){ corners.push(p); });
     geom.c={key:key,segs:segs,gates:gates,corners:corners,edges:e}; return geom.c; }
+  var GIM=new Image(); GIM.src='hf/hr/guard.webp?v=1'; var AIM={}; 'frbl'.split('').forEach(function(k){ var im=new Image(); im.src='hf/hr/arch_'+k+'.webp?v=1'; AIM[k]=im; });
+  function archDraw(fd,fr,x,y,t){ var im=AIM[fd]; if(!im||!im.complete||!im.naturalWidth){ charAt(10,fd,true,fr*2,x,y,1.05); return; } var h=13.5, w=h*150/212; ctx.drawImage(im,fr*150,0,150,212,x-w/2,y-h,w,h); }
+  function guardDraw(x,y,fr){ if(!GIM.complete||!GIM.naturalWidth){ charAt(3,'f',false,0,x,y,1.3); return; } var h=15.5, w=h*160/320; ctx.drawImage(GIM,fr*160,0,160,320,x-w/2,y-h,w,h); }
+  /* хэрмийн дээгүүрх тойрог зам (давхар хаалгаар тахийна) */
+  function loopOf(G){ if(G.loop) return G.loop; var e=G.edges, N=e.hz.find(function(l){ return l.n==='N'; }), S_=e.hz.find(function(l){ return l.n==='S'; }), Wv=e.vt.find(function(l){ return l.n==='W'; }), Ev=e.vt.find(function(l){ return l.n==='E'; });
+    if(!N||!S_||!Wv||!Ev){ G.loop={L:0}; return G.loop; }
+    var gs=function(dir){ var g=G.gates.filter(function(q){ return q.dir===dir; }); return g.length>=2?{yA:Math.min(g[0].y,g[1].y),yB:Math.max(g[0].y,g[1].y),x:g[0].x,xi:g[0].xi}:null; };
+    var pts=[[Wv.x,N.y],[Ev.x,N.y]], ge=gs(1), gw=gs(-1);
+    if(ge){ pts.push([Ev.x,ge.yA]); pts.push([ge.xi,ge.yA]); pts.push([ge.xi,ge.yB]); pts.push([Ev.x,ge.yB]); }
+    pts.push([Ev.x,S_.y]); pts.push([Wv.x,S_.y]);
+    if(gw){ pts.push([Wv.x,gw.yB]); pts.push([gw.xi,gw.yB]); pts.push([gw.xi,gw.yA]); pts.push([Wv.x,gw.yA]); }
+    pts.push([Wv.x,N.y]);
+    var segs=[], L=0; for(var i=0;i<pts.length-1;i++){ var a=pts[i], c=pts[i+1], l=Math.hypot(c[0]-a[0],c[1]-a[1]); if(l<0.01) continue; segs.push({a:a,c:c,l:l,s:L}); L+=l; }
+    G.loop={segs:segs,L:L}; return G.loop; }
+  function onWall(G,x,y,h){ if(G.gates.some(function(q){ return Math.abs(y-q.y)<1.5&&x>=Math.min(q.x,q.xi)-1&&x<=Math.max(q.x,q.xi)+1; })) return true;
+    return G.segs.some(function(s){ return s.h?(h&&Math.abs(s.y-y)<1.5&&x>=s.a-1&&x<=s.b+1):(!h&&Math.abs(s.x-x)<1.5&&y>=s.a-1&&y<=s.b+1); }); }
+  function atLoop(LP,d){ var sg=LP.segs, i=0; while(i<sg.length-1&&d>sg[i].s+sg[i].l) i++; var g=sg[i], u=Math.max(0,Math.min(1,(d-g.s)/g.l)), x=g.a[0]+(g.c[0]-g.a[0])*u, y=g.a[1]+(g.c[1]-g.a[1])*u, dx=g.c[0]-g.a[0], dy=g.c[1]-g.a[1], h=Math.abs(dx)>Math.abs(dy);
+    return {x:x,y:y,dx:dx,dy:dy,h:h,on:onWall(geom.c,x,y,h)}; }
   function charAt(c,fd,moving,ph,x,y,sc){ var k='nw'+c+'_'+fd, F=NWF[k]; if(!F) return; var i=moving?Math.floor(ph)%F[0]:F[5], key=k+i; if(!SPR[key]) return; var w=SZ[key]*sc, hh=sprH(key)*sc; spr(key,x-(NWAX[key]||w/2)*sc,y-hh,w); }
   /* хаалганы орчим (хаалганы хашаа, хаалганы өмнөх, дотор талын зам) мод байхгүй */
   function clearGates(G){ try{ if(!L||!L.trees||!G.gates.length) return; var th=sprH('tree'), R=[];
@@ -25867,12 +25885,13 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       G.gates.forEach(function(q){ if(q.cx<x0-40||q.cx>x1+40||q.y<y0||q.y-40>y1) return;
         if(SP) list.push({y:q.y+0.3,f:function(){ hwG(ctx,t,q.cx,q.y+2); }});
         else { list.push({y:q.y+0.3,f:function(){ tower(ctx,t,q.x,q.y,1,tm); tower(ctx,t,q.xi,q.y,1,tm); ctx.fillStyle='#8f2f22'; ctx.fillRect(Math.min(q.x,q.xi),q.y-DIM[t].H-3,Math.abs(q.xi-q.x),2.2); }}); }
-        var mid=Math.min(q.x,q.xi)+Math.abs(q.xi-q.x)/2; [-0.14,0.14].forEach(function(f){ var gx=mid+q.w*f; list.push({y:q.y+3,f:function(){ charAt(3,'f',false,0,gx,q.y+6,1.3); }}); }); });
-      /* эргүүлийн харваачид */
-      var n=t===1?2:t===2?4:6, segs=G.segs.filter(function(s){ return (s.b-s.a)>30; }).sort(function(p,q){ return (q.b-q.a)-(p.b-p.a); });
-      for(var i=0;i<n&&segs.length;i++){ (function(i){ var s=segs[i%segs.length], len=s.b-s.a, sp=5, ph0=hsh(i,9)*len*2, d=(tm*sp+ph0)%(len*2), fwd=d<len, u=fwd?d:2*len-d, px, py, fd;
-          if(s.h){ px=s.a+u; py=s.y-D.H+0.6; fd=fwd?'r':'l'; if(px<x0||px>x1||s.y<y0||s.y>y1) return; list.push({y:s.y+0.05,f:function(){ charAt(10,fd,true,tm*8+i,px,py,1.05); }}); }
-          else { px=s.x; py=s.a+u-(SP?0:D.H-0.6); fd=fwd?'f':'b'; if(px<x0||px>x1||py<y0||py>y1) return; list.push({y:s.a+u+0.05,f:function(){ charAt(10,fd,true,tm*8+i,px,py,1.05); }}); } })(i); }
+        var mid=Math.min(q.x,q.xi)+Math.abs(q.xi-q.x)/2; [-0.14,0.14].forEach(function(f){ var gx=mid+q.w*f; var gf=f>0?1:0; list.push({y:q.y+3,f:function(){ guardDraw(gx,q.y+6,(Math.floor(tm*0.7)+gf)%2); }}); }); });
+      /* эргүүлийн 30 харваач: хэрмийн дээгүүр тосгоныг тойрон явна (хагас нь цагийн зүүгээр, хагас нь эсрэг) */
+      var LP=loopOf(G), NA=30, SPD=6;
+      if(LP.L>0) for(var i=0;i<NA;i++){ (function(i){ var dir=i%2?1:-1, d=((i*LP.L/NA)+(hsh(i,5)-0.5)*LP.L/NA*0.6+dir*tm*SPD)%LP.L; if(d<0) d+=LP.L;
+          var P=atLoop(LP,d), dx=P.dx*dir, dy=P.dy*dir; if(!P.on) return; var fd=Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'f':'b');
+          var px=P.x, py=P.y-(P.h?(SP?hrmWallTop(t)-1.2:D.H-0.6):0); if(px<x0||px>x1||py<y0-20||py>y1+20) return;
+          list.push({y:P.y+(P.h?0.05:31),f:function(){ archDraw(fd,Math.floor((tm*SPD+i*7)/2.2)%4,px,py,t); }}); })(i); }
       /* засварчин */
       if(h.rep&&k>0){ var hs=G.segs.find(function(s){ return s.h; }); if(hs){ var wx=hs.a+(hs.b-hs.a)*0.37, wy=hs.y+2; if(wx>x0&&wx<x1&&wy>y0&&wy<y1) list.push({y:wy,f:function(){ var key='jb3_'+(Math.floor(tm*2.4)%2); if(SPR[key]){ var w=SZ[key]*0.9; spr(key,wx-w/2,wy-sprH(key)*0.9,w); } }}); } }
     }catch(e){ return _fl.apply(this,arguments); } };
@@ -25903,7 +25922,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   window.hrmGo=function(){ try{ closeM(); }catch(e){} var G=geom(), q=G.gates[0], q2=G.gates[1]||q; if(q){ cam.x=q.cx-W/Z*0.55; cam.y=(q.y+q2.y)/2-H/Z*0.5; try{ clampCam(); }catch(e){} } };
   window.heremHTML=function(){ var h=st(), t=tierOf(h.lv), M=maxHP(h.lv), r=M?h.hp/M:0, nx=h.lv<MAXL?cost(h.lv+1):null, can=h.lv<(S.bld.ger||1);
     var x='<h2>🧱 Хэрэм</h2><div class="card" style="text-align:center"><img src="'+hrmThumb(Math.max(1,tierOf(h.lv||1)))+'" style="width:180px;max-width:100%;'+(h.lv?'':'opacity:.45;filter:grayscale(.6)')+'"><h3>'+(h.lv?TN[t]+' · Lv '+h.lv+'/'+MAXL:'Баригдаагүй')+'</h3>';
-    if(h.lv) x+='<div class="bar" style="height:10px;margin:6px 0"><i style="width:'+Math.round(r*100)+'%;background:'+(r>0.6?'#6fd04a':r>0.3?'#ffb347':'#ff5a3a')+'"></i></div><div class="sm">Бат бөх: <b>'+h.hp+'/'+M+'</b>'+(h.hp<=0?' · <b style="color:#ff8a7a">НУРСАН</b>':h.rep===1?' · 🔨 Засварлаж байна':h.rep===2?' · ⚠ Засах мод/зоос хүрэхгүй':'')+'</div><div class="sm">Хамгаалалт: <b>+'+pct(hrmBonus())+'%</b> (бүтэн үед +'+pct(baseB(h.lv))+'%) · Дээрмийн алдагдал −'+pct(hrmBonus())+'%</div><div class="sm">Хаалга 4 · Харуул 8 · Эргүүлийн харваач '+(t===1?2:t===2?4:6)+'</div>';
+    if(h.lv) x+='<div class="bar" style="height:10px;margin:6px 0"><i style="width:'+Math.round(r*100)+'%;background:'+(r>0.6?'#6fd04a':r>0.3?'#ffb347':'#ff5a3a')+'"></i></div><div class="sm">Бат бөх: <b>'+h.hp+'/'+M+'</b>'+(h.hp<=0?' · <b style="color:#ff8a7a">НУРСАН</b>':h.rep===1?' · 🔨 Засварлаж байна':h.rep===2?' · ⚠ Засах мод/зоос хүрэхгүй':'')+'</div><div class="sm">Хамгаалалт: <b>+'+pct(hrmBonus())+'%</b> (бүтэн үед +'+pct(baseB(h.lv))+'%) · Дээрмийн алдагдал −'+pct(hrmBonus())+'%</div><div class="sm">Хаалга 4 · Харуул 8 · Эргүүлийн харваач 30</div>';
     x+='</div>';
     if(nx){ x+='<div class="card"><div class="row"><div style="flex:1"><b>'+(h.lv?'Lv '+(h.lv+1)+' болгох':'Хэрэм барих')+'</b>'+(tierOf(h.lv+1)!==t?'<div class="sm" style="color:#ffd770">→ '+TN[tierOf(h.lv+1)]+'</div>':'')+'<div class="sm">'+f(nx.gold)+' 🪙 · '+f(nx.wood)+' мод · хамгаалалт +'+pct(baseB(h.lv+1))+'%</div>'+(can?'':'<div class="sm" style="color:#ff8a7a">🔒 Гол гэр Lv '+(h.lv+1)+' хэрэгтэй</div>')+'</div><button class="btn" '+(can?'':'disabled')+' onclick="hrmUp()">'+(h.lv?'⬆ Ахиулах':'Барих')+'</button></div></div>'; }
     x+='<div class="card sm">• Lv 1–5 модон хашлага, Lv 6–10 чулуун хана, Lv 11–15 их хэрэм.<br>• Дээрэмчид, тоглогчид дайрахад хэрэм эвдэрнэ: няцаавал −5–10%, давж орвол −25–40%.<br>• Эвдэрсэн хэмжээгээр хамгаалалт буурна. Нурвал хамгаалалтгүй.<br>• Ажилчид мод, зоосоор автоматаар засна.<br>• Өдөр бүр орж ирвэл 12 цаг 🛡 хамгаалалттай. Хэрэм нурсан + 24 цаг ороогүй бол дайрагч нөөцийн <b>50%</b>-ийг авна.</div>';
