@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='6f31204b2e';
+var UPDB='f7860497c1';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26007,10 +26007,15 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
 })();
 </script>
 <script id="cmapbg">
-/* Түүхэн аян: бүлгийн цонхонд бусад самбартай адил AI дэвсгэр (bg_war) */
+/* Түүхэн аян: бүлгийн цонхонд эсгий (ui_felt) дэвсгэр */
 (function(){
-  const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments);
-    try{ const on=typeof cur==='string'&&cur.indexOf('cmap:')===0; if(on) document.body.classList.add('pbg-war'); }catch(e){} return r; };
+  const st=document.createElement('style');
+  st.textContent='body.cmapbg #modal .box{border-image-slice:120!important;background:url(rts/ui_felt.webp?v=1) center top/320px #2a170c!important;background-clip:padding-box!important}'+
+    'body.cmapbg #modal .card{border-image-slice:44!important;background:rgba(20,10,4,.3)!important}';
+  document.head.appendChild(st);
+  const set=()=>{ try{ document.body.classList.toggle('cmapbg',typeof cur==='string'&&cur.indexOf('cmap:')===0); }catch(e){} };
+  const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); set(); return r; };
+  const _c=closeM; closeM=function(){ const r=_c.apply(this,arguments); set(); return r; };
 })();
 </script>
 </body>
