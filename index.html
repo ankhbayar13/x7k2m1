@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='8031899301';
+var UPDB='2d1aad14b0';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -23440,7 +23440,7 @@ window.RINGAR=0.4557291666666667;
 /* Баатар дуудах дэлгэц: ордны дэвсгэр (хайрцаг, бамбар, далбаа) */
 (function(){
   const st=document.createElement('style');
-  st.textContent='#boxov.smbg{background:#0b0603 url(hf/sum_bg.webp?v=1) 50% 100%/cover no-repeat}'
+  st.textContent='#boxov.smbg{background:#0b0603 url(hf/sum_bg.webp?v=3) 50% 100%/cover no-repeat}'
    +'@media (min-aspect-ratio:1/1){#boxov.smbg{background-size:contain;background-position:50% 50%}}'
    +'#boxov.smbg .bxbox{display:none}'
    +'#boxov.smbg .bxs{text-shadow:0 2px 6px #000,0 0 14px #000}';
@@ -25327,7 +25327,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var st=document.createElement('style'); st.textContent=
     '#modal .box:has(#sumimg){background:none!important;border:0!important;border-image:none!important;padding:0!important;box-shadow:none!important;width:min(440px,97vw,calc(92vh*941/1672))!important;max-width:97vw!important;overflow:visible!important}'+
     '#modal .box:has(#sumimg)>.x{display:none!important}#modal .box:has(#sumimg)::before,#modal .box:has(#sumimg)::after{display:none!important}'+
-    '#sumimg{position:relative;width:100%;aspect-ratio:941/1672;background:url(hf/sum_bg.webp?v=2) center/100% 100% no-repeat;border-radius:10px;user-select:none}'+
+    '#sumimg{position:relative;width:100%;aspect-ratio:941/1672;background:url(hf/sum_panel.webp?v=1) center/100% 100% no-repeat;border-radius:10px;user-select:none}'+
     '#sumimg .hs{position:absolute;background:none;border:0;padding:0;margin:0;cursor:pointer;border-radius:12px;-webkit-tap-highlight-color:transparent}'+
     '#sumimg .hs:active{background:rgba(255,220,120,.18)}#sumimg .hs.off{background:rgba(0,0,0,.45);cursor:default}'+
     '#sumimg .pty{position:absolute;display:flex;align-items:center;justify-content:center;background:#24160c;color:#ffd84a;font:800 clamp(13px,4.2vw,19px)/1 sans-serif;border-radius:4px}'+
@@ -25512,6 +25512,38 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _bc=bcard; bcard=function(k){ var h=_bc.apply(this,arguments); if(!bCanNew(k)) return h; var i=h.lastIndexOf('</div>'); return i<0?h:h.slice(0,i)+'<b class="rdot"></b>'+h.slice(i); };
   var _bt=btabsHTML; btabsHTML=function(){ var h=_bt.apply(this,arguments); try{ var n=0; h=h.replace(/(<i [^>]*onclick="setBTab\('([a-z]+)'\)">)(<\/i>)/g,function(m,a,id,c){ var t=BTABS.find(function(x){ return x[0]===id; }); return a+(t&&tabN(t)?'<b class="rdot"></b>':'')+c; }); }catch(e){} return h; };
   setInterval(function(){ try{ var b=document.querySelector('#menu button'); if(!b) return; var on=bNewCount()>0, d=b.querySelector('.rdot'); if(on&&!d){ d=document.createElement('b'); d.className='rdot'; b.appendChild(d); } else if(!on&&d) d.remove(); }catch(e){} },1500);
+})();
+</script>
+<script id="fsguide">
+/* Үнэгүй баатар дуудлага: эрхийг эрт өгч, «Баатар» товч → «Дуудах» → «Үнэгүй дуудах» хүртэл гараар заана */
+(function(){
+  var st=document.createElement('style'); st.textContent=
+    '.fsHint{position:relative;animation:fsP 1s ease-in-out infinite!important;box-shadow:0 0 0 3px #7dff8a,0 0 16px #7dff8a!important;z-index:2}'+
+    '.fsHint::after{content:attr(data-fs);position:absolute;right:-6px;top:-10px;background:#2fae3a;color:#fff;font:bold 11px/1 sans-serif;padding:3px 5px;border-radius:9px;border:1.5px solid #eaffd0;white-space:nowrap;pointer-events:none}'+
+    '#menu button.fsHint{box-shadow:none!important;filter:drop-shadow(0 0 8px #7dff8a)}#menu button.fsHint::after{right:2px;top:2px}'+
+    '@keyframes fsP{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}'+
+    '.fsTk{color:#9fff9a!important;font-weight:bold}';
+  document.head.appendChild(st);
+  var n=function(){ return (typeof S!=='undefined'&&S&&S.fsum)||0; };
+  var busy=function(){ try{ return !!(document.getElementById('tutov')||(typeof RT!=='undefined'&&RT)||document.getElementById('nmaskov')); }catch(e){ return false; } };
+  function tick(){ try{
+    if(typeof S==='undefined'||!S) return;
+    /* эрхийг эхний даалгавар (өвгөнтэй танилцах) дуусмагц өгнө — баатрын жагсаалт нээхийг хүлээхгүй */
+    if(!S.fsGot&&S.met){ S.fsGot=1; S.fsum=(S.fsum||0)+2; try{ mailAdd('Тавтай морилно уу','2 удаа үнэгүй баатар дуудах эрх өглөө! Доорх «Баатар» → «Дуудах».'); }catch(e){} try{ say('🎁 2 удаа үнэгүй баатар дуудах эрх авлаа! Доорх «Баатар» товчийг дар'); }catch(e){} }
+    var k=n(), on=k>0&&!busy(), lab='🎁 '+k+' үнэгүй';
+    document.querySelectorAll('.fsHint').forEach(function(e){ if(!on) e.classList.remove('fsHint'); });
+    if(!on) return;
+    var mOpen=(function(){ var m=document.getElementById('modal'); return m&&m.style.display==='flex'; })();
+    var mb=document.querySelectorAll('#menu button')[2]; if(mb){ var want=!mOpen&&!document.getElementById('hs'); mb.classList.toggle('fsHint',want); if(want) mb.setAttribute('data-fs',lab); }
+    document.querySelectorAll('[onclick*="openM(\'summon\')"]').forEach(function(e){ if(e.closest('#menu')) return; e.classList.add('fsHint'); e.setAttribute('data-fs',lab); });
+    document.querySelectorAll('[onclick="summon(1,1)"]').forEach(function(e){ e.classList.add('fsHint'); e.setAttribute('data-fs','Энд дар'); });
+    addTk();
+  }catch(e){} }
+  function addTk(){ try{ var k=n(); var t=document.getElementById('tasks'); if(!t) return; var d=t.querySelector('.fsTk'); if(!(k>0)){ if(d) d.remove(); return; } if(!d){ d=document.createElement('div'); d.className='tk fsTk'; d.style.cssText='pointer-events:auto;cursor:pointer;margin-top:4px'; d.onclick=function(ev){ ev.stopPropagation(); try{ openM('summon'); }catch(e){} }; t.appendChild(d); } d.textContent='🎁 '+k+' үнэгүй баатар дууд → энд дар'; }catch(e){} }
+  if(typeof updateHUD==='function'){ var _u=updateHUD; updateHUD=function(){ var r=_u.apply(this,arguments); addTk(); return r; }; }
+  /* Цэргийн хүрээгүй ч «Баатар» товч үнэгүй дуудлага руу шууд аваачна */
+  if(typeof menuGo==='function'){ var _mg=menuGo; menuGo=function(k){ try{ if(k==='baatar'&&n()>0&&(S.bld.hureo||0)<1){ openM('summon'); return; } }catch(e){} return _mg.apply(this,arguments); }; }
+  setInterval(tick,700);
 })();
 </script>
 </body>
