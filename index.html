@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='00c1841df3';
+var UPDB='863b129258';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26016,6 +26016,17 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   const set=()=>{ try{ document.body.classList.toggle('cmapbg',typeof cur==='string'&&cur.indexOf('cmap:')===0); }catch(e){} };
   const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); set(); return r; };
   const _c=closeM; closeM=function(){ const r=_c.apply(this,arguments); set(); return r; };
+})();
+</script>
+<script id="bksmall">
+/* Бүх «‹ Буцах» товчийг жижиг, нямбай болгоно (ард талын бичгийг халхлахгүй) */
+(function(){
+  const st=document.createElement('style');
+  st.textContent='#modal .btn.bkb{font-size:12px!important;line-height:14px!important;padding:2px 4px!important;min-height:0!important;height:auto!important;width:auto!important;min-width:0!important;border-width:6px 14px!important;border-image-width:6px 14px!important;margin:0 0 4px!important;box-shadow:none!important;white-space:nowrap}'+
+    '#modal #mback.bkb{position:absolute!important;left:6px!important;top:6px!important;margin:0!important;opacity:.95}';
+  document.head.appendChild(st);
+  const mark=()=>{ try{ document.querySelectorAll('#mbody button').forEach(b=>{ if(/^\s*‹/.test(b.textContent)) b.classList.add('bkb'); }); }catch(e){} };
+  const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); mark(); return r; };
 })();
 </script>
 </body>
