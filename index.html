@@ -2070,8 +2070,8 @@ function updateHUD(){
   $('res').innerHTML=cells.map(([k])=>'<div class="rc"><div class="ri">'+(RICON[k]?'<img src="'+RICON[k]+'">':k==='wood'?'<span class="em">🪵</span>':'<b class="coin'+(k==='alt'?' alt':'')+'">'+(k==='alt'?'А':'🪙')+'</b>')+'</div><div class="rv"><span>'+cn(S.res[k])+'</span>'+(r[k]>0?'<small>+'+(r[k]<10?r[k].toFixed(1):Math.round(r[k]))+'/м</small>':'')+'</div></div>').join('');
   const av=$('avi'), pk=S.prof.img?('u'+S.prof.img.length):(S.prof.sp||'npc1');
   const _asr=S.prof.img||(SPRDATA[S.prof.sp]||SPRDATA.npc1)[0]; if(av&&(av.dataset.k!==pk||av.src!==_asr)){ av.src=_asr; av.dataset.k=pk; av.className=S.prof.img?'ph':''; }
-  try{ const a=av&&av.parentNode, L=S.pl||1, ft=L<5?0:L<10?1:L<20?2:L<30?3:4, fh=(typeof HUDN!=='undefined'&&HUDN)?HUDF:PFH[ft]; if(a&&a.parentNode){ let fi=$('avf'); if(!fi){ fi=document.createElement('img'); fi.id='avf'; fi.style.cssText='position:absolute;pointer-events:none;z-index:3'; a.parentNode.style.position='relative'; a.parentNode.appendChild(fi); }
-    const W=44/(2*fh[2])*1.04; a.style.border='0'; a.style.width=a.style.height='44px'; const _hk=(typeof HUDN!=='undefined'&&HUDN)?'n'+ft:String(ft); if(fi.dataset.k!==_hk){ fi.src=(typeof HUDN!=='undefined'&&HUDN)?HUDN.ring:PFR[ft]; fi.dataset.k=_hk; } fi.style.width=W+'px'; fi.style.left=(a.offsetLeft+22-fh[0]*W)+'px'; fi.style.top=(a.offsetTop+22-fh[1]*W*1.0)+'px'; a.style.overflow='hidden'; try{ hudBadge(fi,W); }catch(e){} } }catch(e){}
+  try{ const a=av&&av.parentNode, L=S.pl||1, ft=L<5?0:L<10?1:L<20?2:L<30?3:4, _pf=(typeof pfxHud==='function')?pfxHud():null, fh=_pf?_pf.geo:(typeof HUDN!=='undefined'&&HUDN)?HUDF:PFH[ft]; if(a&&a.parentNode){ let fi=$('avf'); if(!fi){ fi=document.createElement('img'); fi.id='avf'; fi.style.cssText='position:absolute;pointer-events:none;z-index:3'; a.parentNode.style.position='relative'; a.parentNode.appendChild(fi); }
+    const W=44/(2*fh[2])*1.04; a.style.border='0'; a.style.width=a.style.height='44px'; const _hk=_pf?'p'+_pf.id:(typeof HUDN!=='undefined'&&HUDN)?'n'+ft:String(ft); if(fi.dataset.k!==_hk){ fi.src=_pf?_pf.src:(typeof HUDN!=='undefined'&&HUDN)?HUDN.ring:PFR[ft]; fi.dataset.k=_hk; } fi.style.width=W+'px'; fi.style.left=(a.offsetLeft+22-fh[0]*W)+'px'; fi.style.top=(a.offsetTop+22-fh[1]*W*1.0)+'px'; a.style.overflow='hidden'; try{ hudBadge(fi,W); }catch(e){} } }catch(e){}
   $('pname').textContent=S.prof.name||'Хаан';
   $('pw').textContent=f(totalPower());
   $('plv').textContent=S.bld.ger;
@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='a85f6ca852';
+var UPDB='34b06765ac';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -14312,6 +14312,8 @@ rkGiftOf=function(l){ return {alt:[0,0,50,60,70,80,90,100,200,300,400][l]||0, go
   const pxMe=()=>pxOut(mine());
   const gOf=f=>(f&&f.geo)||GEO;
   const badge=fid=>/3$/.test(String(fid||''))?'<b style="position:absolute;right:2%;bottom:4%;font:900 11px/1 Georgia,serif;color:#ffe9a0;background:#5a1410;border:1px solid #ffd770;border-radius:6px;padding:1px 4px;pointer-events:none">III</b>':'';
+  /* дээд булангийн (HUD) профайл зурагт сонгосон хүрээ */
+  window.pfxHud=()=>{ try{ const f=mine(); return f?{id:f.id,src:f.src,geo:gOf(f)}:null; }catch(e){ return null; } };
   window.chfName=id=>{ const f=byId(id); return f?f.nm:''; };
   window.chfSrc=id=>{ const f=byId(id); return f?f.src:''; };
   /* Хүрээ олгох: буцаах утга нь шагналын самбарт харуулах мөр */
