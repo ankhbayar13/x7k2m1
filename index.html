@@ -4013,7 +4013,7 @@ setInterval(chPop,1200);
 let ARC=null;
 function archInfo(){ const d=nowD().toDateString(); if(!S.arc||S.arc.d!==d) S.arc={d:d,n:0,alt:0,best:(S.arc&&S.arc.best)||0}; return S.arc; }
 function archCardHTML(){ const a=archInfo(), left=Math.max(0,3-a.n);
-  return '<div class="card"><h3 class="rb">'+icTr(0,'🏹')+' Сур харваа</h3><div class="sm" style="text-align:center">Сур зүүн баруун хөдөлнө. Сум голын шугамаар нисдэг тул сур голд <b>очих гэж байхад</b> товш. 5 сум, дээд оноо 50. Харвааны сур Lv '+ntL('arch')+' (өндөр байх тусам сур том).</div>'+
+  return '<div class="card"><h3 class="rb">'+icTr(0,'🏹')+' Сур харваа</h3><div class="sm" style="text-align:center">Сур зүүн баруун хөдөлнө. Сум нисэх зуур сур хөдөлдөг тул <b>урьдчилж</b> товш. Харвааны сур Lv '+ntL('arch')+' (өндөр байх тусам сур том).</div>'+
     '<div class="row" style="margin-top:6px"><div class="sm">Өнөөдөр: <b>'+left+'/3</b> оролдлого · Шилдэг: <b>'+(a.best||0)+'</b>/50</div><button class="btn" '+(left?'':'disabled')+' onclick="archOpen()">'+(left?'Тоглох':'Маргааш')+'</button></div></div>'; }
 function archOpen(){ const a=archInfo(); if(a.n>=3){ say('Өнөөдрийн 3 оролдлого дууссан. Маргааш дахин'); return; }
   closeM(); a.n++; save();
@@ -4022,7 +4022,7 @@ function archOpen(){ const a=archInfo(); if(a.n>=3){ say('Өнөөдрийн 3 �
   const lv=ntL('arch'), R=Math.min(76,w*0.19)*(1+0.04*lv)*(1-0.03*mgDiff());
   ARC={o:o,cv:cv,c:cv.getContext('2d'),dp:dp,w:w,h:h,R:R,df:mgDiff(),i:0,sc:[],st:'aim',ph:Math.random()*6.28,tx:w/2,ty:h*0.36,stuck:[],fl:0,pt:0,pop:'',lv:lv,last:performance.now(),raf:0,ax:w/2,ay:h*0.86};
   cv.addEventListener('pointerdown',archShoot); o.querySelector('#archx').onclick=archClose;
-  ARC.st='ready'; const g=document.createElement('div'); g.id='racego'; g.innerHTML='<h2>🏹 Сур харваа</h2><div class="sm">Сур зүүн баруун хөдөлнө. Сур <b>голд ирэх гэж байхад</b> дэлгэцийг товш.</div><div class="sm">5 сум · дээд оноо 50</div><button class="btn" id="archstart">▶ Эхлэх</button>'; o.appendChild(g);
+  ARC.st='ready'; const g=document.createElement('div'); g.id='racego'; g.innerHTML='<h2>🏹 Сур харваа</h2><div class="sm">Сур зүүн баруун хөдөлнө. Сур <b>голд ирэх гэж байхад</b> дэлгэцийг товш.</div><div class="sm">5 шат × 3 сум · шат бүрт 12+ оноо</div><button class="btn" id="archstart">▶ Эхлэх</button>'; o.appendChild(g);
   g.querySelector('#archstart').onclick=()=>{ g.remove(); if(ARC){ ARC.st='aim'; sfx('horn'); } };
   ARC.raf=requestAnimationFrame(archLoop); }
 function archClose(){ if(!ARC) return; cancelAnimationFrame(ARC.raf); const o=ARC.o; ARC=null; o.remove(); refresh(); openM('naadam'); }
@@ -4888,7 +4888,7 @@ function archDrawN(t){ const A=ARC, c=A.c, dp=A.dp, w=A.w, h=A.h, N=NDR; c.setTr
   const shk=A.st==='aim'?Math.sin(t*11)*0.8:0; c.save(); c.translate(pvx+shk,pvy); c.rotate(th); c.drawImage(N['bow'+idx],0,-bh,bw,bh); c.restore();
   if(A.st==='fly'){ const pr=Math.min(1,A.fl/0.36), qx=tpx+(A.ax-tpx)*pr, qy=tpy+(ty-tpy)*pr, ang=Math.atan2(A.ax-tpx,tpy-ty), L=h*0.17*(1-0.6*pr), W=L*34/300; c.save(); c.globalAlpha=1-0.15*pr; c.translate(qx,qy); c.rotate(ang); c.drawImage(N.arrow,-W/2,0,W,L); c.restore(); }
   c.textAlign='center'; c.lineJoin='round'; c.font='bold 18px sans-serif'; c.lineWidth=4; c.strokeStyle='#000a'; c.fillStyle='#fff'; const tot=A.sc.reduce((a,b)=>a+b,0);
-  const hd='Сум '+Math.min(5,A.i+(A.st==='aim'||A.st==='fly'?1:0))+'/5  ·  Оноо '+tot; ndTxt(c,hd,w/2,34);
+  const hd=(typeof archHdr==='function'&&A.stg)?archHdr(A,tot):'Сум '+Math.min(5,A.i+(A.st==='aim'||A.st==='fly'?1:0))+'/5  ·  Оноо '+tot; ndTxt(c,hd,w/2,A.stg?72:34);
   if(A.st==='aim'&&A.i===0){ c.font='bold 16px sans-serif'; ndTxt(c,'Сур голд ирэхээс ӨМНӨ товш!',w/2,h*0.56); }
   if(A.st==='pop'){ c.font='bold 34px sans-serif'; const y=ty-R-20-A.pt*18; c.fillStyle=A.sc[A.sc.length-1]>=8?'#ffd35a':A.sc[A.sc.length-1]>0?'#fff':'#ff9a7a'; ndTxt(c,A.pop,w/2,y); } }
 // ---------- морин уралдаа (дээрээс харсан босоо зам) ----------
@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='c87dd687c1';
+var UPDB='e202ba4292';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25623,6 +25623,66 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   setInterval(function(){ try{ if(typeof WMMP==='undefined'||!CWD||!CWD.my) return; CWD.my.forEach(function(x){ if(x&&x.v&&x.v.hm&&WMMP) WMMP[x.id]={x:x.v.hm[0],y:x.v.hm[1]}; }); }catch(e){} },1000);
   /* өөрийн тосгоны хамгаалалт: дайсны нутагт −50%, кланы +5%-гүй */
   if(typeof defMul==='function'){ var _dm=defMul; defMul=function(){ var v=_dm.apply(this,arguments); try{ if(wmHostile()>=0) v=Math.max(0.1,(v-0.05)*0.5); }catch(e){} return v; }; }
+})();
+</script>
+<script id="archx">
+/* Сур харваа: 5 шат × 3 сум. Шат бүрт сур холдож жижгэрч, хурдасна; 4-р шатнаас дээш-доош, 5-р шатанд салхи.
+   Шатны 3 сумаар ≥12 түүхий оноо (×1) авбал дараагийн шат. Харвааны цол: Харваач → … → Улсын дархан мэргэн. */
+(function(){
+  var P=[null,{rf:1,ty:0.42,sp:1.15,am:0.30,mu:1},{rf:0.84,ty:0.36,sp:1.65,am:0.32,mu:1.5},{rf:0.70,ty:0.31,sp:2.0,am:0.33,mu:2,vr:1},{rf:0.58,ty:0.27,sp:2.15,am:0.34,mu:2.5,vr:1,bob:0.05},{rf:0.48,ty:0.24,sp:2.5,am:0.35,mu:3,vr:1,bob:0.06,rev:1,wind:1}];
+  var NEED=12;
+  var TT=[['Харваач','🏹','#c9e7a0'],['Сумын мэргэн','🎯','#9fd0ff'],['Аймгийн мэргэн','🎯','#c49bff'],['Улсын мэргэн','🏅','#ffd35a'],['Улсын гарамгай мэргэн','🏅','#ffb347'],['Улсын дархан мэргэн','👑','#ff7a5a']];
+  var TALT=[1,3,5,10,20,50];
+  var st=function(){ S.arcT=S.arcT||{mx:0,c5:0,b10:0,got:{}}; if(!S.arcT.got) S.arcT.got={}; return S.arcT; };
+  window.archTitle=function(){ var t=st(), i=-1; if(t.mx>=1) i=0; if(t.mx>=3) i=1; if(t.mx>=4) i=2; if(t.c5>=1) i=3; if(t.c5>=5) i=4; if(t.c5>=20&&t.b10) i=5; return i; };
+  window.archTitleHTML=function(i,sz){ if(i==null) i=archTitle(); if(i<0) return '<span class="sm" style="opacity:.6">Цолгүй</span>'; var x=TT[i]; return '<b style="color:'+x[2]+'">'+x[1]+' '+x[0]+'</b>'; };
+  function apply(A){ var q=P[A.stg]; A.R=A.R0*q.rf; A.tyb=A.h*q.ty; A.ty=A.tyb; A.dir=1; A.stuck=[]; A.wind=q.wind?(Math.random()*2-1):0; A.ban=1.6; }
+  window.archHdr=function(A,tot){ return 'Шат '+A.stg+'/5 · Сум '+Math.min(3,A.j+(A.st==='aim'||A.st==='fly'?1:0))+'/3 · '+tot+' оноо'; };
+  var _op=archOpen; archOpen=function(){ var r=_op.apply(this,arguments); try{ var A=ARC; if(A&&!A.stg){ A.stg=1; A.j=0; A.R0=A.R; A.raw=[]; A.b10=0; A.cl=0; apply(A); A.ban=0; } }catch(e){} return r; };
+  archLoop=function(now){ if(!ARC) return; var A=ARC, dt=Math.min(0.05,(now-A.last)/1000); A.last=now;
+    if(!A.stg){ A.stg=1; A.j=0; A.R0=A.R; A.raw=[]; A.b10=0; A.cl=0; apply(A); }
+    var q=P[A.stg], spd=q.sp*Math.max(0.75,1-0.025*(A.lv||0))*(1+0.04*(A.df||0)), amp=Math.min(A.w*q.am,150);
+    if(q.vr) spd*=1+0.45*Math.sin(now/650);
+    if(A.ban>0) A.ban-=dt;
+    if(A.st==='aim'||A.st==='fly'){ if(q.rev&&Math.random()<dt*0.55) A.dir=-A.dir; A.ph+=spd*dt*A.dir; A.tx=A.w/2+amp*Math.sin(A.ph); A.ty=A.tyb+(q.bob?A.h*q.bob*Math.sin(A.ph*1.7+0.6):0); }
+    if(A.st==='fly'){ A.fl+=dt; if(A.fl>=0.36){
+        var dx=A.ax-A.tx+(A.wind||0)*A.R*0.6, dy=A.tyb-A.ty, ring=archRing(Math.hypot(dx,dy)), sc=Math.round(ring*q.mu);
+        A.raw.push(ring); A.sc.push(sc); if(ring>=10) A.b10++; A.stuck.push({dx:dx});
+        A.pop=ring>=10?'ЯГ ГОЛД! +'+sc:sc>0?('+'+sc):'Алдлаа'; A.pt=0; A.st='pop'; sfx(ring>=8?'big':ring>0?'hit':'err'); if(ring>=10) vib([20,30,40]); } }
+    else if(A.st==='pop'){ A.pt+=dt; if(A.pt>0.85){ A.i++; A.j++;
+        if(A.j>=3){ var got=A.raw.slice(-3).reduce(function(a,b){ return a+b; },0);
+          if(got>=NEED){ A.cl=A.stg; if(A.stg>=5){ A.st='end'; archFinish(); } else { A.stg++; A.j=0; apply(A); A.st='aim'; try{ sfx('horn'); }catch(e){} } }
+          else { A.fail=got; A.st='end'; archFinish(); } }
+        else { if(q.wind) A.wind=Math.random()*2-1; A.st='aim'; } } }
+    archDraw(now/1000); if(ARC) ARC.raf=requestAnimationFrame(archLoop); };
+  /* нэмэлт зураг: шатны мэдэгдэл, салхи */
+  var _dn=archDrawN; archDrawN=function(t){ var r=_dn.apply(this,arguments); try{ var A=ARC, c=A.c, q=P[A.stg||1];
+      c.textAlign='center'; c.lineJoin='round'; c.lineWidth=4; c.strokeStyle='#000a';
+      if(A.ban>0&&A.stg){ c.globalAlpha=Math.min(1,A.ban); c.font='bold 30px sans-serif'; c.fillStyle='#ffd35a'; ndTxt(c,A.stg+'-р шат',A.w/2,A.h*0.6); c.font='bold 15px sans-serif'; c.fillStyle='#fff'; ndTxt(c,A.stg>1?'Сур холдлоо! Оноо ×'+q.mu:'3 сумаар '+NEED+'+ оноо ав',A.w/2,A.h*0.6+26); c.globalAlpha=1; }
+      if(q.wind&&A.st!=='end'){ var wv=A.wind||0, aw=Math.abs(wv), dirS=wv<0?'⬅⬅':'➡➡', str=aw<0.33?'сул':aw<0.66?'дунд':'хүчтэй'; c.font='bold 16px sans-serif'; c.fillStyle=aw<0.33?'#d9f2ff':aw<0.66?'#ffe29a':'#ff9a7a'; ndTxt(c,'🌬 Салхи '+(wv<0?dirS+' ':'')+str+(wv>=0?' '+dirS:''),A.w/2,100); }
+    }catch(e){} return r; };
+  /* дүн, цол, шагнал */
+  archFinish=function(){ var A=ARC, a=archInfo(), tot=A.sc.reduce(function(x,y){ return x+y; },0), nr=S.bld.naadamring||0, T=st(), ti0=archTitle();
+    T.mx=Math.max(T.mx||0,A.cl||0); if((A.cl||0)>=5){ T.c5=(T.c5||0)+1; if(A.b10>=10) T.b10=1; }
+    var ti=archTitle(), newT=[], altT=0; for(var i=0;i<=ti;i++){ if(!T.got[i]){ T.got[i]=1; newT.push(i); altT+=TALT[i]; } }
+    var gold=Math.round(tot*2*(1+0.2*nr)*(1+0.05*(A.lv||0))*(1+0.1*(ti+1))); S.res.gold+=gold;
+    var alt=altT; if((A.cl||0)>=5&&!a.alt){ a.alt=1; alt+=3; } S.res.alt=(S.res.alt||0)+alt;
+    var nb=tot>(a.best||0); if(nb) a.best=tot; try{ qh('nd',1); }catch(e){} try{ rkAdd(2,'Сур харваа'); }catch(e){} save(); try{ clPushL(true); }catch(e){} sfx((A.cl||0)>=3?'win':'lvl');
+    var head=(A.cl||0)>=5?'🏅 Бүх шат давлаа!':(A.cl||0)>0?('🏹 '+A.cl+'-р шат хүртэл'):'🏹 1-р шатанд үлдлээ';
+    var r=document.createElement('div'); r.id='archres'; var left=Math.max(0,3-a.n);
+    r.innerHTML=icRes('a',(A.cl||0)>=5?3:(A.cl||0)>=3?2:(A.cl||0)>=1?1:0)+'<h2>'+head+'</h2><div class="big">'+tot+'</div>'+(A.fail!=null&&(A.cl||0)<5?'<div class="sm">'+(A.stg)+'-р шатанд '+A.fail+'/'+NEED+' оноо — хүрсэнгүй</div>':'')+
+      '<div>+'+gold+' 🪙'+(alt?' · +'+alt+' Алт':'')+(nb&&tot>0?' · 🏆 Шинэ рекорд':'')+'</div>'+
+      (newT.length?'<div style="margin-top:6px;color:#ffd35a">🎉 Шинэ цол: '+newT.map(function(i){ return archTitleHTML(i); }).join(', ')+'</div>':'<div class="sm" style="margin-top:4px">Цол: '+archTitleHTML(ti)+'</div>')+
+      '<div class="sm" style="margin-top:4px">Өнөөдөр '+left+' оролдлого үлдсэн</div><div class="row2">'+(left?'<button class="btn" id="archagain">Дахин</button>':'')+'<button class="btn red" id="archexit">Гарах</button></div>';
+    A.o.appendChild(r); r.querySelector('#archexit').onclick=archClose; var ag=r.querySelector('#archagain'); if(ag) ag.onclick=function(){ var o=A.o; cancelAnimationFrame(A.raf); ARC=null; o.remove(); archOpen(); }; };
+  /* карт, профайл дээр цол */
+  window.archTitlesInfo=function(){ var t=st(), ti=archTitle(), h='<h3>🏹 Харвааны цол</h3>';
+    var how=['1-р шат давах','3-р шат давах','4-р шат давах','5-р шатыг давах','5-р шатыг 5 удаа давах','5-р шатыг 20 удаа давах + нэг тоглолтод 15 сумнаас 10+ голд'];
+    TT.forEach(function(x,i){ h+='<div class="row" style="margin-top:6px;opacity:'+(i<=ti?1:0.6)+'"><div style="flex:1">'+(i<=ti?'✅ ':'🔒 ')+archTitleHTML(i)+'<div class="sm">'+how[i]+' · +'+TALT[i]+' Алт</div></div></div>'; });
+    h+='<div class="sm" style="margin-top:8px">Таны явц: хамгийн их '+(t.mx||0)+'-р шат · 5-р шат '+(t.c5||0)+' удаа давсан</div>';
+    if(typeof dxAsk==='function') dxAsk(h,'Ойлголоо',function(){}); };
+  var _ac=archCardHTML; archCardHTML=function(){ var h=_ac.apply(this,arguments); try{ h=h.replace(/(<h3 class="rb">[\s\S]*?<\/h3>)/,'$1<div class="sm" style="text-align:center">Цол: '+archTitleHTML()+' · <a style="color:#ffd770;text-decoration:underline;cursor:pointer" onclick="archTitlesInfo()">цолнууд</a></div><div class="sm" style="text-align:center">Шат бүрт сур холдож, хурдасна. 4-р шатнаас дээш-доош хөдөлж, 5-р шатанд салхитай. 3 сумаар '+NEED+'+ оноо авбал дараагийн шат.</div>'); h=h.replace(/Шилдэг: <b>(\d+)<\/b>\/50/,'Шилдэг: <b>$1</b>'); }catch(e){} return h; };
+  if(typeof profHTML==='function'){ var _p=profHTML; profHTML=function(){ var h=_p.apply(this,arguments); try{ var i=archTitle(); if(i>=0) h=h.replace(/(<div>Хүч [^<]*<\/div>)/,'$1<div style="font-size:14px">'+archTitleHTML(i)+'</div>'); }catch(e){} return h; }; }
 })();
 </script>
 </body>
