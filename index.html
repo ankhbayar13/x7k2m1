@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='0a1494de00';
+var UPDB='3245906d69';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26186,8 +26186,11 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     const b=document.getElementById('hscbox'); if(b) b.innerHTML=h; };
   window.hscSet=function(i,id){ const d=D(); if(i>=nSl()||!S.heroes[id]) return; if(d.sl.some(x=>x&&x.id===id)) return; d.sl[i]={id:id,t:Date.now()};
     try{ sfx('ok'); }catch(e){} say('🎓 '+nm(id).split(' ')[0]+' сургуульд суулаа (24ц тутамд +1 түвшин)'); try{ save(); }catch(e){} fillM(); };
+  let INF=false; window.hscInfo=function(){ INF=!INF; const e=document.getElementById('hscinf'); if(e) e.style.display=INF?'block':'none'; };
   window.hscOut=function(i){ const d=D(); d.sl[i]=null; try{ save(); }catch(e){} fillM(); };
-  function card(){ const d=D(), n=nSl(), now=Date.now(); let h='<div class="card" id="hscbox"><h3>🎓 Баатар сургах</h3><div class="sm" style="margin-bottom:4px">Суусан баатар 24 цаг тутамд 1 түвшин ахина. Суудал: Lv1–10 → 1 · Lv11–16 → 2 · Lv17+ → 3</div>';
+  function card(){ const d=D(), n=nSl(), now=Date.now(); let h='<div class="card" id="hscbox"><h3 style="display:flex;align-items:center;gap:8px">🎓 Баатар сургах <span onclick="hscInfo()" style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#c9972b;color:#2a1608;font:900 14px/1 Georgia,serif;border:2px solid #ffe9a0;box-shadow:0 0 6px rgba(255,215,112,.6)">!</span></h3>'+
+      '<div id="hscinf" class="sm" style="display:'+(INF?'block':'none')+';margin:4px 0 6px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.4);border:1px solid #c9972b88;line-height:1.5">'+
+      '• Сургуульд суусан баатар <b>24 цаг тутамд 1 түвшин</b> ахина. Тоглоогүй байхад ч хугацаа явна.<br>• Суудал: сургууль <b>Lv 1–10 → 1</b> баатар, <b>Lv 11–16 → 2</b>, <b>Lv 17+ → 3</b>.<br>• Баатар <b>Lv '+MX()+'</b> хүрмэгц сургуулиас өөрөө гарна.<br>• Сургуульд сууж байгаа баатар тулалдаанд ердийнхөөрөө оролцоно.<br>• «Гаргах» дарвал баатар суудлаас гарна, хуримтлагдсан цаг тоологдохгүй.</div>';
     for(let i=0;i<3;i++){ const x=d.sl[i];
       if(i>=n){ h+='<div class="row" style="margin-top:6px;opacity:.55"><span>🔒 '+(i+1)+'-р суудал</span><span class="sm">Сургууль Lv '+(i===1?11:17)+'</span></div>'; continue; }
       if(!x){ h+='<div class="row" style="margin-top:6px"><span>➕ '+(i+1)+'-р суудал хоосон</span><button class="btn" onclick="hscPick('+i+')">Баатар суулгах</button></div>'; continue; }
