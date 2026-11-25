@@ -8289,6 +8289,10 @@ function jamInfo(){ try{ heroInfo(JAM.id); const h=document.getElementById('hd')
 '#jamb{position:fixed;left:9px;top:238px;z-index:3;display:none;flex-direction:column;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}'+
 '#jamb .jr2{width:54px;height:54px;border-radius:50%;background-size:cover;background-position:center;box-shadow:0 0 0 2px #f6e3a0,0 0 12px 3px #ff9a2e99,0 3px 8px #000a;animation:jamgl 2s ease-in-out infinite}'+
 '#jamb b{margin-top:-9px;z-index:1;background:linear-gradient(#e44,#a11);color:#fff;font-size:11px;padding:1px 8px;border-radius:9px;border:1px solid #fcc;white-space:nowrap}'+
+'#jamb .jnm{margin-top:2px;color:#fff3cf;font:bold 11px/1.1 sans-serif;text-align:center;white-space:nowrap;text-shadow:0 1px 0 #000,0 0 3px #000,0 0 7px #000}'+
+'#jamb{width:54px}'+
+'#jamb .jr2{animation:jamblk 1.1s ease-in-out infinite!important}'+
+'@keyframes jamblk{0%,100%{box-shadow:0 0 0 2px #c9972b,0 0 4px 1px #ff9a2e44,0 3px 8px #000a}50%{box-shadow:0 0 0 4px #fff2a8,0 0 22px 9px #ffd24aee,0 3px 8px #000a}}'+
 '#jamb i{position:absolute;right:-2px;top:-2px;background:#ffd24a;color:#3b2200;border-radius:9px;min-width:17px;height:17px;font-size:12px;font-weight:900;font-style:normal;line-height:17px;text-align:center;border:1px solid #fff;display:none}'+
 '@keyframes jamgl{0%,100%{box-shadow:0 0 0 2px #f6e3a0,0 0 8px 2px #ff9a2e66,0 3px 8px #000a}50%{box-shadow:0 0 0 2px #ffe9a0,0 0 18px 6px #ffb54acc,0 3px 8px #000a}}';
  document.head.appendChild(st); })();
@@ -8348,7 +8352,8 @@ function jamBtnUpd(){
   const busy=(typeof BT!=='undefined'&&BT)||['modal','chat','jamov','hd','boxov','ckov','cwp','tutov','splash'].some(vis);
   let show=false; try{ show=!!(S.tutDone&&S.met&&jamVis()); }catch(e){}
   b.style.display=(show&&!busy)?'flex':'none'; if(!show) return;
-  b.querySelector('b').textContent=jamShort();
+  { const l=JAM.end-wmNow(), d=Math.floor(l/864e5), tx=d>=1?d+' өдөр':Math.max(1,Math.floor(l/36e5))+' цаг'; b.querySelector('b').textContent=tx;
+    let u=b.querySelector('.jnm'); if(!u){ u=document.createElement('span'); u.className='jnm'; u.innerHTML='Жамухын<br>эвент'; b.appendChild(u); } }
   try{ const rc=document.getElementById('rcol'); if(rc){ let bt=0, L=0, W=0; [...rc.children].forEach(x=>{ const cs=getComputedStyle(x); if(cs.display==='none') return; const r=x.getBoundingClientRect(); if(r.height>0&&r.bottom>bt){ bt=r.bottom; L=r.left; W=r.width; } });
     if(bt>0){ b.style.top=Math.round(bt+8)+'px'; b.style.left=Math.round(L+W/2-27)+'px'; } } }catch(e){}
   const J=jamS(), dot=(J.ld!==jamDay())||(jamOwn()?jamCanStar():J.sh>=JAM.need); const i=b.querySelector('i'); i.style.display=dot?'block':'none'; i.textContent='!';
@@ -11158,7 +11163,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='27cf4f986e';
+var UPDB='734f6048db';
 (function(){
   const K='updTry';
   const _go=updGo;
