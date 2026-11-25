@@ -4027,7 +4027,7 @@ function archOpen(){ const a=archInfo(); if(a.n>=3){ say('Өнөөдрийн 3 �
   ARC.raf=requestAnimationFrame(archLoop); }
 function archClose(){ if(!ARC) return; cancelAnimationFrame(ARC.raf); const o=ARC.o; ARC=null; o.remove(); refresh(); openM('naadam'); }
 function archShoot(e){ if(!ARC||ARC.st!=='aim') return; e.preventDefault(); ARC.st='fly'; ARC.fl=0; sfx('bow'); vib(15); }
-function archRing(d){ if(typeof NDR!=='undefined'&&NDR){ const f=d/ARC.R; return f<0.16?10:f<0.3?8:f<0.46?6:f<0.62?4:f<1?2:0; } const rw=ARC.R/5, k=Math.floor(d/rw); return k>=5?0:[10,8,6,4,2][k]; }
+function archRing(d){ if(typeof NDR!=='undefined'&&NDR){ const f=d/ARC.R; return f<0.26?10:f<0.43?8:f<0.61?6:f<0.8?4:f<1?2:0; } const rw=ARC.R/5, k=Math.floor(d/rw); return k>=5?0:[10,8,6,4,2][k]; }
 function archLoop(now){ if(!ARC) return; const A=ARC, dt=Math.min(0.05,(now-A.last)/1000); A.last=now;
   const spd=(1.25+0.32*A.i)*Math.max(0.72,1-0.03*A.lv)*(1+0.05*(A.df||0)), amp=Math.min(A.w*0.34,135);
   if(A.st==='aim'||A.st==='fly'){ A.ph+=spd*dt; A.tx=A.w/2+amp*Math.sin(A.ph); }
@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='e8a0a2efdd';
+var UPDB='c87dd687c1';
 (function(){
   const K='updTry';
   const _go=updGo;
