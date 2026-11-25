@@ -11155,7 +11155,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='bcf0fa446c';
+var UPDB='8031899301';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25487,6 +25487,31 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   /* шинэ судалгаа нэмэгдсэн тул дууссан салбарын шагнал/цол хэвээр (S.rs.bd), харин эхлэхэд өмнөх шатыг шаардана */
   var ORD={e:['e7','e8','e9','eA','eB'],m:['m7','m8','m9','mA','mB'],c:['c7','c8','c9','cA','cB']};
   var _st=rsStart; rsStart=function(id){ try{ rsInit(); for(var b in ORD){ var L=ORD[b], i=L.indexOf(id); if(i>0&&!S.rs.done[L[i-1]]){ var p=TECH.find(function(x){ return x.id===L[i-1]; }); say('Эхлээд «'+(p?p.n:L[i-1])+'» судал'); return; } } }catch(e){} return _st.apply(this,arguments); };
+})();
+</script>
+<script id="bdot">
+/* Барилга цэс: бариагүй (нээгдсэн) барилга бүр дээр улаан цэг — карт, таб, доод «Барилга» товч */
+(function(){
+  var st=document.createElement('style'); st.textContent=
+    '.rdot{position:absolute;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8a7a,#e01b0b 60%,#8a0a02);border:2px solid #ffe9b0;box-shadow:0 0 6px #ff2a1a,0 1px 2px #000;z-index:6;pointer-events:none;animation:rdotP 1.4s ease-in-out infinite}'+
+    '.bcard>.rdot{left:50%;margin-left:-9px;top:3%;width:18px;height:18px}.btabs2 i{position:absolute}.btabs2 i>.rdot{right:8%;top:6%}'+
+    '#menu button>.rdot{right:10%;top:6%;width:15px;height:15px}'+
+    '@keyframes rdotP{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}';
+  document.head.appendChild(st);
+  var has=function(k){ return (S.bld[k]||0)>0||!!(S.sites&&S.sites[k]); };
+  var wdOk=function(k){ if(k==='lsm') return has('khk')&&!(S.sites&&S.sites.khk)&&(S.hk||0)>=5; if(k==='hsm') return has('lsm')&&!(S.sites&&S.sites.lsm)&&((S.wd&&S.wd.ls)||0)>=5; return true; };
+  window.bCanNew=function(k){ try{
+    if(k==='gmain') return false;
+    if(k.indexOf('pen:')===0) return !has('hashaa')&&S.bld.ger>=(BREQ.hashaa||1);
+    var G={gerg:function(){ return GK.slice(); },gerx:function(){ return GK.slice(); },targ:function(){ return ['tarialan'].concat(MG.tarialan); },tarx:function(){ return ['tarialan'].concat(MG.tarialan); },modg:function(){ return ['modcex'].concat(MG.modcex); },modx:function(){ return ['modcex'].concat(MG.modcex); }};
+    if(G[k]){ var ks=G[k](), nx=ks.find(function(x){ return !has(x); }); return !!nx&&bCanNew(nx); }
+    if(!BUILD[k]||has(k)) return false; return S.bld.ger>=(BREQ[k]||1)&&wdOk(k);
+  }catch(e){ return false; } };
+  var tabN=function(t){ return t[2].filter(bCanNew).length; };
+  window.bNewCount=function(){ try{ return BTABS.reduce(function(a,t){ return a+tabN(t); },0); }catch(e){ return 0; } };
+  var _bc=bcard; bcard=function(k){ var h=_bc.apply(this,arguments); if(!bCanNew(k)) return h; var i=h.lastIndexOf('</div>'); return i<0?h:h.slice(0,i)+'<b class="rdot"></b>'+h.slice(i); };
+  var _bt=btabsHTML; btabsHTML=function(){ var h=_bt.apply(this,arguments); try{ var n=0; h=h.replace(/(<i [^>]*onclick="setBTab\('([a-z]+)'\)">)(<\/i>)/g,function(m,a,id,c){ var t=BTABS.find(function(x){ return x[0]===id; }); return a+(t&&tabN(t)?'<b class="rdot"></b>':'')+c; }); }catch(e){} return h; };
+  setInterval(function(){ try{ var b=document.querySelector('#menu button'); if(!b) return; var on=bNewCount()>0, d=b.querySelector('.rdot'); if(on&&!d){ d=document.createElement('b'); d.className='rdot'; b.appendChild(d); } else if(!on&&d) d.remove(); }catch(e){} },1500);
 })();
 </script>
 </body>
