@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='3ba1eb3d9f';
+var UPDB='b0ffd8ee26';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26097,7 +26097,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
 (function(){
   function add(){ try{ const rc=document.getElementById('rcol'); if(!rc) return; let b=document.getElementById('hboxb');
       if(!b){ b=document.createElement('button'); b.id='hboxb'; b.setAttribute('onclick',"openM('summon')");
-        let ic=''; try{ ic=ico('chest',42); }catch(e){}
+        let ic='<img src="hf/herobox.webp?v=1" alt="">';
         b.innerHTML='<span>'+(ic||'🎁')+'</span>Баатрын<br>хайрцаг'; }
       if(b.parentNode!==rc||rc.lastElementChild!==b) rc.appendChild(b); }catch(e){} }
   const st=document.createElement('style'); st.textContent='#hboxb{line-height:1.05}#hboxb span img{height:42px!important;width:auto!important;display:block;margin:0 auto}#hboxb.fsHint::after{right:calc(100% - 6px)!important;top:14px!important}';
