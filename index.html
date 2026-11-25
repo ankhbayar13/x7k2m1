@@ -8262,7 +8262,8 @@ function jamSpin(){
   JAMX.sp=1; const el=document.getElementById('jwr'); const cur=JAMX.rot||0; const need=((-k*45+(Math.random()*24-12))-cur)%360; const tgt=cur+360*5+((need+360)%360); JAMX.rot=tgt;
   if(el){ el.style.transition='transform 4.2s cubic-bezier(.12,.62,.1,1)'; void el.getBoundingClientRect(); el.style.transform='rotate('+tgt+'deg)'; el.querySelectorAll('.jl').forEach(g=>{ g.style.transition='transform 4.2s cubic-bezier(.12,.62,.1,1)'; g.style.transform='rotate('+(-tgt)+'deg)'; }); }
   try{ sfx('ok'); }catch(e){}
-  setTimeout(()=>{ JAMX.sp=0; try{ sfx('lvl'); }catch(e){} try{ say(msg); }catch(e){} try{ if(hero){ jamClose(); jamReveal(); jamBtnUpd(); } else jamRender(); }catch(e){} try{ jamBtnUpd(); }catch(e){} },el?4400:100);
+  setTimeout(()=>{ JAMX.sp=0; try{ sfx('lvl'); }catch(e){} try{ say(msg); }catch(e){} try{ if(hero){ jamClose(); jamReveal(); jamBtnUpd(); } else jamRender(); }catch(e){}
+    try{ if(!hero&&window.rwShow){ const it=w.t==='a'?{k:'alt',n:w.n,l:'Алт'}:w.t==='t'?{k:'stn',n:w.n,l:'Ид шидийн чулуу'}:{k:'jsh',n:w.n,l:'Жамухын хэлтэрхий'}; rwShow({t:'🎡 Жамухын хүрд',s:'Эргүүлгийн шагнал',em:w.t==='a'?'💎':w.t==='t'?'🔮':'🗡',r1:msg.replace(/^\S+\s/,''),it:[it]}); } }catch(e){} try{ jamBtnUpd(); }catch(e){} },el?4400:100);
 }
 function jamStar(){ const id=JAM.id; if(!S.heroes[id]) return; const st=starOf(id); if(st>=STMAX){ say('Дээд од хүрсэн'); return; } const c=stcOf(id,st); if(shN(id)<c){ say('Хэлтэрхий хүрэхгүй байна'); try{ sfx('err'); }catch(e){} return; }
   S.sh[id]-=c; S.heroes[id]=st+2; try{ sfx('lvl'); }catch(e){} say('Жамуха '+(st+1)+' одтой боллоо!'); try{ save(); refresh(); }catch(e){} setTimeout(()=>{ try{ clPushL(true); }catch(e){} },3000); try{ jamBtnUpd(); }catch(e){} jamRender(); }
@@ -11157,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='7b14fbfd22';
+var UPDB='1b8f561ce5';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -13451,13 +13452,16 @@ heroListHTML=function(){
   window.patrolSpin=function(){
     S.pt=S.pt||{}; if(PT.spin) return; if(left()>0){ say('Дараагийн эргүүл: '+fmt(left())+'-ын дараа'); return; }
     let r=Math.random()*100, i=0; for(let k=0;k<SG.length;k++){ if(r<SG[k].w){ i=k; break; } r-=SG[k].w; if(k===SG.length-1) i=k; }
-    const sg=SG[i], txt=sg.f(); S.pt.t=now(); S.pt.last=txt||sg.n; S.pt.n=(S.pt.n||0)+1; try{ save(); }catch(e){}
+    const sg=SG[i], txt=sg.f(); PT.sg=sg; PT.tx=txt; S.pt.t=now(); S.pt.last=txt||sg.n; S.pt.n=(S.pt.n||0)+1; try{ save(); }catch(e){}
     PT.spin=1; PT.rot=360*6-45*i+(Math.random()*24-12);
     const w=document.getElementById('ptw'), b=document.getElementById('ptb');
     if(b){ b.disabled=true; b.textContent='🎡 Эргэж байна…'; }
     if(w){ w.style.transition='transform 4.2s cubic-bezier(.12,.62,.08,1)'; void w.offsetWidth; w.style.transform='rotate('+PT.rot+'deg)'; }
     try{ sfx('click'); }catch(e){}
-    setTimeout(()=>{ PT.spin=0; try{ sfx('coin'); vib(30); }catch(e){} say('🎡 Эргүүл: '+S.pt.last); try{ refresh(); }catch(e){} },4400);
+    setTimeout(()=>{ PT.spin=0; try{ sfx('coin'); vib(30); }catch(e){} say('🎡 Эргүүл: '+S.pt.last); try{ refresh(); }catch(e){}
+      try{ const g=PT.sg, K={'🌾':['grain','тариа'],'💎':['alt','Алт'],'🪵':['wood','мод'],'🥛':['milk','сүү'],'🪙':['gold','мөнгө']}[g.e];
+        if(K&&window.rwShow){ const m=/\+(\d+)/.exec(PT.tx||''), n=m?+m[1]:+g.a; rwShow({t:'🎁 Өдрийн бэлэг',s:'Эргүүлгийн шагнал',em:g.e,r1:g.n.replace(/^\S+\s/,''),it:[{k:K[0],n:n,l:K[1]}]}); } }catch(e){}
+    },4400);
   };
   window.patrolHTML=function(){
     S.pt=S.pt||{}; const done=left()>0, D=280, R=D/2;
