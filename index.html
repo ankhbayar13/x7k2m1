@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='a61d6d592c';
+var UPDB='86ca78d6cc';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25980,6 +25980,19 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var _s=say; say=function(t){ if(on()){ Q.push(t); if(Q.length>3) Q.shift(); return; } return _s.apply(this,arguments); };
   var _mp=musPlay; musPlay=function(k){ if(on()){ try{ MUSV.want=k; }catch(e){} return; } return _mp.apply(this,arguments); };
   var iv=setInterval(function(){ if(on()) return; clearInterval(iv); document.documentElement.classList.remove('splon'); var q=Q.slice(-1); Q=[]; if(q.length) setTimeout(function(){ try{ _s(q[0]); }catch(e){} },1200); },300);
+})();
+</script>
+<script id="menuback">
+/* Цэснээс орсон цонхны ✕ дарахад цэс рүүгээ, яг өмнөх гүйлгэсэн байрлал дээрээ буцна */
+(function(){
+  var MS=0, box=function(){ return document.querySelector('#modal .box'); };
+  var _o=openM; openM=function(k){ try{ if(cur==='menu'&&k!=='menu'){ var b=box(); MS=b?b.scrollTop:0; } }catch(e){} var back=(k==='menu'&&window.__mret); var r=_o.apply(this,arguments); if(back){ try{ var b2=box(); if(b2){ b2.scrollTop=MS; requestAnimationFrame(function(){ b2.scrollTop=MS; }); } }catch(e){} } return r; };
+  var _c=closeM; closeM=function(){
+    try{ var ev=window.event, t=ev&&ev.type==='click'&&ev.target&&ev.target.closest?ev.target.closest('button,.x,.hs,[onclick]'):null, txt=t?((t.textContent||'')+' '+(t.getAttribute('aria-label')||'')):'';
+      var isX=!!t&&(t.classList.contains('x')||/✕|×|Хаах|Гарах/.test(txt));
+      var fromMenu=cur&&cur!=='menu'&&(MBACK===1||(window.MH&&MH.indexOf('menu')>=0));
+      if(isX&&fromMenu&&document.getElementById('modal').style.display==='flex'){ window.__mret=1; try{ openM('menu'); } finally{ window.__mret=0; } return; } }catch(e){}
+    return _c.apply(this,arguments); };
 })();
 </script>
 </body>
