@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='3d41675920';
+var UPDB='8cc56ce258';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25804,8 +25804,8 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   window.hrmThumb=function(t){ var c=document.createElement('canvas'); c.width=180; c.height=120; var g=c.getContext('2d'); if(!t) return c.toDataURL(); g.scale(7,7); g.translate(1,0);
     faceH(g,t,0,24,15.5,0,1); tower(g,t,2,16,1,0); tower(g,t,22,16,1,0); return c.toDataURL(); };
   /* ---------- тосгоны газрын зураг ---------- */
-  /* хэрэм тосгоны газрын бүр захаар тойрно */
-  function bbox(){ var x0=14, x1=WW-14, y0=70, y1=WH-50;
+  /* хэрэм тосгоны захын ойн дотор талаар тойрно */
+  function bbox(){ var x0=36, x1=WW-44, y0=88, y1=WH-50; /* захын өтгөн ойн дотор талаар */
     return {key:'bb'+x0+','+y0+','+x1+','+y1,hz:[{n:'N',a:x0,b:x1,y:y0},{n:'S',a:x0,b:x1,y:y1}],vt:[{n:'W',x:x0,a:y0,b:y1},{n:'E',x:x1,a:y0,b:y1}]}; }
   window.hrmBox=function(){ return bbox(); };
   function geom(){ var e=bbox(), h=st(); var key=e.key+'|'+h.lv; if(geom.c&&geom.c.key===key) return geom.c;
