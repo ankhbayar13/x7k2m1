@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='e8ca26480e';
+var UPDB='4d8876e56e';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25803,7 +25803,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     g.fillStyle=t===3?'#2e6db4':'#6b3f1b'; g.fillRect(x-D.T/2-1.2,g0-H-4.6,D.T+2.4,1.6); }
   /* ---------- AI зургууд (hf/hr/t{1..3}{a..e}.webp): a хэвтээ, b босоо, c булан, d хаалга, e эвдэрсэн ---------- */
   var GTF={1:[0.142,0.853],2:[0.162,0.833],3:[0.174,0.824]};
-  var IMD={1:{a:[457,126],b:[78,267],c:[125,165],d:[327,183],e:[290,131],tw:50},2:{a:[449,143],b:[79,258],c:[117,167],d:[317,188],e:[291,140],tw:50},3:{a:[474,235],b:[96,348],c:[150,284],d:[340,267],e:[310,217],tw:60}}, IMG={};
+  var IMD={1:{a:[457,126],b:[78,267],c:[125,165],d:[327,183],e:[290,131],tw:78},2:{a:[449,143],b:[79,258],c:[117,167],d:[317,188],e:[291,140],tw:78},3:{a:[474,235],b:[96,348],c:[150,284],d:[340,267],e:[310,217],tw:92}}, IMG={};
   [1,2,3].forEach(function(t){ 'abcde'.split('').forEach(function(n){ var im=new Image(); im.src='hf/hr/t'+t+n+'.webp?v=1'; IMG[t+n]=im; }); });
   var ok=function(t){ return 'abcde'.split('').every(function(n){ var im=IMG[t+n]; return im&&im.complete&&im.naturalWidth; }); };
   var sc=function(t){ return IMD[t].tw/IMD[t].a[0]; };
@@ -25867,12 +25867,12 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       G.gates.forEach(function(q){ if(q.cx<x0-40||q.cx>x1+40||q.y<y0||q.y-40>y1) return;
         if(SP) list.push({y:q.y+0.3,f:function(){ hwG(ctx,t,q.cx,q.y+2); }});
         else { list.push({y:q.y+0.3,f:function(){ tower(ctx,t,q.x,q.y,1,tm); tower(ctx,t,q.xi,q.y,1,tm); ctx.fillStyle='#8f2f22'; ctx.fillRect(Math.min(q.x,q.xi),q.y-DIM[t].H-3,Math.abs(q.xi-q.x),2.2); }}); }
-        [-0.3,0.3].forEach(function(f){ var gx=q.cx+q.w*f; list.push({y:q.y+3,f:function(){ charAt(3,'f',false,0,gx,q.y+4.5,0.9); }}); }); });
+        [-0.3,0.3].forEach(function(f){ var gx=q.cx+q.w*f; list.push({y:q.y+3,f:function(){ charAt(3,'f',false,0,gx,q.y+5,1.3); }}); }); });
       /* эргүүлийн харваачид */
       var n=t===1?2:t===2?4:6, segs=G.segs.filter(function(s){ return (s.b-s.a)>30; }).sort(function(p,q){ return (q.b-q.a)-(p.b-p.a); });
       for(var i=0;i<n&&segs.length;i++){ (function(i){ var s=segs[i%segs.length], len=s.b-s.a, sp=5, ph0=hsh(i,9)*len*2, d=(tm*sp+ph0)%(len*2), fwd=d<len, u=fwd?d:2*len-d, px, py, fd;
-          if(s.h){ px=s.a+u; py=s.y-D.H+0.6; fd=fwd?'r':'l'; if(px<x0||px>x1||s.y<y0||s.y>y1) return; list.push({y:s.y+0.05,f:function(){ charAt(10,fd,true,tm*8+i,px,py,0.75); }}); }
-          else { px=s.x; py=s.a+u-(SP?0:D.H-0.6); fd=fwd?'f':'b'; if(px<x0||px>x1||py<y0||py>y1) return; list.push({y:s.a+u+0.05,f:function(){ charAt(10,fd,true,tm*8+i,px,py,0.75); }}); } })(i); }
+          if(s.h){ px=s.a+u; py=s.y-D.H+0.6; fd=fwd?'r':'l'; if(px<x0||px>x1||s.y<y0||s.y>y1) return; list.push({y:s.y+0.05,f:function(){ charAt(10,fd,true,tm*8+i,px,py,1.05); }}); }
+          else { px=s.x; py=s.a+u-(SP?0:D.H-0.6); fd=fwd?'f':'b'; if(px<x0||px>x1||py<y0||py>y1) return; list.push({y:s.a+u+0.05,f:function(){ charAt(10,fd,true,tm*8+i,px,py,1.05); }}); } })(i); }
       /* засварчин */
       if(h.rep&&k>0){ var hs=G.segs.find(function(s){ return s.h; }); if(hs){ var wx=hs.a+(hs.b-hs.a)*0.37, wy=hs.y+2; if(wx>x0&&wx<x1&&wy>y0&&wy<y1) list.push({y:wy,f:function(){ var key='jb3_'+(Math.floor(tm*2.4)%2); if(SPR[key]){ var w=SZ[key]*0.9; spr(key,wx-w/2,wy-sprH(key)*0.9,w); } }}); } }
     }catch(e){ return _fl.apply(this,arguments); } };
