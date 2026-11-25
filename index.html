@@ -249,7 +249,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#2b1d12;color:#f3e6c8;
  tp(); a.addEventListener('playing',ok); a.addEventListener('error',function(){ h.style.display='none'; });
  ['pointerdown','touchend','click'].forEach(function(ev){ document.addEventListener(ev,function(){ if(!done&&a.paused) tp(); },{passive:true}); });
  document.addEventListener('visibilitychange',function(){ if(done) return; if(document.hidden) a.pause(); else tp(); });
- window.DXX_SPLSTOP=function(){ if(done) return; done=1; h.style.display='none'; var v=a.volume, n=0, t=setInterval(function(){ n++; a.volume=Math.max(0,v*(1-n/8)); if(n>=8){ clearInterval(t); try{ a.pause(); }catch(e){} } },80); };
+ window.DXX_SPLSTOP=function(){ if(done) return; done=1; window.DXX_SPLDONE=1; try{ document.documentElement.classList.remove('splon'); }catch(e){} setTimeout(function(){ try{ if(window.MUSV&&typeof musPlay==='function') musPlay(MUSV.want||'village'); }catch(e){} },700); h.style.display='none'; var v=a.volume, n=0, t=setInterval(function(){ n++; a.volume=Math.max(0,v*(1-n/8)); if(n>=8){ clearInterval(t); try{ a.pause(); }catch(e){} } },80); };
 })();</script>
 <script>(function(){ var ua=navigator.userAgent||''; if(!/FBAN|FBAV|FB_IAB|FBIOS|Messenger|Instagram|\bLine\/|MicroMessenger|Snapchat|TikTok/i.test(ua)) return;
  try{ if(sessionStorage.getItem('dxx_iab')==='1') return; }catch(e){}
@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='69a2ec6ca0';
+var UPDB='a61d6d592c';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25968,6 +25968,18 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var iv=setInterval(function(){ if(CL.ok&&FBM){ clearInterval(iv); check('start'); } },300);
   setTimeout(function(){ if(!CL.sync&&!window._clR) CL.sync=1; },30000);
   document.addEventListener('visibilitychange',function(){ if(document.hidden){ hidAt=Date.now(); return; } if(hidAt&&Date.now()-hidAt>60000&&CL.ok){ CL.sync=0; check('vis'); } });
+})();
+</script>
+<script id="splquiet">
+/* Эхлэх дэлгэц дээр: тосгоны хөгжим эхлэхгүй, мэдэгдэл (say, шуудан, попап) гарахгүй — «ТОГЛОХ» дармагц л эхэлнэ */
+(function(){
+  if(!window.DXX_SPLDONE&&document.getElementById('splash')) document.documentElement.classList.add('splon');
+  var st=document.createElement('style'); st.textContent='html.splon #msg,html.splon .msg,html.splon #rpop,html.splon #tutov,html.splon #rwov,html.splon #lvov,html.splon #askov,html.splon #mailpop{display:none!important}'; document.head.appendChild(st);
+  var on=function(){ return !window.DXX_SPLDONE&&!!document.getElementById('splash'); };
+  var Q=[];
+  var _s=say; say=function(t){ if(on()){ Q.push(t); if(Q.length>3) Q.shift(); return; } return _s.apply(this,arguments); };
+  var _mp=musPlay; musPlay=function(k){ if(on()){ try{ MUSV.want=k; }catch(e){} return; } return _mp.apply(this,arguments); };
+  var iv=setInterval(function(){ if(on()) return; clearInterval(iv); document.documentElement.classList.remove('splon'); var q=Q.slice(-1); Q=[]; if(q.length) setTimeout(function(){ try{ _s(q[0]); }catch(e){} },1200); },300);
 })();
 </script>
 </body>
