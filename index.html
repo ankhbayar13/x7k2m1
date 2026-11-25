@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='0fae443d8f';
+var UPDB='e8ca26480e';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25849,7 +25849,13 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     var corners=[]; e.hz.forEach(function(l){ corners.push([l.a,l.y]); corners.push([l.b,l.y]); }); ends.forEach(function(p){ corners.push(p); });
     geom.c={key:key,segs:segs,gates:gates,corners:corners,edges:e}; return geom.c; }
   function charAt(c,fd,moving,ph,x,y,sc){ var k='nw'+c+'_'+fd, F=NWF[k]; if(!F) return; var i=moving?Math.floor(ph)%F[0]:F[5], key=k+i; if(!SPR[key]) return; var w=SZ[key]*sc, hh=sprH(key)*sc; spr(key,x-(NWAX[key]||w/2)*sc,y-hh,w); }
-  var _fl=fenceList; fenceList=function(list,vis){ var h=st(); if(!h.lv) return _fl.apply(this,arguments); if(!geom.t||performance.now()-geom.t>1500){ geom.t=performance.now(); geom.c=null; }
+  /* хаалганы орчим (хаалганы хашаа, хаалганы өмнөх, дотор талын зам) мод байхгүй */
+  function clearGates(G){ try{ if(!L||!L.trees||!G.gates.length) return; var th=sprH('tree'), R=[];
+      for(var i=0;i<G.gates.length;i+=2){ var q1=G.gates[i], q2=G.gates[i+1]||q1, xl=Math.min(q1.x,q1.xi), xr=Math.max(q1.x,q1.xi), y0=q1.y-(q1.w*0.9), y1=q2.y+q1.w*0.5;
+        R.push({x0:xl-q1.w*0.9,x1:xr+q1.w*1.1,y0:y0,y1:y1}); }
+      var hit=function(t){ var tx0=t.x, tx1=t.x+SZ.tree, ty0=t.y, ty1=t.y+th; return R.some(function(r){ return tx1>r.x0&&tx0<r.x1&&ty1>r.y0&&ty0<r.y1; }); };
+      var n0=L.trees.length; L.trees=L.trees.filter(function(t){ return !hit(t); }); if(L.trees.length!==n0){ try{ if(typeof propsBuild==='function') propsBuild(); }catch(e){} } }catch(e){} }
+  var _fl=fenceList; fenceList=function(list,vis){ var h=st(); if(!h.lv) return _fl.apply(this,arguments); try{ var Gc=geom(); if(clearGates.k!==Gc.key+'|'+(L&&L.trees&&L.trees.length)){ clearGates(Gc); clearGates.k=Gc.key+'|'+(L&&L.trees&&L.trees.length); } }catch(e){} if(!geom.t||performance.now()-geom.t>1500){ geom.t=performance.now(); geom.c=null; }
     try{ var L0=list; list={push:function(o){ o.y+=1e6; L0.push(o); }}; var t=tierOf(h.lv), G=geom(), D=DIM[t], vw=W/Z, vh=H/Z, x0=cam.x-14, x1=cam.x+vw+14, y0=cam.y-20, y1=cam.y+vh+30, k=dmgF(), tm=performance.now()/1000;
       var SP=ok(t); if(SP) D={H:hrmWallTop(t),T:IMD[t].b[0]*sc(t)};
       G.segs.forEach(function(s,si){ if(s.h&&SP){ if(s.y<y0||s.y-40>y1||s.b<x0||s.a>x1) return; var a=Math.max(s.a,x0), b=Math.min(s.b,x1); list.push({y:s.y,f:function(){ hwH(ctx,t,a,b,s.y,k,si+1); }}); return; }
