@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='cf78100ddb';
+var UPDB='395965e38c';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26110,6 +26110,24 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
 (function(){ const st=document.createElement('style');
   st.textContent='#lvov .bar{border-width:5px 8px!important;border-image-width:5px 8px!important;width:84%!important;font-size:clamp(13px,3.1cqw,16px)!important;gap:clamp(5px,1.4cqw,8px)!important;padding:clamp(4px,1.1cqw,6px) 3cqw!important}#lvov .bar i{font-size:clamp(9px,2.2cqw,11px)!important}#lvov .bar .ic{gap:3px!important}#lvov .bar .ic img{width:clamp(16px,4.4cqw,22px)!important;height:clamp(16px,4.4cqw,22px)!important}#lvov .tap{font-size:clamp(12px,3cqw,15px)!important}';
   document.head.appendChild(st); })();
+</script>
+<script id="qdot">
+/* Даалгавар: биелсэн (авах боломжтой) шагналын товч дээр улаан цэг, (Цэс доторх «Даалгавар» хавтан дээр тоот улаан тэмдэг өмнөөс байгаа) */
+(function(){
+  const st=document.createElement('style');
+  st.textContent='.qdot{position:relative}.qdot::before{content:"";position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;background:#e8281c;border:2px solid #fff;box-shadow:0 0 4px rgba(0,0,0,.7);z-index:3;pointer-events:none}'+
+    '.mnx.qdot::before{top:4px;right:6px;width:16px;height:16px}';
+  document.head.appendChild(st);
+  const CL=/^(dqClaim|x2Claim|x2Box|claimChap|dqBox|wkClaim|wkBox)/;
+  function tick(){ try{
+      const m=document.getElementById('modal'); if(!m||m.style.display!=='flex') return;
+      document.querySelectorAll('#mbody button').forEach(b=>{ const o=b.getAttribute('onclick')||''; if(!CL.test(o)) return; b.classList.toggle('qdot',!b.disabled); });
+      /* Цэсний «Даалгавар» хавтан дээр тоотой улаан тэмдэг аль хэдийн гардаг */
+
+    }catch(e){} }
+  setInterval(tick,600);
+  const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); tick(); return r; };
+})();
 </script>
 </body>
 </html>
