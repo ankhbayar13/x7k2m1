@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='0b19903997';
+var UPDB='6f31204b2e';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26004,6 +26004,13 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       if(MR.st!=='away'){ if(Date.now()-MR.t>3000) MR=null; return; }
       if((typeof placing!=='undefined'&&placing)||(typeof BT!=='undefined'&&BT)||(typeof RT!=='undefined'&&RT)||document.getElementById('askov')) return;
       MS=MR.s; MR=null; window.__mret=1; try{ openM('menu'); } finally{ window.__mret=0; } }catch(e){} },300);
+})();
+</script>
+<script id="cmapbg">
+/* Түүхэн аян: бүлгийн цонхонд бусад самбартай адил AI дэвсгэр (bg_war) */
+(function(){
+  const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments);
+    try{ const on=typeof cur==='string'&&cur.indexOf('cmap:')===0; if(on) document.body.classList.add('pbg-war'); }catch(e){} return r; };
 })();
 </script>
 </body>
