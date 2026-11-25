@@ -5309,7 +5309,7 @@ function upEff(k){
 /* p32/ndplay.js — 121: наадмын 3 тэмцээний карт (Оролцох = шууд тоглоом) */
 function ndPlayCards(){
   var D=[
-    {n:'Сур харвалт', img:'nd_arch', cup:0, d:'Харваач бэлтгэл хийж сураа нэм', a:archInfo(), st:function(a){return 'Шилдэг: <b>'+(a.best||0)+'</b>/50';}, fn:'archOpen()'},
+    {n:'Сур харвалт', img:'nd_arch', cup:0, d:'Харваач бэлтгэл хийж сураа нэм', a:archInfo(), st:function(a){return 'Шилдэг: <b>'+(a.best||0)+'</b>';}, fn:'archOpen()'},
     {n:'Хурдан морины уралдаан', img:'nd_race', cup:1, d:'Морио товшиж давхиул. Хурд, тэсвэр бэлтгэлээр нэмэгдэнэ', a:raceInfo(), st:function(a){return 'Шилдэг: <b>'+(a.best?a.best.toFixed(1)+'с':'-')+'</b>';}, fn:'raceOpen()'},
     {n:'Бөхийн барилдаан', img:'nd_wrest', cup:2, d:'Бөх бэлтгэл хийж хүчээ нэм', a:wrestInfo(), st:function(a){return 'Нийт ялалт: <b>'+(a.tw||0)+'</b>';}, fn:'wrestOpen()'}];
   return D.map(function(c){ var left=Math.max(0,3-c.a.n);
@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='4bc74ccf21';
+var UPDB='b8b1d1b153';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -21705,7 +21705,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
   /* ---------- Үндсэн дэлгэц ---------- */
   function cardInfo(k){
     const arch=k==='arch', a=arch?archInfo():raceInfo(), left=Math.max(0,3-a.n);
-    const best=arch?'Шилдэг: <b>'+(a.best||0)+'</b>/50':'Шилдэг: <b>'+(a.best?a.best.toFixed(1)+'с':'-')+'</b>';
+    const best=arch?'Шилдэг: <b>'+(a.best||0)+'</b>':'Шилдэг: <b>'+(a.best?a.best.toFixed(1)+'с':'-')+'</b>';
     return {left:left,best:best,shut:closedGame(arch?'archOpen':'raceOpen')}; }
   function mainHTML(){
     const T=M, now=Date.now(); S.ntT=S.ntT||{};
@@ -21722,7 +21722,8 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
       h+=el(T,'ndx-ds',c[5],c[6],c[7],c[8],ds,'',null);
       h+=el(T,'ndx-st',c[9],c[10],c[11],c[12],'Өнөөдөр: <b>'+I.left+'/3</b> · '+I.best,'',null);
       const off=I.shut||!I.left;
-      h+=el(T,'ndx-bt'+(off?' off':''),c[13],c[14],c[15],c[16],I.shut?'Удахгүй':(I.left?'Оролцох':'Маргааш'),'',off?'':(k==='arch'?'archOpen()':'raceOpen()')); });
+      h+=el(T,'ndx-bt'+(off?' off':''),c[13],c[14],c[15],c[16],I.shut?'Удахгүй':(I.left?'Оролцох':'Маргааш'),'',off?'':(k==='arch'?'archOpen()':'raceOpen()'))
+      if(!I.shut) h+=el(T,'ndx-bt',k==='arch'?70:556,560,180,52,(k==='arch'?'🎯':'🐎')+' Дадлага','background:linear-gradient(#7fbf5a,#3e7a2a);color:#fff;text-shadow:0 .2cqw .3cqw #000;font-size:2.4cqw!important;border:.3cqw solid #e9d58a;box-shadow:0 .4cqw 1cqw rgba(0,0,0,.5)',k==='arch'?'archPrac()':"raceOpen();setTimeout(function(){ try{ ndPracRace(); }catch(e){} },350)"); });
     /* Наадмын хөтөлбөр */
     h+=el(T,'ndx-sh',100,782,370,40,'Наадмын хөтөлбөр','',null);
     const ev=evInfo(); const rows=[['s',46,842,300,84],['a',46,942,420,156],['u',46,1176,420,116]];
@@ -21956,6 +21957,7 @@ function sbAdminHTML(){ const on=SBX.chat||SBX.dm||SBX.fr;
     if(z.pt>0) t+='<div class="hz-box" style="border-color:#ffd35a"><div class="sm">Танд <b>'+z.pt+'</b> оноо байна. «Морь» хэсгээс чадвараа нэмээрэй.</div></div>';
     t+='<div class="sm" style="text-align:center">Өнөөдөр: <b>'+left+'/3</b> оролдлого · Таны морь: <b>'+esc(h.nm)+'</b></div>';
     t+='<button class="hz-btn" onclick="hzStart()" '+(left?'':'disabled')+'>'+(left?'Уралдаан эхлэх'+(fee?' · '+fee+' '+coin:''):'Маргааш дахин')+'</button>';
+    t+='<button class="hz-btn" style="margin-top:6px;filter:hue-rotate(80deg) saturate(.8)" onclick="ndPracRace()">🐎 Дадлага · үнэгүй, хязгааргүй</button>';
     return t; }
   function statRow(k,nm,h,cap){ const p=PEND[k], v=h[k]+p, z=hz(), used=PEND.sp+PEND.st+PEND.se, can=used<z.pt&&v<cap;
     return '<div class="hz-sr"><div class="hz-sn">'+nm+'</div><div class="hz-bar"><i style="width:'+(h[k]/cap*100)+'%"></i><b style="left:'+(h[k]/cap*100)+'%;width:'+(p/cap*100)+'%"></b></div><div class="hz-v">'+v+'/'+cap+'</div>'+
@@ -25639,7 +25641,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   window.archTitle=function(){ var t=st(), i=-1; if(t.mx>=1) i=0; if(t.mx>=3) i=1; if(t.mx>=4) i=2; if(t.c5>=1) i=3; if(t.c5>=5) i=4; if(t.c5>=20&&t.b10) i=5; return i; };
   window.archTitleHTML=function(i,sz){ if(i==null) i=archTitle(); if(i<0) return '<span class="sm" style="opacity:.6">Цолгүй</span>'; var x=TT[i]; return '<b style="color:'+x[2]+'">'+x[1]+' '+x[0]+'</b>'; };
   function apply(A){ var q=P[A.stg]; A.mode=A.stg>=4?'kh':'bai'; A.R=A.R0*q.rf; A.tyb=A.h*q.ty; A.ty=A.tyb; A.dir=1; A.stuck=[]; A.wind=q.wind?(Math.random()*2-1):0; A.ban=1.6; if(A.mode==='kh') khRow(A); }
-  window.archHdr=function(A,tot){ return 'Шат '+A.stg+'/5 · Сум '+Math.min(3,A.j+(A.st==='aim'||A.st==='fly'?1:0))+'/3 · '+tot+' оноо'; };
+  window.archHdr=function(A,tot){ if(A.pr) return 'Дадлага · '+A.stg+'-р шат · Сум '+Math.min(9,A.i+(A.st==='aim'||A.st==='fly'?1:0))+'/9'; return 'Шат '+A.stg+'/5 · Сум '+Math.min(3,A.j+(A.st==='aim'||A.st==='fly'?1:0))+'/3 · '+tot+' оноо'; };
   var KW=[24,20,17,14,12], KN=9;
   function khRow(A){ A.kh=[]; for(var i=0;i<KN;i++) A.kh.push({up:1,f:0,i:i}); A.kw=KW[A.stg-1]*Math.min(1.25,A.w/390); A.ksp=A.kw*2.1; }
   var _op=archOpen; archOpen=function(){ var r=_op.apply(this,arguments); try{ var A=ARC; if(A&&!A.stg){ A.stg=1; A.j=0; A.R0=A.R; A.raw=[]; A.b10=0; A.cl=0; apply(A); A.ban=0; }
@@ -25658,7 +25660,8 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
         A.raw.push(ring); A.sc.push(sc); if(ring>=10) A.b10++; if(A.mode!=='kh') A.stuck.push({dx:dx});
         A.pop=A.mode==='kh'?(ring?'Уухай! +'+sc:'Алдлаа'):ring>=10?'ЯГ ГОЛД! +'+sc:sc>0?('+'+sc):'Алдлаа'; A.pt=0; A.st='pop'; sfx(ring>=8?'big':ring>0?'hit':'err'); if(ring>=10) vib([20,30,40]); } }
     else if(A.st==='pop'){ A.pt+=dt; if(A.pt>0.85){ A.i++; A.j++;
-        if(A.j>=3){ var got=A.raw.slice(-3).reduce(function(a,b){ return a+b; },0);
+        if(A.j>=3&&A.pr){ if(A.i>=9){ A.st='end'; archFinish(); } else { A.j=0; apply(A); A.st='aim'; } }
+        else if(A.j>=3){ var got=A.raw.slice(-3).reduce(function(a,b){ return a+b; },0);
           if(got>=NEED){ A.cl=A.stg; if(A.stg>=5){ A.st='end'; archFinish(); } else { A.stg++; A.j=0; apply(A); A.st='aim'; try{ sfx('horn'); }catch(e){} } }
           else { A.fail=got; A.st='end'; archFinish(); } }
         else { if(q.wind) A.wind=Math.random()*2-1; A.st='aim'; } } }
@@ -25690,14 +25693,62 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       (newT.length?'<div style="margin-top:6px;color:#ffd35a">🎉 Шинэ цол: '+newT.map(function(i){ return archTitleHTML(i); }).join(', ')+'</div>':'<div class="sm" style="margin-top:4px">Цол: '+archTitleHTML(ti)+'</div>')+
       '<div class="sm" style="margin-top:4px">Өнөөдөр '+left+' оролдлого үлдсэн</div><div class="row2">'+(left?'<button class="btn" id="archagain">Дахин</button>':'')+'<button class="btn red" id="archexit">Гарах</button></div>';
     A.o.appendChild(r); r.querySelector('#archexit').onclick=archClose; var ag=r.querySelector('#archagain'); if(ag) ag.onclick=function(){ var o=A.o; cancelAnimationFrame(A.raf); ARC=null; o.remove(); archOpen(); }; };
+  /* ---- Дадлага: шат сонгож, үнэгүй, хязгааргүй, шагналгүй ---- */
+  window.archPrac=function(){ var h='<h3>🎯 Сур харвааны дадлага</h3><div class="sm">Үнэгүй, хязгааргүй. Шагнал, цол, рекордод тооцохгүй. Аль шатаа дадлагажих вэ? (9 сум)</div><div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px">';
+    for(var i=1;i<=5;i++) h+='<button class="btn" style="min-width:0;padding:8px 10px" onclick="archPracGo('+i+')">'+(i<=3?'🎯':'🧱')+' '+i+'-р шат</button>';
+    h+='</div>'; if(typeof dxAsk==='function') dxAsk(h,'Болих',function(){}); };
+  window.archPracGo=function(stg){ try{ var ov=document.getElementById('askov'); if(ov) ov.remove(); }catch(e){}
+    var a=archInfo(), n0=a.n; a.n=0; window.WEVB=1; try{ archOpen(); } finally{ window.WEVB=0; a.n=n0; try{ save(); }catch(e){} }
+    var A=ARC; if(!A) return; A.pr=1; A.stg=stg; A.j=0; A.i=0; A.sc=[]; A.raw=[]; apply(A); A.ban=0;
+    try{ var g=document.getElementById('racego'); if(g){ var h2=g.querySelector('h2'); if(h2) h2.textContent='🎯 Дадлага · '+stg+'-р шат'; var sm=g.querySelectorAll('.sm'); if(sm[1]) sm[1].textContent=(stg>=4?'Хасаа унагаана':'Бай онно')+' · 9 сум · шагналгүй'; } }catch(e){} };
+  var _af=archFinish; archFinish=function(){ var A=ARC; if(!A||!A.pr) return _af.apply(this,arguments);
+    var hits=A.raw.filter(function(x){ return x>0; }).length, ten=A.raw.filter(function(x){ return x>=10; }).length, n=A.raw.length||1, stg=A.stg;
+    var r=document.createElement('div'); r.id='archres'; r.innerHTML='<h2>🎯 Дадлага · '+stg+'-р шат</h2><div class="big">'+hits+' / '+n+'</div><div>'+(stg>=4?'Унагаасан хасаа':'Онсон сум')+' · '+Math.round(hits/n*100)+'%'+(stg<4?' · голд '+ten:'')+'</div><div class="sm" style="margin-top:4px">Дадлага: шагнал, рекордод тооцохгүй</div><div class="row2"><button class="btn" id="archagain">Дахин</button><button class="btn red" id="archexit">Гарах</button></div>';
+    A.o.appendChild(r); r.querySelector('#archexit').onclick=archClose; r.querySelector('#archagain').onclick=function(){ var o=A.o; cancelAnimationFrame(A.raf); ARC=null; o.remove(); archPracGo(stg); }; };
   /* карт, профайл дээр цол */
   window.archTitlesInfo=function(){ var t=st(), ti=archTitle(), h='<h3>🏹 Харвааны цол</h3>';
     var how=['1-р шат давах','3-р шат давах','4-р шат давах','5-р шатыг давах','5-р шатыг 5 удаа давах','5-р шатыг 20 удаа давах + нэг тоглолтод 15 сумнаас 10+ голд'];
     TT.forEach(function(x,i){ h+='<div class="row" style="margin-top:6px;opacity:'+(i<=ti?1:0.6)+'"><div style="flex:1">'+(i<=ti?'✅ ':'🔒 ')+archTitleHTML(i)+'<div class="sm">'+how[i]+' · +'+TALT[i]+' Алт</div></div></div>'; });
     h+='<div class="sm" style="margin-top:8px">Таны явц: хамгийн их '+(t.mx||0)+'-р шат · 5-р шат '+(t.c5||0)+' удаа давсан</div>';
     if(typeof dxAsk==='function') dxAsk(h,'Ойлголоо',function(){}); };
-  var _ac=archCardHTML; archCardHTML=function(){ var h=_ac.apply(this,arguments); try{ h=h.replace(/(<h3 class="rb">[\s\S]*?<\/h3>)/,'$1<div class="sm" style="text-align:center">Цол: '+archTitleHTML()+' · <a style="color:#ffd770;text-decoration:underline;cursor:pointer" onclick="archTitlesInfo()">цолнууд</a></div><div class="sm" style="text-align:center">1–3-р шатанд бай (3 сумаар '+NEED+'+ оноо), 4–5-р шатанд хасаа унагаана (3 сумаар 2 хасаа). Шат бүрт холдож хэцүүднэ, 5-р шатанд салхитай.</div>'); h=h.replace(/Шилдэг: <b>(\d+)<\/b>\/50/,'Шилдэг: <b>$1</b>'); }catch(e){} return h; };
+  var _ac=archCardHTML; archCardHTML=function(){ var h=_ac.apply(this,arguments); try{ h=h.replace(/(<h3 class="rb">[\s\S]*?<\/h3>)/,'$1<div class="sm" style="text-align:center">Цол: '+archTitleHTML()+' · <a style="color:#ffd770;text-decoration:underline;cursor:pointer" onclick="archTitlesInfo()">цолнууд</a></div><div class="sm" style="text-align:center">1–3-р шатанд бай (3 сумаар '+NEED+'+ оноо), 4–5-р шатанд хасаа унагаана (3 сумаар 2 хасаа). Шат бүрт холдож хэцүүднэ, 5-р шатанд салхитай.</div>'); h=h.replace(/Шилдэг: <b>(\d+)<\/b>\/50/,'Шилдэг: <b>$1</b>'); h=h.replace(/(<\/div><\/div>)$/,'<div style="text-align:center;margin-top:6px"><button class="btn" style="background:#3e5a2a" onclick="archPrac()">🎯 Дадлага · үнэгүй</button></div>$1'); }catch(e){} return h; };
   if(typeof profHTML==='function'){ var _p=profHTML; profHTML=function(){ var h=_p.apply(this,arguments); try{ var i=archTitle(); if(i>=0) h=h.replace(/(<div>Хүч [^<]*<\/div>)/,'$1<div style="font-size:14px">'+archTitleHTML(i)+'</div>'); }catch(e){} return h; }; }
+})();
+</script>
+<script id="racett">
+/* Хурдан морь: дадлага + уяачийн цол + уралдааны нэр (Түмний эх / Айргийн / Баян хоцроо) */
+(function(){
+  var TT=[['Уяач','🐎','#c9e7a0'],['Сумын алдарт уяач','🎖','#9fd0ff'],['Аймгийн алдарт уяач','🎖','#c49bff'],['Улсын алдарт уяач','🏅','#ffd35a'],['Улсын хурдан морины эзэн','👑','#ff7a5a']];
+  var TALT=[1,3,10,25,50], HOW=['Анх удаа айрагдах (эхний 3)','5 удаа айрагдах','3 удаа түрүүлэх','10 удаа түрүүлэх','25 удаа түрүүлэх'];
+  var st=function(){ S.rcT=S.rcT||{a:0,w:0,got:{}}; if(!S.rcT.got) S.rcT.got={}; return S.rcT; };
+  window.raceTitle=function(){ var t=st(), i=-1; if(t.a>=1) i=0; if(t.a>=5) i=1; if(t.w>=3) i=2; if(t.w>=10) i=3; if(t.w>=25) i=4; return i; };
+  window.raceTitleHTML=function(i){ if(i==null) i=raceTitle(); if(i<0) return '<span class="sm" style="opacity:.6">Цолгүй</span>'; var x=TT[i]; return '<b style="color:'+x[2]+'">'+x[1]+' '+x[0]+'</b>'; };
+  window.raceTitlesInfo=function(){ var t=st(), ti=raceTitle(), h='<h3>🐎 Уяачийн цол</h3>';
+    TT.forEach(function(x,i){ h+='<div class="row" style="margin-top:6px;opacity:'+(i<=ti?1:0.6)+'"><div style="flex:1">'+(i<=ti?'✅ ':'🔒 ')+raceTitleHTML(i)+'<div class="sm">'+HOW[i]+' · +'+TALT[i]+' Алт</div></div></div>'; });
+    h+='<div class="sm" style="margin-top:8px">Уралдаан бүрт: 🥇 1-р байр «Түмний эх», 2–3-р байр «Айрагдсан», сүүлд ирвэл «Баян хоцроо».<br>Таны явц: '+(t.a||0)+' удаа айрагдсан · '+(t.w||0)+' удаа түрүүлсэн</div>';
+    if(typeof dxAsk==='function') dxAsk(h,'Ойлголоо',function(){}); };
+  /* дадлага */
+  window.ndPracRace=function(){ var a=raceInfo(), n0=a.n; a.n=0; window.WEVB=1; window.NDPRR=1; try{ hzStart(); } finally{ window.WEVB=0; a.n=n0; try{ save(); }catch(e){} }
+    if(typeof RCE!=='undefined'&&RCE){ RCE.pr=1; try{ var g=document.getElementById('racego'); if(g){ var h2=g.querySelector('h2'); if(h2) h2.textContent='🐎 Дадлага'; } }catch(e){} } window.NDPRR=0; };
+  var _rf=raceFinish; raceFinish=function(){ var R=RCE; if(!R) return;
+    if(R.pr){ try{ var hd=document.getElementById('hzhud'); if(hd) hd.remove(); }catch(e){} var pl=R.place||5, tm=R.hs[R.me].fin||0;
+      var r=document.createElement('div'); r.id='archres'; r.innerHTML='<h2>🐎 Дадлага</h2><div class="big">'+pl+' / 5</div><div>Хугацаа '+tm.toFixed(1)+'с</div><div class="sm" style="margin-top:4px">Дадлага: шагнал, рекорд, цолд тооцохгүй</div><div class="row2"><button class="btn" id="archagain">Дахин</button><button class="btn red" id="archexit">Гарах</button></div>';
+      R.o.appendChild(r); r.querySelector('#archexit').onclick=raceClose; r.querySelector('#archagain').onclick=function(){ var o=R.o; cancelAnimationFrame(R.raf); RCE=null; o.remove(); raceOpen(); setTimeout(function(){ try{ ndPracRace(); }catch(e){} },300); }; return; }
+    var pl=R.place||5, t=st(), ti0=raceTitle(); if(pl<=3) t.a=(t.a||0)+1; if(pl===1) t.w=(t.w||0)+1;
+    var ti=raceTitle(), newT=[], alt=0; for(var i=0;i<=ti;i++){ if(!t.got[i]){ t.got[i]=1; newT.push(i); alt+=TALT[i]; } }
+    var extra=ti>=0?Math.round([180,110,70,40,20][pl-1]*0.1*(ti+1)):0, cons=pl===5?30:0; S.res.gold+=extra+cons; S.res.alt=(S.res.alt||0)+alt;
+    var r0=_rf.apply(this,arguments);
+    try{ var r=document.getElementById('archres'); if(r){ var nm=pl===1?'🥇 Түмний эх!':pl<=3?'🏅 Айрагдлаа!':pl===5?'🐴 Баян хоцроо':'';
+        var d=document.createElement('div'); d.style.cssText='margin:4px 0;color:#ffe29a'; d.innerHTML=(nm?'<b>'+nm+'</b><br>':'')+(extra?'Цолын нэмэгдэл +'+extra+' 🪙 ':'')+(cons?'Тайтгарал +30 🪙 ':'')+(alt?'· +'+alt+' Алт':'')+(newT.length?'<div style="color:#ffd35a;margin-top:3px">🎉 Шинэ цол: '+newT.map(function(i){ return raceTitleHTML(i); }).join(', ')+'</div>':(ti>=0?'<div class="sm">Цол: '+raceTitleHTML(ti)+'</div>':''));
+        var row=r.querySelector('.row2'); if(row) r.insertBefore(d,row); else r.appendChild(d); } save(); }catch(e){}
+    return r0; };
+  /* карт */
+  var _rc=raceCardHTML; raceCardHTML=function(){ var h=_rc.apply(this,arguments); try{ h=h.replace(/(<h3 class="rb">[\s\S]*?<\/h3>)/,'$1<div class="sm" style="text-align:center">Цол: '+raceTitleHTML()+' · <a style="color:#ffd770;text-decoration:underline;cursor:pointer" onclick="raceTitlesInfo()">цолнууд</a></div>'); h=h.replace(/(<\/div><\/div>)$/,'<div style="text-align:center;margin-top:6px"><button class="btn" style="background:#3e5a2a" onclick="raceOpen();setTimeout(function(){ try{ ndPracRace(); }catch(e){} },350)">🐎 Дадлага · үнэгүй</button></div>$1'); }catch(e){} return h; };
+  if(typeof profHTML==='function'){ var _p=profHTML; profHTML=function(){ var h=_p.apply(this,arguments); try{ var i=raceTitle(); if(i>=0) h=h.replace(/(<div>Хүч [^<]*<\/div>)/,'$1<div style="font-size:14px">'+raceTitleHTML(i)+'</div>'); }catch(e){} return h; }; }
+  /* Топ 50: цолыг онлайнаар */
+  var _ss=socSnap; socSnap=function(){ var o=_ss.apply(this,arguments); try{ var a=typeof archTitle==='function'?archTitle():-1, r=raceTitle(); if(a>=0) o.at=a; if(r>=0) o.rt=r; }catch(e){} return o; };
+  var _nl=ndLbHTML; ndLbHTML=function(){ var h=_nl.apply(this,arguments); try{ if(NDTAB!=='a'&&NDTAB!=='r') return h; var L=NDLB[NDTAB]||[], k=0;
+      h=h.replace(/(<span class="sm">Lv [^<]*<\/span>)(<\/div>)/g,function(m,a1,b1){ var x=L[k++], v=x&&x.v, i=v?(NDTAB==='a'?v.at:v.rt):null; if(i==null) return m; return a1+'<div style="font-size:12px">'+(NDTAB==='a'?archTitleHTML(i):raceTitleHTML(i))+'</div>'+b1; }); }catch(e){} return h; };
 })();
 </script>
 </body>
