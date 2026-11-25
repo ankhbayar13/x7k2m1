@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='4d8876e56e';
+var UPDB='d7abc5f182';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25867,7 +25867,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       G.gates.forEach(function(q){ if(q.cx<x0-40||q.cx>x1+40||q.y<y0||q.y-40>y1) return;
         if(SP) list.push({y:q.y+0.3,f:function(){ hwG(ctx,t,q.cx,q.y+2); }});
         else { list.push({y:q.y+0.3,f:function(){ tower(ctx,t,q.x,q.y,1,tm); tower(ctx,t,q.xi,q.y,1,tm); ctx.fillStyle='#8f2f22'; ctx.fillRect(Math.min(q.x,q.xi),q.y-DIM[t].H-3,Math.abs(q.xi-q.x),2.2); }}); }
-        [-0.3,0.3].forEach(function(f){ var gx=q.cx+q.w*f; list.push({y:q.y+3,f:function(){ charAt(3,'f',false,0,gx,q.y+5,1.3); }}); }); });
+        var mid=Math.min(q.x,q.xi)+Math.abs(q.xi-q.x)/2; [-0.14,0.14].forEach(function(f){ var gx=mid+q.w*f; list.push({y:q.y+3,f:function(){ charAt(3,'f',false,0,gx,q.y+6,1.3); }}); }); });
       /* эргүүлийн харваачид */
       var n=t===1?2:t===2?4:6, segs=G.segs.filter(function(s){ return (s.b-s.a)>30; }).sort(function(p,q){ return (q.b-q.a)-(p.b-p.a); });
       for(var i=0;i<n&&segs.length;i++){ (function(i){ var s=segs[i%segs.length], len=s.b-s.a, sp=5, ph0=hsh(i,9)*len*2, d=(tm*sp+ph0)%(len*2), fwd=d<len, u=fwd?d:2*len-d, px, py, fd;
