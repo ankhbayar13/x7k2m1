@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='34b06765ac';
+var UPDB='0a1494de00';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26160,6 +26160,41 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     }catch(e){} }
   setInterval(tick,800);
   const _f=fillM; fillM=function(){ const r=_f.apply(this,arguments); tick(); return r; };
+})();
+</script>
+<script id="hschool">
+/* Баатрын сургууль: баатар суулгаж 24 цаг тутамд 1 түвшин ахиулна.
+   Суудал: сургууль Lv1–10 → 1, Lv11–16 → 2, Lv17+ → 3. Өгөгдөл: S.hsc={sl:[{id,t}|null,…]} */
+(function(){
+  if(typeof bldHTML!=='function') return;
+  const DAY=864e5;
+  const D=()=>{ const d=S.hsc=S.hsc||{sl:[null,null,null]}; if(!Array.isArray(d.sl)) d.sl=[null,null,null]; while(d.sl.length<3) d.sl.push(null); return d; };
+  const nSl=()=>{ const L=S.bld.school||0; return L<1?0:L<=10?1:L<=16?2:3; };
+  const MX=()=>(typeof HLMAX!=='undefined'?HLMAX:30);
+  const nm=id=>{ try{ return HEROES.find(h=>h.id===id).n; }catch(e){ return id; } };
+  const fmt=ms=>{ const m=Math.max(0,Math.ceil(ms/60000)), h=Math.floor(m/60); return (h?h+'ц ':'')+(m%60)+'м'; };
+  function step(){ try{ const d=D(), now=Date.now(); let ch=false;
+      d.sl.forEach((x,i)=>{ if(!x) return; if(!S.heroes[x.id]){ d.sl[i]=null; ch=true; return; }
+        S.hl=S.hl||{}; while(now-x.t>=DAY&&hlv(x.id)<MX()){ S.hl[x.id]=hlv(x.id)+1; x.t+=DAY; ch=true; try{ say('🎓 '+nm(x.id).split(' ')[0]+' сургуульд Lv '+hlv(x.id)+' боллоо'); }catch(e){} }
+        if(hlv(x.id)>=MX()){ d.sl[i]=null; ch=true; try{ say('🎓 '+nm(x.id).split(' ')[0]+' дээд түвшинд хүрч сургууль төгслөө'); }catch(e){} } });
+      if(ch){ try{ save(); }catch(e){} try{ refresh(); }catch(e){} try{ if(cur==='bld:school') fillM(); }catch(e){} }
+    }catch(e){} }
+  setInterval(step,5000);
+  window.hscPick=function(i){ const d=D(); if(i>=nSl()) return; const used=d.sl.filter(Boolean).map(x=>x.id);
+    const ids=Object.keys(S.heroes).filter(id=>HEROES.find(h=>h.id===id)&&used.indexOf(id)<0&&hlv(id)<MX()).sort((a,b)=>hlv(b)-hlv(a));
+    let h='<div class="card"><h3>Сургуульд суулгах баатар</h3>'+(ids.length?'':'<div class="sm">Суулгах баатар алга.</div>')+ids.map(id=>'<div class="row" style="margin-top:6px;align-items:center"><span style="display:flex;align-items:center;gap:8px"><span style="width:38px;height:38px;border-radius:50%;overflow:hidden;display:inline-block;flex:none">'+(typeof hdImg==='function'?hdImg(id,0,'',38):'')+'</span><b>'+nm(id)+'</b> <span class="sm">Lv '+hlv(id)+'</span></span><button class="btn" onclick="hscSet('+i+',\''+id+'\')">Суулгах</button></div>').join('')+'<button class="btn" style="margin-top:8px" onclick="fillM()">‹ Буцах</button></div>';
+    const b=document.getElementById('hscbox'); if(b) b.innerHTML=h; };
+  window.hscSet=function(i,id){ const d=D(); if(i>=nSl()||!S.heroes[id]) return; if(d.sl.some(x=>x&&x.id===id)) return; d.sl[i]={id:id,t:Date.now()};
+    try{ sfx('ok'); }catch(e){} say('🎓 '+nm(id).split(' ')[0]+' сургуульд суулаа (24ц тутамд +1 түвшин)'); try{ save(); }catch(e){} fillM(); };
+  window.hscOut=function(i){ const d=D(); d.sl[i]=null; try{ save(); }catch(e){} fillM(); };
+  function card(){ const d=D(), n=nSl(), now=Date.now(); let h='<div class="card" id="hscbox"><h3>🎓 Баатар сургах</h3><div class="sm" style="margin-bottom:4px">Суусан баатар 24 цаг тутамд 1 түвшин ахина. Суудал: Lv1–10 → 1 · Lv11–16 → 2 · Lv17+ → 3</div>';
+    for(let i=0;i<3;i++){ const x=d.sl[i];
+      if(i>=n){ h+='<div class="row" style="margin-top:6px;opacity:.55"><span>🔒 '+(i+1)+'-р суудал</span><span class="sm">Сургууль Lv '+(i===1?11:17)+'</span></div>'; continue; }
+      if(!x){ h+='<div class="row" style="margin-top:6px"><span>➕ '+(i+1)+'-р суудал хоосон</span><button class="btn" onclick="hscPick('+i+')">Баатар суулгах</button></div>'; continue; }
+      const l=hlv(x.id), rem=DAY-((now-x.t)%DAY), pc=Math.round(100*(1-rem/DAY));
+      h+='<div class="row" style="margin-top:6px;align-items:center;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex:1;min-width:0"><span style="width:38px;height:38px;border-radius:50%;overflow:hidden;display:inline-block;flex:none">'+(typeof hdImg==='function'?hdImg(x.id,0,'',38):'')+'</span><span style="flex:1;min-width:0"><b>'+nm(x.id)+'</b><div class="sm">Lv '+l+' → '+(l+1)+' · '+fmt(rem)+' үлдсэн</div><div style="height:6px;border-radius:3px;background:#0008;margin-top:3px;overflow:hidden"><div style="height:100%;width:'+pc+'%;background:linear-gradient(90deg,#c9972b,#ffd770)"></div></div></span></span><button class="btn" style="background:#5b3d1e" onclick="hscOut('+i+')">Гаргах</button></div>'; }
+    return h+'</div>'; }
+  const _b=bldHTML; bldHTML=function(k){ const h=_b.apply(this,arguments); if(k!=='school'||!(S.bld.school>0)) return h; try{ step(); return h+card(); }catch(e){ return h; } };
 })();
 </script>
 </body>
