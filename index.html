@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='1d23387ca3';
+var UPDB='dd6f9991c2';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25766,7 +25766,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   var maxHP=function(lv){ return lv>0?100+60*lv:0; };
   var baseB=function(lv){ return lv<=0?0:lv<=5?0.05+0.025*(lv-1):lv<=10?0.20+0.0375*(lv-6):0.40+0.05*(lv-11); };
   window.hrmBonus=function(){ var h=st(); if(!h.lv) return 0; return baseB(h.lv)*Math.max(0,Math.min(1,h.hp/maxHP(h.lv))); };
-  var cost=function(lv){ return {gold:Math.round(400*Math.pow(lv,1.6)/10)*10,wood:Math.round(40*Math.pow(lv,1.3))}; };
+  var cost=function(lv){ var m=lv>=6?2:1; return {gold:Math.round(400*Math.pow(lv,1.6)/10)*10*m,wood:Math.round(40*Math.pow(lv,1.3))*m}; };
   var DIM=[null,{H:8.5,T:2.6},{H:9.5,T:3.4},{H:12,T:4.4}];
   var hsh=function(a,b){ var x=Math.sin(a*127.1+b*311.7)*43758.5453; return x-Math.floor(x); };
   var dmgF=function(){ var h=st(); if(!h.lv) return 0; var r=h.hp/maxHP(h.lv); return r>=0.999?0:Math.min(0.95,(1-r)*0.8+(r<=0?0.15:0)); };
