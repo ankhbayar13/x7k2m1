@@ -11157,7 +11157,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='6304e81c0a';
+var UPDB='fd776cb069';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25824,7 +25824,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   /* хэрэм тосгоны захын ойн дотор талаар тойрно */
   function bbox(){ var x0=36, x1=WW-44, y0=88, y1=WH-50; /* захын өтгөн ойн дотор талаар */
     return {key:'bb'+x0+','+y0+','+x1+','+y1,hz:[{n:'N',a:x0,b:x1,y:y0},{n:'S',a:x0,b:x1,y:y1}],vt:[{n:'W',x:x0,a:y0,b:y1},{n:'E',x:x1,a:y0,b:y1}]}; }
-  window.hrmBox=function(){ return bbox(); };
+  window.hrmBox=function(){ return bbox(); }; window.hrmGeom=function(){ geom.c=null; return geom(); };
   function geom(){ var e=bbox(), h=st(); var key=e.key+'|'+h.lv; if(geom.c&&geom.c.key===key) return geom.c;
     var W_=e.vt.filter(function(l){ return l.n==='W'; }), E_=e.vt.filter(function(l){ return l.n==='E'; }), gy=WH*0.56;
     var pick=function(L,mn){ if(!L.length) return null; L=L.slice().sort(function(p,q){ return mn?(p.x-q.x):(q.x-p.x); }); var x0=L[0].x, cs=L.filter(function(l){ return Math.abs(l.x-x0)<1; }).sort(function(p,q){ return (q.b-q.a)-(p.b-p.a); }); var l=cs.find(function(l){ return gy>l.a+20&&gy<l.b-20; })||cs[0]; var c=Math.max(l.a+60,Math.min(l.b-60,gy)); return {l:l,c:c}; };
@@ -25836,7 +25836,16 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       var dir=l.n==='W'?-1:1, xi=l.x-dir*GW, yA=q.c-LL/2, yB=q.c+LL/2;
       segs.push({v:1,x:l.x,a:l.a,b:yA,n:l.n}); segs.push({v:1,x:l.x,a:yB,b:l.b,n:l.n}); segs.push({v:1,x:xi,a:yA,b:yB,n:l.n,cn:1});
       gates.push({cx:(l.x+xi)/2,y:yA,w:GW,dir:dir,x:l.x,xi:xi}); gates.push({cx:(l.x+xi)/2,y:yB,w:GW,dir:dir,x:l.x,xi:xi}); });
-    var corners=[]; e.hz.forEach(function(l){ corners.push([l.a,l.y]); corners.push([l.b,l.y]); });
+    /* ус, уулан дээгүүр хэрэм барихгүй: нуур (усан флотын боомт), уул дайрах хэсгийг тасална, үзүүрт нь цамхаг */
+    var ends=[], P=((L&&L.ponds)||[]).concat((L&&L.peaks)||[]), M=6, cut=function(s){ var out=[[s.a,s.b]];
+      P.forEach(function(q){ var lo,hi; if(s.h){ if(s.y<q.y-M||s.y>q.y+q.h+M) return; lo=q.x-M; hi=q.x+q.w+M; } else { if(s.x<q.x-M||s.x>q.x+q.w+M) return; lo=q.y-M; hi=q.y+q.h+M; }
+        var nx=[]; out.forEach(function(r){ if(hi<=r[0]||lo>=r[1]){ nx.push(r); return; } if(lo>r[0]) nx.push([r[0],lo]); if(hi<r[1]) nx.push([hi,r[1]]); }); out=nx; });
+      return out; };
+    var segs2=[]; segs.forEach(function(s){ var rs=cut(s); if(rs.length===1&&rs[0][0]===s.a&&rs[0][1]===s.b){ segs2.push(s); return; }
+      rs.forEach(function(r){ if(r[1]-r[0]<6) return; var n=Object.assign({},s,{a:r[0],b:r[1]}); segs2.push(n);
+        if(r[0]>s.a+0.5) ends.push(s.h?[r[0],s.y]:[s.x,r[0]]); if(r[1]<s.b-0.5) ends.push(s.h?[r[1],s.y]:[s.x,r[1]]); }); });
+    segs=segs2;
+    var corners=[]; e.hz.forEach(function(l){ corners.push([l.a,l.y]); corners.push([l.b,l.y]); }); ends.forEach(function(p){ corners.push(p); });
     geom.c={key:key,segs:segs,gates:gates,corners:corners,edges:e}; return geom.c; }
   function charAt(c,fd,moving,ph,x,y,sc){ var k='nw'+c+'_'+fd, F=NWF[k]; if(!F) return; var i=moving?Math.floor(ph)%F[0]:F[5], key=k+i; if(!SPR[key]) return; var w=SZ[key]*sc, hh=sprH(key)*sc; spr(key,x-(NWAX[key]||w/2)*sc,y-hh,w); }
   var _fl=fenceList; fenceList=function(list,vis){ var h=st(); if(!h.lv) return _fl.apply(this,arguments); if(!geom.t||performance.now()-geom.t>1500){ geom.t=performance.now(); geom.c=null; }
