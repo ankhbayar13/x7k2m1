@@ -11158,7 +11158,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='85b2940639';
+var UPDB='d096e68e5f';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25853,7 +25853,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       segs.push({v:1,x:l.x,a:l.a,b:yA-GH*0.35,n:l.n}); segs.push({v:1,x:l.x,a:yB,b:l.b,n:l.n,ga:1}); segs.push({v:1,x:xi,a:yA,b:yB-GH*0.35,n:l.n,cn:1,ga:1});
       var cxg=Math.min(l.x,xi)-TF[0]*GW+GW/2; gates.push({cx:cxg,y:yA,w:GW,dir:dir,x:l.x,xi:xi}); gates.push({cx:cxg,y:yB,w:GW,dir:dir,x:l.x,xi:xi}); });
     /* ус, уулан дээгүүр хэрэм барихгүй: нуур (усан флотын боомт), уул дайрах хэсгийг тасална, үзүүрт нь цамхаг */
-    var ends=[], P=((L&&L.ponds)||[]).concat((L&&L.peaks)||[]), M=6, cut=function(s){ var out=[[s.a,s.b]];
+    var ends=[], P=((L&&L.ponds)||[]), M=6, cut=function(s){ var out=[[s.a,s.b]];
       P.forEach(function(q){ var lo,hi; if(s.h){ if(s.y<q.y-M||s.y>q.y+q.h+M) return; lo=q.x-M; hi=q.x+q.w+M; } else { if(s.x<q.x-M||s.x>q.x+q.w+M) return; lo=q.y-M; hi=q.y+q.h+M; }
         var nx=[]; out.forEach(function(r){ if(hi<=r[0]||lo>=r[1]){ nx.push(r); return; } if(lo>r[0]) nx.push([r[0],lo]); if(hi<r[1]) nx.push([hi,r[1]]); }); out=nx; });
       return out; };
@@ -25890,6 +25890,10 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       try{ var t_=tierOf(st().lv)||1, WH_=ok(t_)?hrmWallTop(t_):DIM[t_].H, WT_=ok(t_)?IMD[t_].b[0]*sc(t_):DIM[t_].T;
         G.segs.forEach(function(g){ if(g.h) R.push({x0:g.a-10,x1:g.b+10,y0:g.y-WH_-8,y1:g.y+th*0.55});
           else R.push({x0:g.x-WT_/2-12,x1:g.x+WT_/2+12,y0:g.a-WH_-8,y1:g.b+th*0.55}); }); }catch(e){}
+      /* хэрмийн зам дээрх уулыг арилгана (хэрэм шулуун үргэлжилнэ) */
+      try{ if(L.peaks&&L.peaks.length){ var bx=hrmBox(), pk0=L.peaks.length, Mg=14;
+        L.peaks=L.peaks.filter(function(q){ var hz=bx.hz.some(function(l){ return l.y>q.y-Mg&&l.y<q.y+q.h+Mg&&q.x+q.w>l.a&&q.x<l.b; }), vt=bx.vt.some(function(l){ return l.x>q.x-Mg&&l.x<q.x+q.w+Mg&&q.y+q.h>l.a&&q.y<l.b; }); return !(hz||vt); });
+        if(L.peaks.length!==pk0){ geom.c=null; } } }catch(e){}
       var hit=function(t){ var tx0=t.x, tx1=t.x+SZ.tree, ty0=t.y, ty1=t.y+th; return R.some(function(r){ return tx1>r.x0&&tx0<r.x1&&ty1>r.y0&&ty0<r.y1; }); };
       var n0=L.trees.length; L.trees=L.trees.filter(function(t){ return !hit(t); }); if(L.trees.length!==n0){ try{ if(typeof propsBuild==='function') propsBuild(); }catch(e){} } }catch(e){} }
   var _fl=fenceList; fenceList=function(list,vis){ var h=st(); if(!h.lv) return _fl.apply(this,arguments); try{ var Gc=geom(); if(clearGates.k!==Gc.key+'|'+(L&&L.trees&&L.trees.length)){ clearGates(Gc); clearGates.k=Gc.key+'|'+(L&&L.trees&&L.trees.length); } }catch(e){} if(!geom.t||performance.now()-geom.t>1500){ geom.t=performance.now(); geom.c=null; }
