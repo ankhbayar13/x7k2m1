@@ -4880,7 +4880,6 @@ function archDrawN(t){ const A=ARC, c=A.c, dp=A.dp, w=A.w, h=A.h, N=NDR; c.setTr
   /* нум сумны шугам дээр: сумны үзүүр доод голд, бай руу чиглэнэ; салхины эсрэг бага зэрэг хазайна; харвахад хойш цочирно */
   const aimY=(A.tyb!=null?A.tyb:ty), aimX=w/2-(A.wind||0)*R*0.3, T0x=w/2, T0y=h*0.80, dirA=Math.atan2(aimY-T0y,aimX-T0x), th=dirA-Math.atan2(-0.015*bh,0.285*bw);
   const rc=(A.st==='fly'&&A.fl<0.16)?(1-A.fl/0.16)*12:0, tpx=T0x-Math.cos(dirA)*rc, tpy=T0y-Math.sin(dirA)*rc, cs=Math.cos(th), sn=Math.sin(th), pvx=tpx-(cs*(0.915*bw)-sn*(-0.545*bh)), pvy=tpy-(sn*(0.915*bw)+cs*(-0.545*bh));
-  c.strokeStyle='#ffffff66'; c.setLineDash([4,6]); c.lineWidth=2; c.beginPath(); c.moveTo(tpx,tpy); c.lineTo(A.ax,ty+R+6); c.stroke(); c.setLineDash([]);
   c.fillStyle='rgba(0,0,0,0.22)'; c.beginPath(); c.ellipse(tx,gy,R*0.85,R*0.13,0,0,6.3); c.fill();
   c.strokeStyle='#4a2d14'; c.lineCap='round'; c.lineWidth=Math.max(4,R*0.1); c.beginPath(); c.moveTo(tx-R*0.45,ty+R*0.55); c.lineTo(tx-R*0.78,gy); c.moveTo(tx+R*0.45,ty+R*0.55); c.lineTo(tx+R*0.78,gy); c.moveTo(tx,ty+R*0.7); c.lineTo(tx,gy); c.stroke();
   const ds=R*2*(136/132); c.drawImage(N.adisc,tx-ds/2,ty-ds/2,ds,ds);
@@ -11163,7 +11162,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='514ef12a20';
+var UPDB='99cdf089c1';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25705,6 +25704,19 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     try{ var A=ARC, c=A.c, q=P[A.stg||1]; if(kmode) khDraw(A,c,t);
       c.textAlign='center'; c.lineJoin='round'; c.lineWidth=4; c.strokeStyle='#000a';
       if(A.ban>0&&A.stg){ c.globalAlpha=Math.min(1,A.ban); c.font='bold 30px sans-serif'; c.fillStyle='#ffd35a'; ndTxt(c,A.stg+'-р шат',A.w/2,A.h*0.6); c.font='bold 15px sans-serif'; c.fillStyle='#fff'; ndTxt(c,A.mode==='kh'?(A.stg===4?'🧱 Хасаа харваа эхэллээ! 3 сумаар 2 хасаа унагаа':'Хасаа холдож, салхитай! ×'+q.mu):(A.stg>1?'Сур холдлоо! Оноо ×'+q.mu:'3 сумаар '+NEED+'+ оноо ав'),A.w/2,A.h*0.6+26); c.globalAlpha=1; }
+      /* CS шиг crosshair: сум очих цэг дээр; бай/хасаа доор нь ирвэл ногоон; харвахад тэлнэ */
+      if(A.st==='aim'||A.st==='fly'||A.st==='ready'){ var cx=A.ax, cy=kmode?(A.ty+A.kw*0.6-A.kw*0.55):A.ty, on=false;
+        if(kmode){ var land=A.ax+(A.wind||0)*A.kw*1.4; A.kh.forEach(function(k){ var kx=A.tx+(k.i-(KN-1)/2)*A.ksp; if(k.up&&Math.abs(land-kx)<A.kw*0.55) on=true; }); }
+        else on=Math.abs(A.ax-A.tx+(A.wind||0)*A.R*0.6)<A.R*0.22;
+        var kick=A.st==='fly'?Math.max(0,1-A.fl/0.3):0, S0=Math.max(7,Math.min(A.w,A.h)*0.016), gap=S0*(0.55+kick*1.4), len=S0*1.15, col=on?'#4dff6a':'#ffffff';
+        c.save(); c.lineCap='butt';
+        [[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){ var x1=cx+d[0]*gap, y1=cy+d[1]*gap, x2=cx+d[0]*(gap+len), y2=cy+d[1]*(gap+len);
+          c.strokeStyle='rgba(0,0,0,.85)'; c.lineWidth=4.5; c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
+          c.strokeStyle=col; c.lineWidth=2.2; c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke(); });
+        c.fillStyle='rgba(0,0,0,.85)'; c.beginPath(); c.arc(cx,cy,2.6,0,6.3); c.fill(); c.fillStyle=col; c.beginPath(); c.arc(cx,cy,1.5,0,6.3); c.fill();
+        if(q.wind&&Math.abs(A.wind||0)>0.05){ var wd=A.wind>0?1:-1, n=Math.abs(A.wind)<0.33?1:Math.abs(A.wind)<0.66?2:3; c.font='bold '+Math.round(S0*1.5)+'px sans-serif'; c.textAlign='center'; c.fillStyle='#d9f2ff'; c.strokeStyle='#000a'; c.lineWidth=3;
+          var wt=(wd>0?'›':'‹').repeat(n); c.strokeText(wt,cx+wd*(gap+len+S0*1.6),cy+S0*0.5); c.fillText(wt,cx+wd*(gap+len+S0*1.6),cy+S0*0.5); }
+        c.restore(); }
       if(q.wind&&A.st!=='end'){ var wv=A.wind||0, aw=Math.abs(wv), dirS=wv<0?'⬅⬅':'➡➡', str=aw<0.33?'сул':aw<0.66?'дунд':'хүчтэй'; c.font='bold 16px sans-serif'; c.fillStyle=aw<0.33?'#d9f2ff':aw<0.66?'#ffe29a':'#ff9a7a'; ndTxt(c,'🌬 Салхи '+(wv<0?dirS+' ':'')+str+(wv>=0?' '+dirS:''),A.w/2,100); }
     }catch(e){} return r; };
   /* дүн, цол, шагнал */
