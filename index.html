@@ -11163,7 +11163,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b443134fbf';
+var UPDB='514ef12a20';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25695,8 +25695,11 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
   function khDraw(A,c,t){ var y=A.ty+A.kw*0.6, kw=A.kw, kh=kw*1.05, x0=A.tx-((KN-1)/2)*A.ksp;
     c.fillStyle='rgba(0,0,0,.22)'; c.beginPath(); c.ellipse(A.tx,y+3,(KN/2)*A.ksp+kw,kw*0.35,0,0,6.3); c.fill();
     c.fillStyle='#c9a46a'; c.fillRect(x0-A.ksp*0.6,y,(KN-1)*A.ksp+A.ksp*1.2,Math.max(3,kw*0.18));
-    A.kh.forEach(function(k){ if(!k.up) k.f=Math.min(1,k.f+0.06); var kx=x0+k.i*A.ksp; c.save(); c.translate(kx,y); c.rotate(k.f*1.5*(k.i%2?1:-1)); c.globalAlpha=k.up?1:Math.max(0.35,1-k.f*0.5);
-      c.fillStyle=k.i===(KN-1)/2?'#b8321f':'#8a5a2b'; c.fillRect(-kw/2,-kh,kw,kh); c.fillStyle='#e9d6a8'; c.fillRect(-kw/2,-kh*0.62,kw,kh*0.18); c.fillStyle='#5a3618'; c.beginPath(); c.ellipse(0,-kh,kw/2,kw*0.18,0,0,6.3); c.fill(); c.restore(); }); }
+    A.kh.forEach(function(k){ if(!k.up) k.f=Math.min(1,k.f+0.06); var kx=x0+k.i*A.ksp, red=k.i===(KN-1)/2, im=KIM[(red?1:0)+(k.up?0:2)];
+      if(im&&im.complete&&im.naturalWidth){ var w=kw*(k.up?1:1.2), h=w*im.naturalHeight/im.naturalWidth; c.save(); c.translate(kx,y-(k.up?0:k.f*kw*0.5)); c.globalAlpha=k.up?1:Math.max(0.6,1-k.f*0.4); if(!k.up&&k.i%2) c.scale(-1,1); c.drawImage(im,-w/2,-h,w,h); c.restore(); return; }
+      c.save(); c.translate(kx,y); c.rotate(k.f*1.5*(k.i%2?1:-1)); c.globalAlpha=k.up?1:Math.max(0.35,1-k.f*0.5);
+      c.fillStyle=red?'#b8321f':'#8a5a2b'; c.fillRect(-kw/2,-kh,kw,kh); c.fillStyle='#e9d6a8'; c.fillRect(-kw/2,-kh*0.62,kw,kh*0.18); c.fillStyle='#5a3618'; c.beginPath(); c.ellipse(0,-kh,kw/2,kw*0.18,0,0,6.3); c.fill(); c.restore(); }); }
+  var KIM=[0,1,2,3].map(function(i){ var m=new Image(); m.src='hf/kh/k'+i+'.webp?v=1'; return m; });
   var _dn=archDrawN; archDrawN=function(t){ var A0=ARC, kmode=A0&&A0.mode==='kh'&&A0.kh, tx0=kmode?A0.tx:0; if(kmode) A0.tx=-99999;
     var r; try{ r=_dn.apply(this,arguments); } finally{ if(kmode) A0.tx=tx0; }
     try{ var A=ARC, c=A.c, q=P[A.stg||1]; if(kmode) khDraw(A,c,t);
