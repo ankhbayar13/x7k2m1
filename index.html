@@ -11162,7 +11162,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='99cdf089c1';
+var UPDB='a8aa31abc9';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26281,6 +26281,20 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
      B+' .srbtns .btn.red{left:20%!important;width:28.6%!important;font-size:2.7cqw!important}'+B+' .srbtns .btn:not(.red){left:57.7%!important;width:18%!important}'+
    '}';
   document.head.appendChild(st);
+})();
+</script>
+<script id="backrow">
+/* Түүхэн аян: арын эгнээнд нумтан + дэмжигч нийт 2 зай. Дүүрсэн үед дахин нэмэхэд мэдэгдэл гаргана */
+(function(){
+  if(typeof btPick!=='function') return;
+  const isBack=id=>!!(SUPP[id])||htype(id)==='archer';
+  const _p=btPick;
+  btPick=function(id){ try{
+      if(BT&&BT.wait&&!BT.vs&&BT.e&&typeof BT.e.back==='string'&&BT.e.back.indexOf('cmap:')===0&&!BT.sel.includes(id)&&isBack(id)){
+        let back=BT.sel.filter(isBack);
+        if(SUPP[id]) back=back.filter(x=>!SUPP[x]); /* дэмжигчийг солих бол тоолохгүй */
+        if(back.length>=2){ say('🏹 Арын эгнээнд нумтан, дэмжигчийн зай хүрэхгүй байна (2 зай). Эхлээд арын эгнээнээс нэгийг нь болиул'); try{ sfx('err'); }catch(e){} return; } }
+    }catch(e){} return _p.apply(this,arguments); };
 })();
 </script>
 </body>
