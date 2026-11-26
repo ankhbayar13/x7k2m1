@@ -11163,7 +11163,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='b2cf0c68f0';
+var UPDB='0885895a49';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25169,21 +25169,26 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
       '<div class="pr"><i style="width:'+(done()/12*100)+'%"></i></div><div class="pg"><div class="intro">'+esc(D.intro)+'</div>'+
       (s.l>=0?'<div style="text-align:center;margin-bottom:10px"><button class="bt" onclick="ntRead('+s.l+')">📑 Үргэлжлүүлэн унших: '+(s.l+1)+'-р бүлэг</button></div>':'');
     D.ch.forEach(function(c,i){ h+='<div class="it" onclick="ntRead('+i+')"><div class="no">'+(i+1)+'</div><div class="tx"><b>'+esc(c.n)+'</b><small>'+esc(c.y)+' · '+esc(c.s)+'</small></div>'+(s.r[i]?'<span class="ok">✓</span>':'<span style="font-size:12px;color:#ffd770">+3 Алт</span>')+'</div>'; });
-    h+='</div></div>'; root().innerHTML=h; V.ch=-1; }
+    h+='</div></div>'; root().innerHTML=h; V.ch=-1; clearInterval(V.tm); }
   function read(i){
     var c=D.ch[i]; if(!c) return; var s=st(); s.l=i; try{ save(); }catch(e){}
     var h='<div class="bk"><div class="hd"><button class="ib" onclick="ntList()">☰</button><b>'+(i+1)+'-р бүлэг</b><button class="ib" onclick="ntClose()">✕</button></div>'+
       '<div class="pr"><i style="width:'+((i+1)/12*100)+'%"></i></div><div class="pg" id="ntpg"><h2>'+esc(c.n)+'</h2><div class="yr">'+esc(c.y)+' · Нууц товчоо '+esc(c.s)+'</div>'+
       c.p.map(function(t){ return '<p>'+esc(t)+'</p>'; }).join('')+
       '<div class="nv"><button class="bt r" '+(i?'':'disabled ')+'onclick="ntRead('+(i-1)+')">◀ Өмнөх</button>'+
-      (s.r[i]?'<button class="bt" disabled>✓ Уншсан</button>':'<button class="bt" onclick="ntDone('+i+')">✓ Бүлгийг дуусгалаа (+3 Алт)</button>')+
+      (s.r[i]?'<button class="bt" disabled>✓ Уншсан</button>':'<button class="bt" id="ntdn" disabled onclick="ntDone('+i+')">⏳ 1:00</button>')+
       '<button class="bt r" '+(i<11?'':'disabled ')+'onclick="ntRead('+(i+1)+')">Дараах ▶</button></div></div></div>';
-    root().innerHTML=h; V.ch=i; var pg=document.getElementById('ntpg'); if(pg) pg.scrollTop=0; }
+    root().innerHTML=h; V.ch=i; var pg=document.getElementById('ntpg'); if(pg) pg.scrollTop=0;
+    /* 1 минут уншсаны дараа шагнал авах товч идэвхжинэ */
+    clearInterval(V.tm); if(!s.r[i]){ V.t0=Date.now(); var tk=function(){ var b=document.getElementById('ntdn'); if(!b||V.ch!==i){ clearInterval(V.tm); return; }
+        var left=Math.max(0,60-Math.floor((Date.now()-V.t0)/1000)); if(left>0){ b.disabled=true; b.textContent='⏳ 0:'+(left<10?'0':'')+left; }
+        else { b.disabled=false; b.textContent='✓ Бүлгийг дуусгалаа (+3 Алт)'; clearInterval(V.tm); } };
+      tk(); V.tm=setInterval(tk,1000); } }
   window.ntOpen=function(){ try{ closeM(); }catch(e){} load(function(){ var s=st(); list(); }); };
   window.ntList=function(){ load(list); };
   window.ntRead=function(i){ load(function(){ read(i); }); };
-  window.ntClose=function(){ var o=document.getElementById('ntv'); if(o) o.remove(); };
-  window.ntDone=function(i){ var s=st(); if(s.r[i]) return; s.r[i]=1; S.res.alt=(S.res.alt||0)+3; try{ addXP(40); }catch(e){} try{ if(typeof rkAdd==='function') rkAdd(5,'Нууц товчоо уншсан'); }catch(e){}
+  window.ntClose=function(){ clearInterval(V.tm); V.ch=-1; var o=document.getElementById('ntv'); if(o) o.remove(); };
+  window.ntDone=function(i){ var s=st(); if(s.r[i]) return; if(V.ch!==i||!V.t0||Date.now()-V.t0<59000) return; s.r[i]=1; S.res.alt=(S.res.alt||0)+3; try{ addXP(40); }catch(e){} try{ if(typeof rkAdd==='function') rkAdd(5,'Нууц товчоо уншсан'); }catch(e){}
     try{ save(); updateHUD(); sfx('coin'); }catch(e){}
     try{ say(done()===12?'📖 Нууц товчоог бүрэн уншлаа! +3 Алт':'📖 '+(i+1)+'-р бүлэг уншлаа · +3 Алт'); }catch(e){}
     if(i<11) read(i+1); else list(); };
