@@ -11162,7 +11162,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='a8aa31abc9';
+var UPDB='1540dac91d';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -26295,6 +26295,33 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
         if(SUPP[id]) back=back.filter(x=>!SUPP[x]); /* дэмжигчийг солих бол тоолохгүй */
         if(back.length>=2){ say('🏹 Арын эгнээнд нумтан, дэмжигчийн зай хүрэхгүй байна (2 зай). Эхлээд арын эгнээнээс нэгийг нь болиул'); try{ sfx('err'); }catch(e){} return; } }
     }catch(e){} return _p.apply(this,arguments); };
+})();
+</script>
+<script id="engrp">
+/* Түүхэн аян: улс бүрийн дайсны цэрэг (явган / нумтан / дэмжигч), AI 8 кадр: алхах 2, довтлох 4, үхэх 2. hf/en/<бүлэг>.webp */
+(function(){
+  const M={"st": [[184, 174, 165], [184, 171, 168], [184, 178, 171]], "ca": [[184, 176, 167], [184, 184, 163], [184, 176, 172]], "cn": [[184, 179, 170], [184, 184, 166], [184, 177, 176]], "is": [[184, 177, 171], [184, 184, 168], [184, 177, 174]], "eu": [[184, 173, 163], [184, 179, 166], [184, 184, 175]], "jp": [[184, 179, 176], [184, 184, 180], [184, 179, 176]], "se": [[184, 180, 170], [184, 184, 167], [184, 179, 169]], "kr": [[184, 181, 171], [184, 184, 169], [184, 179, 171]]};
+  const G=[['st',['Жалайр','Тайчууд','Хатагин','Салжиуд','Хонгирад','Мэргид','Татар','Урианхай','Хэрэйд','Найман','Ойрад','Хори','Баргууд','Хиргис','Боржигон','Овог']],
+    ['ca',['Уйгур','Тангуд','Хайду','Төмөр']],['cn',['Зүрчид','Сүн','Дали','Мин']],['is',['Хорезм','Аламут','Мамлюк','Дели']],
+    ['eu',['Орос','Унгар','Польш']],['jp',['Япон']],['kr',['Солонгос']],['se',['Паган','Дай Вьет','Ява']]];
+  const grpOf=ci=>{ const n=((typeof CAMP!=='undefined'&&CAMP[ci])||{}).n||''; for(const g of G) if(g[1].some(k=>n.indexOf(k)>=0)) return g[0]; return null; };
+  const LD={}, OK={};
+  function load(g){ if(LD[g]) return; LD[g]=1; const im=new Image();
+    im.onload=()=>{ let y=0; ['f','a','s'].forEach((r,ri)=>{ const cw=M[g][ri][0], ch=M[g][ri][1], key='x'+g+r, fr=[];
+        for(let i=0;i<8;i++){ const c=document.createElement('canvas'); c.width=cw; c.height=ch; c.getContext('2d').drawImage(im,i*cw,y,cw,ch,0,0,cw,ch); fr.push(c); }
+        const set=(act,idx)=>idx.forEach((fi,j)=>{ SPR['be_'+key+'_'+act+j]={img:fr[fi],iw:cw,ih:ch}; });
+        set('idle',[5,5]); set('walk',[0,1]); set('run',[0,1]); set('atk',[2,3,4,5]); set('hit',[5]); set('die',[6,7]); set('win',[5]); set('blk',[5]);
+        BEN[key]={idle:2,walk:2,run:2,atk:4,hit:1,die:2,win:1,blk:1,ih:ch,H:ch,W:cw,fh:ch}; y+=ch; });
+      OK[g]=1; };
+    im.onerror=()=>{ LD[g]=0; }; im.src='hf/en/'+g+'.webp?v=1'; }
+  window.enGrpLoad=load;
+  const _d=btDraw;
+  btDraw=function(){ try{ const e=BT&&BT.e; if(e&&!e.hbf&&typeof e.back==='string'&&e.back.indexOf('cmap:')===0){ const g=grpOf(+e.back.slice(5));
+        if(g){ load(g); if(OK[g]&&!BT.xg){ BT.xg=1; const en=BT.units.filter(u=>u.side&&!u.sup), na=en.filter(u=>u.type!=='archer');
+            en.forEach(u=>{ const ar=u.type==='archer'; u.ev='x'+g+(ar?'a':'f'); u.name=ar?'Харваач':'Явган цэрэг'; });
+            /* 3+ дайсантай бол арын нэг нь дэмжигч (бөө / шашны хүн) */
+            if(en.length>=3&&na.length>=2){ const u=na[na.length-1]; u.ev='x'+g+'s'; u.name={st:'Бөө',ca:'Лам',cn:'Даос мэргэн',is:'Дервиш',eu:'Санваартан',jp:'Оньмёжи',kr:'Лам',se:'Лам'}[g]||'Дэмжигч'; } } } } }catch(x){}
+    return _d.apply(this,arguments); };
 })();
 </script>
 </body>
