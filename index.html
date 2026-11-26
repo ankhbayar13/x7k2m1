@@ -11163,7 +11163,7 @@ function actHTML(){
 /* p32/updfix.js — «Шинэ хувилбар гарлаа» цонх давтан гарах асуудал:
    өмнө нь index.html-ийн ETag-ийг HEAD-ээр харьцуулдаг байсан (CDN-ийн өөр өөр зангилаа өөр ETag өгч, шинэчилсний дараа ч дахин гардаг).
    Одоо хуудас өөрийн хувилбарын дугаарыг (UPDB) агуулж, ver.txt-тэй харьцуулна. Ижил хувилбарт 2 удаа шинэчилсэний дараа дахин асуухгүй. */
-var UPDB='13513a7008';
+var UPDB='b443134fbf';
 (function(){
   const K='updTry';
   const _go=updGo;
@@ -25676,7 +25676,7 @@ document.getElementById('goBtn').onclick=function(){try{window.DXX_SPLSTOP&&DXX_
     var q=P[A.stg], spd=q.sp*Math.max(0.75,1-0.025*(A.lv||0))*(1+0.04*(A.df||0)), amp=Math.min(A.w*q.am,150);
     if(q.vr) spd*=1+0.45*Math.sin(now/650);
     if(A.ban>0) A.ban-=dt;
-    if(A.st==='aim'||A.st==='fly'){ if(q.rev&&Math.random()<dt*0.55) A.dir=-A.dir; A.ph+=spd*dt*A.dir; A.tx=A.w/2+amp*Math.sin(A.ph); A.ty=A.tyb+(q.bob?A.h*q.bob*Math.sin(A.ph*1.7+0.6):0); }
+    if(A.st==='aim'||A.st==='fly'){ if(q.rev&&Math.random()<dt*0.55) A.dir=-A.dir; A.ph+=spd*dt*A.dir; A.tx=A.w/2+amp*Math.sin(A.ph); A.ty=A.tyb; }
     if(A.st==='fly'){ A.fl+=dt; if(A.fl>=0.36){
         var dx=A.ax-A.tx+(A.wind||0)*A.R*0.6, dy=A.tyb-A.ty, ring, sc;
         if(A.mode==='kh'){ var land=A.ax+(A.wind||0)*A.kw*1.4, hitK=null; A.kh.forEach(function(k){ var kx=A.tx+(k.i-(KN-1)/2)*A.ksp; if(k.up&&Math.abs(land-kx)<A.kw*0.55&&Math.abs(dy)<A.kw*1.2) hitK=k; }); ring=hitK?10:0; if(hitK){ hitK.up=0; } dx=land-A.tx; }
